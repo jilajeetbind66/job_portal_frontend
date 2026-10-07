@@ -5,6 +5,7 @@ import { RouterProvider } from 'react-router-dom'
 import './index.css'
 import { router } from './routes'
 import AuthProvider from '@/auth/AuthProvider'
+import { ToastProvider } from '@/components'
 
 const queryClient = new QueryClient()
 
@@ -20,9 +21,11 @@ enableMocking().then(() => {
   createRoot(document.getElementById('root')).render(
     <StrictMode>
       <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <RouterProvider router={router} />
-        </AuthProvider>
+        <ToastProvider>
+          <AuthProvider>
+            <RouterProvider router={router} />
+          </AuthProvider>
+        </ToastProvider>
       </QueryClientProvider>
     </StrictMode>,
   )
