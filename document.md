@@ -26,10 +26,10 @@ Source: "Multi-Tenant Job Portal — Architecture & Plan" doc (Frontend Dev 1 / 
 - `src/auth/`
 - `src/components/` (shared components)
 - `src/hooks/`
-- `src/types/`
+- `src/constants/`
 - `src/mocks/`
-- `src/routes.tsx`
-- `src/main.tsx`
+- `src/routes.jsx`
+- `src/main.jsx`
 - `src/features/public/`
 - `src/features/candidate/`
 - `src/layouts/PublicLayout`, `src/layouts/CandidateLayout`
@@ -49,9 +49,9 @@ Source: "Multi-Tenant Job Portal — Architecture & Plan" doc (Frontend Dev 1 / 
 - Tailwind (Vite plugin), `@/` alias, `.env.example`, Vitest config, scripts.
 - Axios client (`withCredentials`, CSRF cookie call, 401/403 handling).
 - TanStack Query provider, MSW mocks.
-- `routes.tsx` me saare routes placeholder pages ke saath.
+- `routes.jsx` me saare routes placeholder pages ke saath.
 - 4 layouts ke khali shell (taaki Dev 1 apna layout bhar sake).
-- Shared types (`User`, `Job`, `Application`, `Partner`).
+- Shared constants (`src/constants/`): roles aur job/application status ke naam.
 
 > Ye khatam hone par Dev 1 ko batao. Uske baad hi Dev 1 apne screens shuru karega.
 
@@ -129,7 +129,7 @@ Dev 2 ka router aur auth guard ready hone ke baad shuru.
 - `master` par seedha push mat karo. Apni branch banao: `dev1/partners-screen`, `dev2/auth-screens`.
 - Chhote PRs, ek feature ek PR.
 - Merge se pehle dusra dev review kare.
-- `routes.tsx` dono chhuyenge, isliye is file me conflict aa sakta hai. Chhote change karo aur turant merge karo.
+- `routes.jsx` dono chhuyenge, isliye is file me conflict aa sakta hai. Chhote change karo aur turant merge karo.
 
 ---
 

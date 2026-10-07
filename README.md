@@ -1,6 +1,6 @@
 # Job Portal – Frontend (React SPA)
 
-Ye project ka frontend hai: **React + Vite + TypeScript** ka alag SPA, jo `../backend` ke Laravel API se baat karta hai.
+Ye project ka frontend hai: **React + Vite + JavaScript (JSX)** ka alag SPA (TypeScript nahi), jo `../backend` ke Laravel API se baat karta hai.
 
 > **Status:** Abhi sirf Phase 0 scaffold hua hai. Vite project bana hai, dependencies install hui hain aur `src/` ke khali folders bane hain. Abhi koi screen, route, Tailwind config, `@/` alias, API client ya test setup nahi bana. Neeche likha hai ki ye sab **kaise aur kis order me** banega.
 
@@ -38,13 +38,11 @@ Ye project ka frontend hai: **React + Vite + TypeScript** ka alag SPA, jo `../ba
 | Package | Kaam |
 |---|---|
 | vite ^8.3, @vitejs/plugin-react | Dev server + build |
-| typescript ~6.0 | Types |
 | tailwindcss ^4.3, @tailwindcss/vite | Styling (Vite plugin ke through) |
 | msw ^2.15 | Backend ready na ho to mock API |
 | vitest ^5, jsdom, @testing-library/react, @testing-library/jest-dom | Tests |
 | prettier, eslint-config-prettier | Formatting |
 | oxlint | Lint (Vite template ke saath aaya) |
-| @types/node | `path` wagairah ke types (alias config ke liye) |
 
 ---
 
@@ -65,12 +63,12 @@ frontend/
 │   ├── components/     # Shared UI (Button, Table, Modal, StatusBadge...)
 │   ├── hooks/          # useJobs, useApplications (TanStack Query)
 │   ├── mocks/          # MSW handlers
-│   ├── types/          # Job, Application, Partner, User
-│   ├── routes.tsx      # saare routes (abhi bana nahi)
-│   └── main.tsx        # entry point
+│   ├── constants/      # roles, job/application status ke naam
+│   ├── routes.jsx      # saare routes (abhi bana nahi)
+│   └── main.jsx        # entry point
 ├── index.html
-├── vite.config.ts
-├── tsconfig*.json
+├── vite.config.js
+├── jsconfig.json
 └── package.json
 ```
 
@@ -85,14 +83,14 @@ Khali folders me `.gitkeep` hai. Pehli file aane par hata dena.
 Order ye rakho. Har step ke baad `npm run build` chala ke dekho.
 
 ### Step 1: Base config
-1. **Tailwind v4:** `vite.config.ts` me `@tailwindcss/vite` plugin jodo, aur `src/index.css` me `@import "tailwindcss";` rakho.
-2. **`@/` alias:** `vite.config.ts` me `resolve.alias` (`@` → `src`), aur `tsconfig.app.json` me `baseUrl` + `paths` (`@/*` → `src/*`).
+1. **Tailwind v4:** `vite.config.js` me `@tailwindcss/vite` plugin jodo, aur `src/index.css` me `@import "tailwindcss";` rakho.
+2. **`@/` alias:** `vite.config.js` me `resolve.alias` (`@` → `src`), aur `jsconfig.json` me `baseUrl` + `paths` (`@/*` → `src/*`) taaki editor autocomplete kare.
 3. **Env:** `.env.example` banao: `VITE_API_URL=http://localhost:8000`. Asli `.env` git me na jaaye.
-4. **Vitest:** `vite.config.ts` me `test` block (`environment: 'jsdom'`, setup file me `@testing-library/jest-dom`).
+4. **Vitest:** `vite.config.js` me `test` block (`environment: 'jsdom'`, setup file me `@testing-library/jest-dom`).
 5. **Scripts:** `package.json` me `dev`, `build`, `test`, `lint`, `format` rakho.
 6. **Prettier:** `.prettierrc` banao, aur lint me `eslint-config-prettier` jodo (agar ESLint use karo).
 
-### Step 2: API client (`src/api/client.ts`)
+### Step 2: API client (`src/api/client.js`)
 Ek hi axios instance:
 - `baseURL = import.meta.env.VITE_API_URL`
 - `withCredentials: true` aur `withXSRFToken: true` (Sanctum cookie auth ke liye)
@@ -106,7 +104,7 @@ Ek hi axios instance:
 - `RequireRole`: route guard. Login nahi → `/login`. Galat role → us role ke apne portal par.
 - Buttons permission se hide karo, par yaad rakho ki asli check backend karta hai.
 
-### Step 4: Layouts aur routes (`src/layouts/`, `src/routes.tsx`)
+### Step 4: Layouts aur routes (`src/layouts/`, `src/routes.jsx`)
 Har layout me sidebar/navbar aur `<Outlet />`. Routes:
 
 | Path | Layout | Guard |
@@ -125,7 +123,7 @@ Button, Input, Select, TagInput, Table (pagination ke saath), Modal, ConfirmDial
 - Har API call ke liye `hooks/` me TanStack Query hook (`useJobs`, `useApplications`...).
 - Forms: React Hook Form + Zod schema + `@hookform/resolvers/zod`.
 - Lists paginated hain (`?page=&per_page=`). Search filters **URL query params** me rakho taaki link share/bookmark ho sake.
-- API responses ke types `src/types/` me.
+- Roles aur status ke naam `src/constants/` me constants ki tarah rakho (types nahi). Data ki shape Zod se validate karo.
 
 ### Step 7: Mock API (MSW)
 Backend endpoint ready na ho to `src/mocks/` me handlers likho aur dev me MSW chalao. Endpoint merge hote hi mock hata do. Pehle API contract (request/response JSON) likh lo, phir dono taraf se kaam shuru.
@@ -174,7 +172,7 @@ cd frontend
 npm install
 cp .env.example .env     # .env.example banne ke baad
 npm run dev              # http://localhost:5173
-npm run build            # type-check + production build
+npm run build            # production build
 npm run lint             # oxlint
 npm test                 # vitest (script jodna baaki hai)
 npm run format           # prettier (script jodna baaki hai)
