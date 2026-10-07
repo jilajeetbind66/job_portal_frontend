@@ -13,6 +13,9 @@ import JobDetailPage from '@/features/public/JobDetailPage'
 import CompanyPage from '@/features/public/CompanyPage'
 import LoginPage from '@/features/public/LoginPage'
 import RegisterPage from '@/features/public/RegisterPage'
+import ForgotPasswordPage from '@/features/public/ForgotPasswordPage'
+import ResetPasswordPage from '@/features/public/ResetPasswordPage'
+import VerifyEmailNoticePage from '@/features/public/VerifyEmailNoticePage'
 
 import CandidateDashboardPage from '@/features/candidate/DashboardPage'
 import ProfilePage from '@/features/candidate/ProfilePage'
@@ -31,7 +34,7 @@ import ModerationPage from '@/features/admin/ModerationPage'
 import UsersPage from '@/features/admin/UsersPage'
 import AuditLogsPage from '@/features/admin/AuditLogsPage'
 
-export const router = createBrowserRouter([
+export const routes = [
   {
     element: <PublicLayout />,
     children: [
@@ -41,6 +44,9 @@ export const router = createBrowserRouter([
       { path: '/companies/:slug', element: <CompanyPage /> },
       { path: '/login', element: <LoginPage /> },
       { path: '/register', element: <RegisterPage /> },
+      { path: '/forgot-password', element: <ForgotPasswordPage /> },
+      { path: '/reset-password', element: <ResetPasswordPage /> },
+      { path: '/verify-email', element: <VerifyEmailNoticePage /> },
     ],
   },
   {
@@ -91,4 +97,6 @@ export const router = createBrowserRouter([
       },
     ],
   },
-])
+]
+
+export const router = createBrowserRouter(routes)

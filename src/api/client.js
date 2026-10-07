@@ -1,5 +1,7 @@
 import axios from 'axios'
 
+export const UNAUTHORIZED_EVENT = 'auth:unauthorized'
+
 export const api = axios.create({
   baseURL: `${import.meta.env.VITE_API_URL}/api/v1`,
   withCredentials: true,
@@ -16,12 +18,23 @@ export function getCsrfCookie() {
 
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
     const status = error.response?.status
-    // TODO(auth step): 401 par login page, 403 par "access nahi hai", 419 par CSRF dobara lena
-    if (status === 401 || status === 403 || status === 419) {
-      console.warn(`API ${status}`)
+    const config = error.config
+
+    // 419: CSRF token expire. Cookie dobara lo aur request ek baar retry karo
+    if (status === 419 && config && !config._retried) {
+      config._retried = true
+      await getCsrfCookie()
+      return api(config)
     }
+
+    // 401: session khatam. AuthProvider sunta hai aur user ko logout kar deta hai.
+    // /auth/me ka 401 normal hai (login nahi hai), usse event nahi bhejte.
+    if (status === 401 && !config?.url?.endsWith('/auth/me')) {
+      window.dispatchEvent(new Event(UNAUTHORIZED_EVENT))
+    }
+
     return Promise.reject(error)
   },
 )

@@ -1,34 +1,45 @@
 import { render, screen } from '@testing-library/react'
 import { RouterProvider, createMemoryRouter } from 'react-router-dom'
-import { router } from './routes'
+import { ROLES } from '@/constants'
+import AuthProvider from '@/auth/AuthProvider'
+import { ToastProvider } from '@/components'
+import { setMockRole } from '@/mocks/handlers'
+import { routes } from './routes'
 
+// [path, role jisse login karna hai (null = guest), page ka text]
 const cases = [
-  ['/', 'public / HomePage'],
-  ['/jobs', 'public / JobSearchPage'],
-  ['/jobs/some-job', 'public / JobDetailPage'],
-  ['/companies/sbi', 'public / CompanyPage'],
-  ['/login', 'public / LoginPage'],
-  ['/register', 'public / RegisterPage'],
-  ['/candidate', 'candidate / DashboardPage'],
-  ['/candidate/profile', 'candidate / ProfilePage'],
-  ['/candidate/applications', 'candidate / ApplicationsPage'],
-  ['/candidate/saved-jobs', 'candidate / SavedJobsPage'],
-  ['/partner', 'partner / DashboardPage'],
-  ['/partner/jobs', 'partner / JobsPage'],
-  ['/partner/jobs/new', 'partner / JobEditorPage'],
-  ['/partner/jobs/1/applicants', 'partner / ApplicantsPage'],
-  ['/partner/recruiters', 'partner / RecruitersPage'],
-  ['/admin', 'admin / DashboardPage'],
-  ['/admin/partners', 'admin / PartnersPage'],
-  ['/admin/moderation', 'admin / ModerationPage'],
-  ['/admin/users', 'admin / UsersPage'],
-  ['/admin/audit-logs', 'admin / AuditLogsPage'],
+  ['/', null, 'public / HomePage'],
+  ['/jobs', null, 'public / JobSearchPage'],
+  ['/jobs/some-job', null, 'public / JobDetailPage'],
+  ['/companies/sbi', null, 'public / CompanyPage'],
+  ['/verify-email', null, 'Apna email verify karo'],
+  ['/candidate', ROLES.CANDIDATE, 'candidate / DashboardPage'],
+  ['/candidate/profile', ROLES.CANDIDATE, 'candidate / ProfilePage'],
+  ['/candidate/applications', ROLES.CANDIDATE, 'candidate / ApplicationsPage'],
+  ['/candidate/saved-jobs', ROLES.CANDIDATE, 'candidate / SavedJobsPage'],
+  ['/partner', ROLES.PARTNER_ADMIN, 'partner / DashboardPage'],
+  ['/partner/jobs', ROLES.PARTNER_RECRUITER, 'partner / JobsPage'],
+  ['/partner/jobs/new', ROLES.PARTNER_ADMIN, 'partner / JobEditorPage'],
+  ['/partner/jobs/1/applicants', ROLES.PARTNER_ADMIN, 'partner / ApplicantsPage'],
+  ['/partner/recruiters', ROLES.PARTNER_ADMIN, 'partner / RecruitersPage'],
+  ['/admin', ROLES.SUPER_ADMIN, 'admin / DashboardPage'],
+  ['/admin/partners', ROLES.SUPER_ADMIN, 'admin / PartnersPage'],
+  ['/admin/moderation', ROLES.SUPER_ADMIN, 'admin / ModerationPage'],
+  ['/admin/users', ROLES.SUPER_ADMIN, 'admin / UsersPage'],
+  ['/admin/audit-logs', ROLES.SUPER_ADMIN, 'admin / AuditLogsPage'],
 ]
 
 describe('placeholder routes', () => {
-  it.each(cases)('%s renders %s', (path, text) => {
-    const memory = createMemoryRouter(router.routes, { initialEntries: [path] })
-    render(<RouterProvider router={memory} />)
-    expect(screen.getByText(text)).toBeInTheDocument()
+  it.each(cases)('%s (%s) renders %s', async (path, role, text) => {
+    setMockRole(role)
+    const router = createMemoryRouter(routes, { initialEntries: [path] })
+    render(
+      <ToastProvider>
+        <AuthProvider>
+          <RouterProvider router={router} />
+        </AuthProvider>
+      </ToastProvider>,
+    )
+    expect(await screen.findByText(text)).toBeInTheDocument()
   })
 })
