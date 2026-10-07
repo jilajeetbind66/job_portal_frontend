@@ -27,7 +27,10 @@ import RecruitersPage from '@/features/partner/RecruitersPage'
 
 import AdminDashboardPage from '@/features/admin/DashboardPage'
 import PartnersPage from '@/features/admin/PartnersPage'
+import PartnerDetailPage from '@/features/admin/PartnerDetailPage'
+import PartnerFormPage from '@/features/admin/PartnerFormPage'
 import ModerationPage from '@/features/admin/ModerationPage'
+import JobReviewPage from '@/features/admin/JobReviewPage'
 import UsersPage from '@/features/admin/UsersPage'
 import AuditLogsPage from '@/features/admin/AuditLogsPage'
 
@@ -84,7 +87,11 @@ export const router = createBrowserRouter([
         children: [
           { index: true, element: <AdminDashboardPage /> },
           { path: 'partners', element: <PartnersPage /> },
+          { path: 'partners/new', element: <PartnerFormPage /> },
+          { path: 'partners/:id', element: <PartnerDetailPage /> },
+          { path: 'partners/:id/edit', element: <PartnerFormPage /> },
           { path: 'moderation', element: <ModerationPage /> },
+          { path: 'moderation/:id', element: <JobReviewPage /> },
           { path: 'users', element: <UsersPage /> },
           { path: 'audit-logs', element: <AuditLogsPage /> },
         ],

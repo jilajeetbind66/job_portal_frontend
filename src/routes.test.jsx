@@ -1,6 +1,13 @@
 import { render, screen } from '@testing-library/react'
 import { RouterProvider, createMemoryRouter } from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { router } from './routes'
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: { retry: false },
+  },
+})
 
 const cases = [
   ['/', 'public / HomePage'],
@@ -14,13 +21,13 @@ const cases = [
   ['/candidate/applications', 'candidate / ApplicationsPage'],
   ['/candidate/saved-jobs', 'candidate / SavedJobsPage'],
   ['/partner', 'partner / DashboardPage'],
-  ['/partner/jobs', 'partner / JobsPage'],
-  ['/partner/jobs/new', 'partner / JobEditorPage'],
+  ['/partner/jobs', 'Job Postings'],
+  ['/partner/jobs/new', 'Create New Job Posting'],
   ['/partner/jobs/1/applicants', 'partner / ApplicantsPage'],
   ['/partner/recruiters', 'partner / RecruitersPage'],
   ['/admin', 'admin / DashboardPage'],
-  ['/admin/partners', 'admin / PartnersPage'],
-  ['/admin/moderation', 'admin / ModerationPage'],
+  ['/admin/partners', 'Partners'],
+  ['/admin/moderation', 'Job Moderation Queue'],
   ['/admin/users', 'admin / UsersPage'],
   ['/admin/audit-logs', 'admin / AuditLogsPage'],
 ]
@@ -28,7 +35,12 @@ const cases = [
 describe('placeholder routes', () => {
   it.each(cases)('%s renders %s', (path, text) => {
     const memory = createMemoryRouter(router.routes, { initialEntries: [path] })
-    render(<RouterProvider router={memory} />)
-    expect(screen.getByText(text)).toBeInTheDocument()
+    render(
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={memory} />
+      </QueryClientProvider>
+    )
+    expect(screen.getAllByText(text)[0]).toBeInTheDocument()
   })
 })
+
