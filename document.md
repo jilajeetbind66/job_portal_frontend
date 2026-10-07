@@ -15,7 +15,7 @@ Source: "Multi-Tenant Job Portal — Architecture & Plan" doc (Frontend Dev 1 / 
 | Modules (UI) | 5, 6, 7, 8, 9, 10, 11 | 1, 12, 13, 14 + app setup |
 | Pehle kya | Dev 2 ka setup khatam hone ka wait, tab tak layouts ka design | Week 1 me setup, taaki Dev 1 shuru kar sake |
 
-**Naam bhar do:** Dev 1 = `__Vikas______`, Dev 2 = `__Tanzeem______`
+**Naam bhar do:** Dev 1 = `__Tanzeem______`, Dev 2 = `__Vikas______`
 
 ---
 
