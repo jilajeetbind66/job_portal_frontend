@@ -27,6 +27,7 @@ import JobsPage from '@/features/partner/JobsPage'
 import JobEditorPage from '@/features/partner/JobEditorPage'
 import ApplicantsPage from '@/features/partner/ApplicantsPage'
 import RecruitersPage from '@/features/partner/RecruitersPage'
+import PartnerCompanyPage from '@/features/partner/CompanyPage'
 
 import AdminDashboardPage from '@/features/admin/DashboardPage'
 import PartnersPage from '@/features/admin/PartnersPage'
@@ -79,7 +80,9 @@ export const routes = [
           { path: 'jobs/new', element: <JobEditorPage /> },
           { path: 'jobs/:id/edit', element: <JobEditorPage /> },
           { path: 'jobs/:id/applicants', element: <ApplicantsPage /> },
+          { path: 'applicants', element: <ApplicantsPage /> },
           { path: 'recruiters', element: <RecruitersPage /> },
+          { path: 'company', element: <PartnerCompanyPage /> },
         ],
       },
     ],

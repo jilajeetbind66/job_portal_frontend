@@ -1,5 +1,10 @@
 import { http, HttpResponse } from 'msw'
 import { ROLES } from '@/constants'
+import { partnerHandlers } from './partnerHandlers'
+import { jobHandlers } from './jobHandlers'
+import { applicantHandlers } from './applicantHandlers'
+import { recruiterHandlers } from './recruiterHandlers'
+import { companyHandlers } from './companyHandlers'
 
 // Backend ready na ho to ye fake auth API chalti hai (VITE_USE_MOCKS=true).
 // Login: email "candidate@", "partner@", "recruiter@" ya "admin@" se shuru ho, password "password".
@@ -99,4 +104,9 @@ export const handlers = [
       return validationError('email', 'This password reset token is invalid.')
     return HttpResponse.json({ message: 'Your password has been reset.' })
   }),
+  ...partnerHandlers,
+  ...jobHandlers,
+  ...applicantHandlers,
+  ...recruiterHandlers,
+  ...companyHandlers,
 ]

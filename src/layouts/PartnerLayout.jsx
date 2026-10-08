@@ -3,6 +3,7 @@ import { Outlet, useLocation } from 'react-router-dom'
 import {
   LayoutDashboard,
   Briefcase,
+  Users,
   UserPlus,
   Building,
 } from 'lucide-react'
@@ -23,10 +24,9 @@ import Header from './components/Header'
 const PARTNER_NAV = [
   { to: '/partner', icon: LayoutDashboard, label: 'Dashboard' },
   { to: '/partner/jobs', icon: Briefcase, label: 'Jobs' },
+  { to: '/partner/applicants', icon: Users, label: 'Applicants' },
   { to: '/partner/recruiters', icon: UserPlus, label: 'Recruiters' },
-  // TODO(auth step): Company route abhi routes.jsx me nahi hai,
-  // jab backend ready ho tab add karenge
-  // { to: '/partner/company', icon: Building, label: 'Company' },
+  { to: '/partner/company', icon: Building, label: 'Company' },
 ]
 
 export default function PartnerLayout() {
