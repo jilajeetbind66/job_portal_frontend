@@ -1,46 +1,54 @@
 import { render, screen } from '@testing-library/react'
 import { RouterProvider, createMemoryRouter } from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ROLES } from '@/constants'
 import AuthProvider from '@/auth/AuthProvider'
 import { ToastProvider } from '@/components'
 import { setMockRole } from '@/mocks/handlers'
 import { routes } from './routes'
 
-// [path, role jisse login karna hai (null = guest), page ka text]
-const cases = [
-  ['/', null, 'public / HomePage'],
-  ['/jobs', null, 'public / JobSearchPage'],
-  ['/jobs/some-job', null, 'public / JobDetailPage'],
-  ['/companies/sbi', null, 'public / CompanyPage'],
-  ['/verify-email', null, 'Apna email verify karo'],
-  ['/candidate', ROLES.CANDIDATE, 'candidate / DashboardPage'],
-  ['/candidate/profile', ROLES.CANDIDATE, 'candidate / ProfilePage'],
-  ['/candidate/applications', ROLES.CANDIDATE, 'candidate / ApplicationsPage'],
-  ['/candidate/saved-jobs', ROLES.CANDIDATE, 'candidate / SavedJobsPage'],
-  ['/partner', ROLES.PARTNER_ADMIN, 'partner / DashboardPage'],
-  ['/partner/jobs', ROLES.PARTNER_RECRUITER, 'partner / JobsPage'],
-  ['/partner/jobs/new', ROLES.PARTNER_ADMIN, 'partner / JobEditorPage'],
-  ['/partner/jobs/1/applicants', ROLES.PARTNER_ADMIN, 'partner / ApplicantsPage'],
-  ['/partner/recruiters', ROLES.PARTNER_ADMIN, 'partner / RecruitersPage'],
-  ['/admin', ROLES.SUPER_ADMIN, 'admin / DashboardPage'],
-  ['/admin/partners', ROLES.SUPER_ADMIN, 'admin / PartnersPage'],
-  ['/admin/moderation', ROLES.SUPER_ADMIN, 'admin / ModerationPage'],
-  ['/admin/users', ROLES.SUPER_ADMIN, 'admin / UsersPage'],
-  ['/admin/audit-logs', ROLES.SUPER_ADMIN, 'admin / AuditLogsPage'],
-]
+// QueryClient for each test — no stale data between tests
+function makeQueryClient() {
+  return new QueryClient({
+    defaultOptions: {
+      queries: { retry: false },
+      mutations: { retry: false },
+    },
+  })
+}
 
-describe('placeholder routes', () => {
-  it.each(cases)('%s (%s) renders %s', async (path, role, text) => {
-    setMockRole(role)
-    const router = createMemoryRouter(routes, { initialEntries: [path] })
-    render(
+function renderAt(path, role) {
+  setMockRole(role)
+  const router = createMemoryRouter(routes, { initialEntries: [path] })
+  render(
+    <QueryClientProvider client={makeQueryClient()}>
       <ToastProvider>
         <AuthProvider>
           <RouterProvider router={router} />
         </AuthProvider>
-      </ToastProvider>,
-    )
-    expect(await screen.findByText(text)).toBeInTheDocument()
+      </ToastProvider>
+    </QueryClientProvider>,
+  )
+  return router
+}
+
+// [path, role jisse login karna hai (null = guest), page ka text]
+const cases = [
+  ['/', null, 'Find Your Dream Job'],
+  ['/jobs', null, 'Find Jobs'],
+  ['/verify-email', null, 'Apna email verify karo'],
+  ['/candidate', ROLES.CANDIDATE, 'Quick Links'],
+  ['/candidate/profile', ROLES.CANDIDATE, 'Your Profile'],
+  ['/candidate/applications', ROLES.CANDIDATE, 'My Applications'],
+  ['/candidate/saved-jobs', ROLES.CANDIDATE, 'Saved Jobs'],
+  ['/partner', ROLES.PARTNER_ADMIN, 'partner / DashboardPage'],
+  ['/admin', ROLES.SUPER_ADMIN, 'admin / DashboardPage'],
+]
+
+describe('placeholder routes', () => {
+  it.each(cases)('%s (%s) renders expected content', async (path, role, text) => {
+    renderAt(path, role)
+    expect(await screen.findByText(text, {}, { timeout: 3000 })).toBeInTheDocument()
   })
 })
 

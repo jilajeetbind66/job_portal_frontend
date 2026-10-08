@@ -1,20 +1,32 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { RouterProvider, createMemoryRouter } from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ROLES } from '@/constants'
 import { ToastProvider } from '@/components'
 import { setMockRole } from '@/mocks/handlers'
 import { routes } from '@/routes'
 import AuthProvider from './AuthProvider'
 
+function makeQueryClient() {
+  return new QueryClient({
+    defaultOptions: {
+      queries: { retry: false },
+      mutations: { retry: false },
+    },
+  })
+}
+
 function renderAt(path) {
   const router = createMemoryRouter(routes, { initialEntries: [path] })
   render(
-    <ToastProvider>
-      <AuthProvider>
-        <RouterProvider router={router} />
-      </AuthProvider>
-    </ToastProvider>,
+    <QueryClientProvider client={makeQueryClient()}>
+      <ToastProvider>
+        <AuthProvider>
+          <RouterProvider router={router} />
+        </AuthProvider>
+      </ToastProvider>
+    </QueryClientProvider>,
   )
   return router
 }
@@ -35,7 +47,7 @@ describe('route guard', () => {
   it('galat role ko uske apne portal par bhejta hai', async () => {
     setMockRole(ROLES.CANDIDATE)
     const router = renderAt('/admin')
-    await screen.findByText('candidate / DashboardPage')
+    await screen.findByText('Quick Links')
     expect(router.state.location.pathname).toBe('/candidate')
   })
 
@@ -51,7 +63,7 @@ describe('login', () => {
     const user = userEvent.setup()
     const router = renderAt('/login')
     await fillLogin(user, 'candidate@example.com', 'password')
-    await screen.findByText('candidate / DashboardPage')
+    await screen.findByText('Quick Links')
     expect(router.state.location.pathname).toBe('/candidate')
   })
 
@@ -67,7 +79,7 @@ describe('login', () => {
     const user = userEvent.setup()
     const router = renderAt('/candidate/profile')
     await fillLogin(user, 'candidate@example.com', 'password')
-    await screen.findByText('candidate / ProfilePage')
+    await screen.findByText('Your Profile')
     expect(router.state.location.pathname).toBe('/candidate/profile')
   })
 
@@ -92,7 +104,7 @@ describe('logout', () => {
     setMockRole(ROLES.CANDIDATE)
     const user = userEvent.setup()
     const router = renderAt('/candidate')
-    await screen.findByText('candidate / DashboardPage')
+    await screen.findByText('Quick Links')
     await user.click(screen.getByRole('button', { name: /logout/i }))
     await waitFor(() => expect(router.state.location.pathname).toBe('/login'))
   })
