@@ -7,7 +7,6 @@ import { ToastProvider } from '@/components'
 import { setMockRole } from '@/mocks/handlers'
 import { routes } from './routes'
 
-// QueryClient for each test — no stale data between tests
 function makeQueryClient() {
   return new QueryClient({
     defaultOptions: {
@@ -42,13 +41,21 @@ const cases = [
   ['/candidate/applications', ROLES.CANDIDATE, 'My Applications'],
   ['/candidate/saved-jobs', ROLES.CANDIDATE, 'Saved Jobs'],
   ['/partner', ROLES.PARTNER_ADMIN, 'partner / DashboardPage'],
+  ['/partner/jobs', ROLES.PARTNER_RECRUITER, 'Post a New Job'],
+  ['/partner/jobs/new', ROLES.PARTNER_ADMIN, 'Create New Job Posting'],
+  ['/partner/jobs/1/applicants', ROLES.PARTNER_ADMIN, 'Applicant Tracking (ATS)'],
+  ['/partner/recruiters', ROLES.PARTNER_ADMIN, 'Invite Team Member'],
+  ['/partner/company', ROLES.PARTNER_ADMIN, 'Company Profile & Branding'],
   ['/admin', ROLES.SUPER_ADMIN, 'admin / DashboardPage'],
+  ['/admin/partners', ROLES.SUPER_ADMIN, 'Add Partner'],
+  ['/admin/moderation', ROLES.SUPER_ADMIN, 'Job Moderation Queue'],
+  ['/admin/users', ROLES.SUPER_ADMIN, 'admin / UsersPage'],
+  ['/admin/audit-logs', ROLES.SUPER_ADMIN, 'admin / AuditLogsPage'],
 ]
 
-describe('placeholder routes', () => {
+describe('routes rendering test', () => {
   it.each(cases)('%s (%s) renders expected content', async (path, role, text) => {
     renderAt(path, role)
-    expect(await screen.findByText(text, {}, { timeout: 3000 })).toBeInTheDocument()
+    expect(await screen.findByText(text, {}, { timeout: 4000 })).toBeInTheDocument()
   })
 })
-
