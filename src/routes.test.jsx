@@ -1,46 +1,46 @@
 import { render, screen } from '@testing-library/react'
 import { RouterProvider, createMemoryRouter } from 'react-router-dom'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { router } from './routes'
+import { ROLES } from '@/constants'
+import AuthProvider from '@/auth/AuthProvider'
+import { ToastProvider } from '@/components'
+import { setMockRole } from '@/mocks/handlers'
+import { routes } from './routes'
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: { retry: false },
-  },
-})
-
+// [path, role jisse login karna hai (null = guest), page ka text]
 const cases = [
-  ['/', 'public / HomePage'],
-  ['/jobs', 'public / JobSearchPage'],
-  ['/jobs/some-job', 'public / JobDetailPage'],
-  ['/companies/sbi', 'public / CompanyPage'],
-  ['/login', 'public / LoginPage'],
-  ['/register', 'public / RegisterPage'],
-  ['/candidate', 'candidate / DashboardPage'],
-  ['/candidate/profile', 'candidate / ProfilePage'],
-  ['/candidate/applications', 'candidate / ApplicationsPage'],
-  ['/candidate/saved-jobs', 'candidate / SavedJobsPage'],
-  ['/partner', 'partner / DashboardPage'],
-  ['/partner/jobs', 'Job Postings'],
-  ['/partner/jobs/new', 'Create New Job Posting'],
-  ['/partner/jobs/1/applicants', 'partner / ApplicantsPage'],
-  ['/partner/recruiters', 'partner / RecruitersPage'],
-  ['/admin', 'admin / DashboardPage'],
-  ['/admin/partners', 'Partners'],
-  ['/admin/moderation', 'Job Moderation Queue'],
-  ['/admin/users', 'admin / UsersPage'],
-  ['/admin/audit-logs', 'admin / AuditLogsPage'],
+  ['/', null, 'public / HomePage'],
+  ['/jobs', null, 'public / JobSearchPage'],
+  ['/jobs/some-job', null, 'public / JobDetailPage'],
+  ['/companies/sbi', null, 'public / CompanyPage'],
+  ['/verify-email', null, 'Apna email verify karo'],
+  ['/candidate', ROLES.CANDIDATE, 'candidate / DashboardPage'],
+  ['/candidate/profile', ROLES.CANDIDATE, 'candidate / ProfilePage'],
+  ['/candidate/applications', ROLES.CANDIDATE, 'candidate / ApplicationsPage'],
+  ['/candidate/saved-jobs', ROLES.CANDIDATE, 'candidate / SavedJobsPage'],
+  ['/partner', ROLES.PARTNER_ADMIN, 'partner / DashboardPage'],
+  ['/partner/jobs', ROLES.PARTNER_RECRUITER, 'partner / JobsPage'],
+  ['/partner/jobs/new', ROLES.PARTNER_ADMIN, 'partner / JobEditorPage'],
+  ['/partner/jobs/1/applicants', ROLES.PARTNER_ADMIN, 'partner / ApplicantsPage'],
+  ['/partner/recruiters', ROLES.PARTNER_ADMIN, 'partner / RecruitersPage'],
+  ['/admin', ROLES.SUPER_ADMIN, 'admin / DashboardPage'],
+  ['/admin/partners', ROLES.SUPER_ADMIN, 'admin / PartnersPage'],
+  ['/admin/moderation', ROLES.SUPER_ADMIN, 'admin / ModerationPage'],
+  ['/admin/users', ROLES.SUPER_ADMIN, 'admin / UsersPage'],
+  ['/admin/audit-logs', ROLES.SUPER_ADMIN, 'admin / AuditLogsPage'],
 ]
 
 describe('placeholder routes', () => {
-  it.each(cases)('%s renders %s', (path, text) => {
-    const memory = createMemoryRouter(router.routes, { initialEntries: [path] })
+  it.each(cases)('%s (%s) renders %s', async (path, role, text) => {
+    setMockRole(role)
+    const router = createMemoryRouter(routes, { initialEntries: [path] })
     render(
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={memory} />
-      </QueryClientProvider>
+      <ToastProvider>
+        <AuthProvider>
+          <RouterProvider router={router} />
+        </AuthProvider>
+      </ToastProvider>,
     )
-    expect(screen.getAllByText(text)[0]).toBeInTheDocument()
+    expect(await screen.findByText(text)).toBeInTheDocument()
   })
 })
 
