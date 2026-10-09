@@ -1,4 +1,4 @@
-const FALLBACK = 'Kuch galat ho gaya. Dobara try karo.'
+const FALLBACK = 'Something went wrong. Please try again.'
 
 export function getErrorMessage(error, fallback = FALLBACK) {
   return error?.response?.data?.message ?? fallback
