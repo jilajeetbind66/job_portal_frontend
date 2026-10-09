@@ -23,15 +23,7 @@ import {
 } from './api/moderation'
 import RejectReasonModal from './components/RejectReasonModal'
 import JobStatusBadge from '@/features/partner/components/JobStatusBadge'
-
-function useDebounce(value, delay) {
-  const [debounced, setDebounced] = useState(value)
-  useEffect(() => {
-    const handler = setTimeout(() => setDebounced(value), delay)
-    return () => clearTimeout(handler)
-  }, [value, delay])
-  return debounced
-}
+import { useDebounce } from '@/hooks/useDebounce'
 
 export default function ModerationPage() {
   const [searchParams, setSearchParams] = useSearchParams()

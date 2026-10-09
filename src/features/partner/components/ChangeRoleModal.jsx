@@ -46,7 +46,7 @@ export default function ChangeRoleModal({ recruiter, open, onClose }) {
 
           <div className="space-y-3">
             <label
-              className="flex items-start gap-3 rounded-xl border border-slate-200 p-3 hover:bg-slate-50 cursor-pointer has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50/40"
+              className="flex items-start gap-3 rounded-xl border border-slate-200 p-3 hover:bg-slate-50 cursor-pointer has-checked:border-indigo-600 has-checked:bg-indigo-50/40"
             >
               <input
                 type="radio"
@@ -65,7 +65,7 @@ export default function ChangeRoleModal({ recruiter, open, onClose }) {
             </label>
 
             <label
-              className="flex items-start gap-3 rounded-xl border border-slate-200 p-3 hover:bg-slate-50 cursor-pointer has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50/40"
+              className="flex items-start gap-3 rounded-xl border border-slate-200 p-3 hover:bg-slate-50 cursor-pointer has-checked:border-indigo-600 has-checked:bg-indigo-50/40"
             >
               <input
                 type="radio"

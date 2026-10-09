@@ -5,6 +5,10 @@ import { jobHandlers } from './jobHandlers'
 import { applicantHandlers } from './applicantHandlers'
 import { recruiterHandlers } from './recruiterHandlers'
 import { companyHandlers } from './companyHandlers'
+import { userHandlers } from './userHandlers'
+import { analyticsHandlers } from './analyticsHandlers'
+import { auditLogHandlers } from './auditLogHandlers'
+import { partnerDashboardHandlers } from './partnerDashboardHandlers'
 import { publicHandlers } from './publicHandlers'
 
 // Backend ready na ho to ye fake auth API chalti hai (VITE_USE_MOCKS=true).
@@ -110,5 +114,9 @@ export const handlers = [
   ...applicantHandlers,
   ...recruiterHandlers,
   ...companyHandlers,
+  ...userHandlers,
+  ...analyticsHandlers,
+  ...auditLogHandlers,
+  ...partnerDashboardHandlers,
   ...publicHandlers,
 ]

@@ -25,15 +25,7 @@ import {
   deletePartnerJob,
 } from './api/jobs'
 import JobStatusBadge from './components/JobStatusBadge'
-
-function useDebounce(value, delay) {
-  const [debounced, setDebounced] = useState(value)
-  useEffect(() => {
-    const handler = setTimeout(() => setDebounced(value), delay)
-    return () => clearTimeout(handler)
-  }, [value, delay])
-  return debounced
-}
+import { useDebounce } from '@/hooks/useDebounce'
 
 export default function JobsPage() {
   const [searchParams, setSearchParams] = useSearchParams()

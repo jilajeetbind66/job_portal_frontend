@@ -11,12 +11,13 @@ import {
   Bookmark,
   BookmarkCheck,
   CheckCircle,
+  FileText,
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { Button, Modal } from '@/components';
 import { useAuth } from '@/auth/useAuth';
 import { useToast } from '@/hooks/useToast';
-import { fetchJobBySlug, applyToJob, saveJob, unsaveJob } from '@/features/public/api/jobs';
+import { fetchJobBySlug, applyToJob, saveJob, unsaveJob, fetchProfile } from '@/features/public/api/jobs';
 
 const formatSalary = (min, max, currency = '₹') => {
   if (!min && !max) return 'Not disclosed';
@@ -41,12 +42,20 @@ export default function JobDetailPage() {
     queryFn: () => fetchJobBySlug(slug),
   });
 
+  const { data: profile } = useQuery({
+    queryKey: ['candidate', 'profile'],
+    queryFn: fetchProfile,
+    enabled: !!isAuthenticated,
+  });
+
   const applyMutation = useMutation({
     mutationFn: (data) => applyToJob(job.id, data),
     onSuccess: () => {
       toast.success('Successfully applied for the job!');
       setIsApplyModalOpen(false);
       queryClient.invalidateQueries({ queryKey: ['job', slug] });
+      queryClient.invalidateQueries({ queryKey: ['candidate', 'applications'] });
+      queryClient.invalidateQueries({ queryKey: ['candidate', 'dashboard'] });
     },
     onError: (err) => {
       toast.error(err?.response?.data?.message || 'Failed to apply. Please try again.');
@@ -255,10 +264,42 @@ export default function JobDetailPage() {
           title="Apply for Job"
         >
           <form onSubmit={handleApplySubmit} className="space-y-4">
-            <div className="bg-gray-50 p-4 rounded-lg mb-4">
-              <p className="text-sm text-gray-600">Applying as</p>
-              <p className="font-medium text-gray-900">{user?.name}</p>
-              <p className="text-sm text-gray-500">{user?.email}</p>
+            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-2">
+              <div className="flex justify-between items-start">
+                <div>
+                  <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                    Applying as
+                  </p>
+                  <p className="text-sm font-bold text-slate-900">{user?.name}</p>
+                  <p className="text-xs text-slate-500">{user?.email}</p>
+                </div>
+                <span className="text-[10px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-100 px-2.5 py-0.5 rounded-full">
+                  Candidate
+                </span>
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-3.5 mb-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <FileText className="h-4 w-4 text-indigo-600" />
+                  <span className="text-xs font-bold text-slate-800">
+                    Attached Resume: {profile?.resume_name || 'Profile_Resume.pdf'}
+                  </span>
+                </div>
+                {profile?.resume_url ? (
+                  <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                    Ready
+                  </span>
+                ) : (
+                  <Link
+                    to="/candidate/profile"
+                    className="text-[10px] font-bold text-indigo-600 hover:underline"
+                  >
+                    Upload Resume →
+                  </Link>
+                )}
+              </div>
             </div>
 
             <div>

@@ -132,7 +132,7 @@ export default function InviteRecruiterModal({ open, onClose }) {
             </label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <label
-                className="relative flex cursor-pointer flex-col rounded-xl border border-slate-200 p-3.5 hover:bg-slate-50 transition-colors has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50/50 has-[:checked]:ring-1 has-[:checked]:ring-indigo-600"
+                className="relative flex cursor-pointer flex-col rounded-xl border border-slate-200 p-3.5 hover:bg-slate-50 transition-colors has-checked:border-indigo-600 has-checked:bg-indigo-50/50 has-checked:ring-1 has-checked:ring-indigo-600"
               >
                 <div className="flex items-center justify-between mb-1">
                   <div className="flex items-center gap-1.5 font-bold text-xs text-slate-900">
@@ -152,7 +152,7 @@ export default function InviteRecruiterModal({ open, onClose }) {
               </label>
 
               <label
-                className="relative flex cursor-pointer flex-col rounded-xl border border-slate-200 p-3.5 hover:bg-slate-50 transition-colors has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50/50 has-[:checked]:ring-1 has-[:checked]:ring-indigo-600"
+                className="relative flex cursor-pointer flex-col rounded-xl border border-slate-200 p-3.5 hover:bg-slate-50 transition-colors has-checked:border-indigo-600 has-checked:bg-indigo-50/50 has-checked:ring-1 has-checked:ring-indigo-600"
               >
                 <div className="flex items-center justify-between mb-1">
                   <div className="flex items-center gap-1.5 font-bold text-xs text-slate-900">
