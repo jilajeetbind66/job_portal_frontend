@@ -24,6 +24,7 @@ import {
   LogIn,
 } from 'lucide-react'
 import { clsx } from 'clsx'
+import { useDebounce } from '@/hooks/useDebounce'
 import { fetchAuditLogs } from './api/auditLogs'
 
 // Action metadata mapping for badges and icons
@@ -117,15 +118,16 @@ function formatRelativeTime(isoString) {
 
 export default function AuditLogsPage() {
   const [search, setSearch] = useState('')
+  const debouncedSearch = useDebounce(search, 400)
   const [actionFilter, setActionFilter] = useState('all')
   const [page, setPage] = useState(1)
   const perPage = 10
 
   const { data: logsResponse, isLoading, isError, error, refetch, isFetching } = useQuery({
-    queryKey: ['admin', 'audit-logs', { search, action: actionFilter, page, perPage }],
+    queryKey: ['admin', 'audit-logs', { search: debouncedSearch, action: actionFilter, page, perPage }],
     queryFn: () =>
       fetchAuditLogs({
-        search,
+        search: debouncedSearch,
         action: actionFilter,
         page,
         perPage,

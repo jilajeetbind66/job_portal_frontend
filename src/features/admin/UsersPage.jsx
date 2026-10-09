@@ -23,15 +23,7 @@ import { ROLES, ACCOUNT_STATUS } from '@/constants'
 import { fetchUsers, toggleUserStatus, deleteUser } from './api/users'
 import UserDetailDrawer from './components/UserDetailDrawer'
 import EditUserRoleModal from './components/EditUserRoleModal'
-
-function useDebounce(value, delay) {
-  const [debounced, setDebounced] = useState(value)
-  useEffect(() => {
-    const handler = setTimeout(() => setDebounced(value), delay)
-    return () => clearTimeout(handler)
-  }, [value, delay])
-  return debounced
-}
+import { useDebounce } from '@/hooks/useDebounce'
 
 export default function UsersPage() {
   const queryClient = useQueryClient()

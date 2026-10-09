@@ -6,19 +6,7 @@ import clsx from 'clsx';
 import { fetchPartners } from './api/partners';
 import StatusBadge from './components/StatusBadge';
 import { ACCOUNT_STATUS } from '@/constants';
-
-function useDebounce(value, delay) {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
-  return debouncedValue;
-}
+import { useDebounce } from '@/hooks/useDebounce';
 
 export default function PartnersPage() {
   const [searchParams, setSearchParams] = useSearchParams();

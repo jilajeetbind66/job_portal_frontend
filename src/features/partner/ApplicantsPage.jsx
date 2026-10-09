@@ -21,15 +21,7 @@ import { fetchPartnerJob } from './api/jobs'
 import ApplicationStatusBadge from './components/ApplicationStatusBadge'
 import ApplicationDetailDrawer from './components/ApplicationDetailDrawer'
 import ResumeViewerModal from './components/ResumeViewerModal'
-
-function useDebounce(value, delay) {
-  const [debounced, setDebounced] = useState(value)
-  useEffect(() => {
-    const handler = setTimeout(() => setDebounced(value), delay)
-    return () => clearTimeout(handler)
-  }, [value, delay])
-  return debounced
-}
+import { useDebounce } from '@/hooks/useDebounce'
 
 export default function ApplicantsPage() {
   const { id: jobId } = useParams()

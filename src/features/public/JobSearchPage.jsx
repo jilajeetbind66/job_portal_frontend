@@ -20,6 +20,7 @@ import { Button, Input, Select, EmptyState, StatusBadge } from '@/components';
 import { fetchJobs, saveJob, unsaveJob } from '@/features/public/api/jobs';
 import { useAuth } from '@/auth/useAuth';
 import { useToast } from '@/hooks/useToast';
+import { useDebounce } from '@/hooks/useDebounce';
 
 const WORK_MODES = ['All', 'Remote', 'Hybrid', 'On-Site'];
 const EXPERIENCE_LEVELS = ['All', 'Entry', 'Mid', 'Senior', 'Lead'];
@@ -40,35 +41,34 @@ export default function JobSearchPage() {
   const toast = useToast();
   const queryClient = useQueryClient();
 
-  // Local state for debounced inputs
+  // Local state for inputs
   const [search, setSearch] = useState(searchParams.get('search') || '');
   const [location, setLocation] = useState(searchParams.get('location') || '');
 
-  // Debounce effect to sync URL params
+  const debouncedSearch = useDebounce(search, 400);
+  const debouncedLocation = useDebounce(location, 400);
+
+  // Sync debounced search to URL
   useEffect(() => {
-    const timer = setTimeout(() => {
-      const newParams = new URLSearchParams(searchParams);
-      let changed = false;
+    setSearchParams(
+      (prev) => {
+        const curSearch = prev.get('search') || '';
+        const curLoc = prev.get('location') || '';
+        if (debouncedSearch === curSearch && debouncedLocation === curLoc) return prev;
 
-      if (search !== (searchParams.get('search') || '')) {
-        if (search) newParams.set('search', search);
-        else newParams.delete('search');
-        changed = true;
-      }
+        const next = new URLSearchParams(prev);
+        if (debouncedSearch) next.set('search', debouncedSearch);
+        else next.delete('search');
 
-      if (location !== (searchParams.get('location') || '')) {
-        if (location) newParams.set('location', location);
-        else newParams.delete('location');
-        changed = true;
-      }
+        if (debouncedLocation) next.set('location', debouncedLocation);
+        else next.delete('location');
 
-      if (changed) {
-        newParams.delete('page');
-        setSearchParams(newParams, { replace: true });
-      }
-    }, 400);
-    return () => clearTimeout(timer);
-  }, [search, location, searchParams, setSearchParams]);
+        next.delete('page');
+        return next;
+      },
+      { replace: true }
+    );
+  }, [debouncedSearch, debouncedLocation, setSearchParams]);
 
   const handleFilterChange = (key, value) => {
     const newParams = new URLSearchParams(searchParams);
