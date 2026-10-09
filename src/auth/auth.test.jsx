@@ -54,7 +54,7 @@ describe('route guard', () => {
   it('partner_recruiter /partner dekh sakta hai', async () => {
     setMockRole(ROLES.PARTNER_RECRUITER)
     renderAt('/partner')
-    expect(await screen.findByText('partner / DashboardPage')).toBeInTheDocument()
+    expect(await screen.findByText('Partner Recruitment Dashboard')).toBeInTheDocument()
   })
 })
 
@@ -71,7 +71,7 @@ describe('login', () => {
     const user = userEvent.setup()
     const router = renderAt('/login')
     await fillLogin(user, 'admin@example.com', 'password')
-    await screen.findByText('admin / DashboardPage')
+    await screen.findByText('Admin Platform Overview')
     expect(router.state.location.pathname).toBe('/admin')
   })
 

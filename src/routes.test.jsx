@@ -41,17 +41,17 @@ const cases = [
   ['/candidate/profile', ROLES.CANDIDATE, 'Your Profile'],
   ['/candidate/applications', ROLES.CANDIDATE, 'My Applications'],
   ['/candidate/saved-jobs', ROLES.CANDIDATE, 'Saved Jobs'],
-  ['/partner', ROLES.PARTNER_ADMIN, 'partner / DashboardPage'],
+  ['/partner', ROLES.PARTNER_ADMIN, 'Partner Recruitment Dashboard'],
   ['/partner/jobs', ROLES.PARTNER_RECRUITER, 'Post a New Job'],
   ['/partner/jobs/new', ROLES.PARTNER_ADMIN, 'Create New Job Posting'],
   ['/partner/jobs/1/applicants', ROLES.PARTNER_ADMIN, 'Applicant Tracking (ATS)'],
   ['/partner/recruiters', ROLES.PARTNER_ADMIN, 'Invite Team Member'],
   ['/partner/company', ROLES.PARTNER_ADMIN, 'Company Profile & Branding'],
-  ['/admin', ROLES.SUPER_ADMIN, 'admin / DashboardPage'],
+  ['/admin', ROLES.SUPER_ADMIN, 'Admin Platform Overview'],
   ['/admin/partners', ROLES.SUPER_ADMIN, 'Add Partner'],
   ['/admin/moderation', ROLES.SUPER_ADMIN, 'Job Moderation Queue'],
-  ['/admin/users', ROLES.SUPER_ADMIN, 'admin / UsersPage'],
-  ['/admin/audit-logs', ROLES.SUPER_ADMIN, 'admin / AuditLogsPage'],
+  ['/admin/users', ROLES.SUPER_ADMIN, 'User Management'],
+  ['/admin/audit-logs', ROLES.SUPER_ADMIN, 'Platform Audit Logs'],
 ]
 
 describe('placeholder routes', () => {
