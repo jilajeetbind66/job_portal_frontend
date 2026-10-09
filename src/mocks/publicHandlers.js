@@ -249,26 +249,52 @@ let mockCandidateProfile = {
 export const publicHandlers = [
   http.get(`${API}/public/jobs`, ({ request }) => {
     const url = new URL(request.url);
-    const search = url.searchParams.get('search');
-    const location = url.searchParams.get('location');
-    const experience_level = url.searchParams.get('experience_level');
-    const workplace_type = url.searchParams.get('workplace_type');
+    const search = (url.searchParams.get('search') || '').toLowerCase().trim();
+    const location = (url.searchParams.get('location') || '').toLowerCase().trim();
+    const experience_level = (url.searchParams.get('experience_level') || '').toLowerCase();
+    const workplace_type = (url.searchParams.get('workplace_type') || url.searchParams.get('work_mode') || '').toLowerCase().replace('-', '_');
+    const employment_type = (url.searchParams.get('employment_type') || '').toLowerCase().replace('-', '_');
+    const category = (url.searchParams.get('category') || '').toLowerCase();
     const page = parseInt(url.searchParams.get('page') || '1', 10);
-    const perPage = parseInt(url.searchParams.get('perPage') || '10', 10);
+    const perPage = parseInt(url.searchParams.get('perPage') || url.searchParams.get('per_page') || '10', 10);
 
     let filteredJobs = [...mockJobs];
 
     if (search) {
-      filteredJobs = filteredJobs.filter(j => j.title.toLowerCase().includes(search.toLowerCase()) || j.company_name.toLowerCase().includes(search.toLowerCase()));
+      filteredJobs = filteredJobs.filter(
+        (j) =>
+          j.title.toLowerCase().includes(search) ||
+          j.company_name.toLowerCase().includes(search) ||
+          (j.skills && j.skills.some((s) => s.toLowerCase().includes(search))) ||
+          (j.description && j.description.toLowerCase().includes(search))
+      );
     }
     if (location) {
-      filteredJobs = filteredJobs.filter(j => j.location.toLowerCase().includes(location.toLowerCase()));
+      filteredJobs = filteredJobs.filter((j) =>
+        j.location.toLowerCase().includes(location)
+      );
     }
-    if (experience_level) {
-      filteredJobs = filteredJobs.filter(j => j.experience_level === experience_level);
+    if (experience_level && experience_level !== 'all') {
+      filteredJobs = filteredJobs.filter(
+        (j) => j.experience_level.toLowerCase() === experience_level
+      );
     }
-    if (workplace_type) {
-      filteredJobs = filteredJobs.filter(j => j.workplace_type === workplace_type);
+    if (workplace_type && workplace_type !== 'all') {
+      filteredJobs = filteredJobs.filter(
+        (j) => j.workplace_type.toLowerCase() === workplace_type
+      );
+    }
+    if (employment_type && employment_type !== 'all') {
+      filteredJobs = filteredJobs.filter(
+        (j) => j.employment_type.toLowerCase() === employment_type
+      );
+    }
+    if (category && category !== 'all') {
+      filteredJobs = filteredJobs.filter(
+        (j) =>
+          j.title.toLowerCase().includes(category) ||
+          (j.skills && j.skills.some((s) => s.toLowerCase().includes(category)))
+      );
     }
 
     const start = (page - 1) * perPage;
@@ -279,15 +305,15 @@ export const publicHandlers = [
       data: paginated,
       meta: {
         current_page: page,
-        last_page: Math.ceil(filteredJobs.length / perPage),
+        last_page: Math.max(1, Math.ceil(filteredJobs.length / perPage)),
         total: filteredJobs.length,
-        per_page: perPage
-      }
+        per_page: perPage,
+      },
     });
   }),
 
   http.get(`${API}/public/jobs/:slug`, ({ params }) => {
-    const job = mockJobs.find(j => j.slug === params.slug);
+    const job = mockJobs.find((j) => j.slug === params.slug);
     if (!job) {
       return new HttpResponse(null, { status: 404 });
     }
@@ -298,6 +324,32 @@ export const publicHandlers = [
     if (params.slug === mockCompany.slug) {
       return HttpResponse.json({ data: mockCompany });
     }
+    const companyJobs = mockJobs.filter((j) => {
+      const pSlug = j.partner?.name?.toLowerCase().replace(/\s+/g, '-');
+      const cSlug = j.company_name?.toLowerCase().replace(/\s+/g, '-');
+      return pSlug === params.slug || cSlug === params.slug;
+    });
+
+    if (companyJobs.length > 0) {
+      const firstJob = companyJobs[0];
+      return HttpResponse.json({
+        data: {
+          id: firstJob.partner?.id || 'comp_' + params.slug,
+          name: firstJob.company_name,
+          slug: params.slug,
+          logo: firstJob.company_logo,
+          website: firstJob.partner?.website || `https://${params.slug}.in`,
+          description:
+            firstJob.partner?.description ||
+            `${firstJob.company_name} is an enterprise technology organization delivering digital solutions and top-tier career opportunities.`,
+          industry: 'Software & Technology Services',
+          size: '100-500 employees',
+          founded_year: 2017,
+          jobs: companyJobs,
+        },
+      });
+    }
+
     return new HttpResponse(null, { status: 404 });
   }),
 

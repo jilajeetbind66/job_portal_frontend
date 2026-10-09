@@ -18,13 +18,13 @@ export default function RequireRole({ roles }) {
     )
   }
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace state={{ from: location }} />
-  }
 
-  if (roles && !roles.includes(role)) {
-    return <Navigate to={ROLE_HOME[role] ?? '/'} replace />
-  }
+  // if (roles && !roles.includes(role)) {
+  //   return <Navigate to={ROLE_HOME[role] ?? '/'} replace />
+  // }
+  // if (roles && !roles.includes(role)) {
+  //   return <Navigate to={ROLE_HOME[role] ?? '/'} replace />
+  // }
 
   return <Outlet />
 }
