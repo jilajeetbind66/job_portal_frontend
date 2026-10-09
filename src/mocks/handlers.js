@@ -9,6 +9,7 @@ import { userHandlers } from './userHandlers'
 import { analyticsHandlers } from './analyticsHandlers'
 import { auditLogHandlers } from './auditLogHandlers'
 import { partnerDashboardHandlers } from './partnerDashboardHandlers'
+import { publicHandlers } from './publicHandlers'
 
 // Backend ready na ho to ye fake auth API chalti hai (VITE_USE_MOCKS=true).
 // Login: email "candidate@", "partner@", "recruiter@" ya "admin@" se shuru ho, password "password".
@@ -117,4 +118,5 @@ export const handlers = [
   ...analyticsHandlers,
   ...auditLogHandlers,
   ...partnerDashboardHandlers,
+  ...publicHandlers,
 ]

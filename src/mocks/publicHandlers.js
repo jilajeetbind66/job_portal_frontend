@@ -302,11 +302,15 @@ export const publicHandlers = [
   }),
 
   http.post(`${API}/candidate/saved-jobs`, async ({ request }) => {
-    const body = await request.json();
+    const { job_id } = await request.json();
+    const job = mockJobs.find((j) => j.id === String(job_id));
+    if (job) job.is_saved = true;
     return HttpResponse.json({ message: 'Job saved successfully' }, { status: 201 });
   }),
 
-  http.delete(`${API}/candidate/saved-jobs/:jobId`, () => {
+  http.delete(`${API}/candidate/saved-jobs/:jobId`, ({ params }) => {
+    const job = mockJobs.find((j) => j.id === String(params.jobId));
+    if (job) job.is_saved = false;
     return new HttpResponse(null, { status: 204 });
   }),
 
@@ -314,7 +318,7 @@ export const publicHandlers = [
     const url = new URL(request.url);
     const page = parseInt(url.searchParams.get('page') || '1', 10);
     const perPage = 10;
-    const saved = mockJobs.filter(j => j.is_saved);
+    const saved = mockJobs.filter((j) => j.is_saved);
     const start = (page - 1) * perPage;
     const end = start + perPage;
 
@@ -324,36 +328,81 @@ export const publicHandlers = [
         current_page: page,
         last_page: Math.ceil(saved.length / perPage) || 1,
         total: saved.length,
-        per_page: perPage
-      }
+        per_page: perPage,
+      },
     });
   }),
 
-  http.post(`${API}/candidate/jobs/:jobId/apply`, async ({ params }) => {
-    // Return 422 for a specific job id to simulate already applied error
+  http.post(`${API}/candidate/jobs/:jobId/apply`, async ({ params, request }) => {
     if (params.jobId === '2') {
-       return HttpResponse.json({ message: 'Already applied' }, { status: 422 });
+      return HttpResponse.json({ message: 'You have already applied for this position.' }, { status: 422 });
     }
-    return HttpResponse.json({ message: 'Applied successfully' }, { status: 201 });
+    const targetJob = mockJobs.find((j) => j.id === String(params.jobId));
+    if (targetJob) {
+      targetJob.has_applied = true;
+      const alreadyApplied = mockApplications.some((a) => a.job?.title === targetJob.title);
+      if (!alreadyApplied) {
+        mockApplications.unshift({
+          id: `app_${Date.now()}`,
+          job: {
+            title: targetJob.title,
+            company_name: targetJob.company_name,
+            company_logo: targetJob.company_logo,
+            location: targetJob.location,
+            workplace_type: targetJob.workplace_type,
+            slug: targetJob.slug,
+          },
+          applied_at: new Date().toISOString(),
+          status: APPLICATION_STATUS ? APPLICATION_STATUS.APPLIED : 'applied',
+          timeline: [
+            {
+              status: 'applied',
+              changed_at: new Date().toISOString(),
+              note: 'Application submitted successfully with attached resume.',
+            },
+          ],
+        });
+      }
+    }
+    return HttpResponse.json({ message: 'Application submitted successfully!' }, { status: 201 });
   }),
 
   http.get(`${API}/candidate/applications`, ({ request }) => {
     const url = new URL(request.url);
+    const status = url.searchParams.get('status');
     const page = parseInt(url.searchParams.get('page') || '1', 10);
     const perPage = 10;
-    
+
+    let filtered = [...mockApplications];
+    if (status && status !== 'all') {
+      filtered = filtered.filter((a) => a.status === status);
+    }
+
     const start = (page - 1) * perPage;
     const end = start + perPage;
-    
+
     return HttpResponse.json({
-      data: mockApplications.slice(start, end),
+      data: filtered.slice(start, end),
       meta: {
         current_page: page,
-        last_page: Math.ceil(mockApplications.length / perPage) || 1,
-        total: mockApplications.length,
-        per_page: perPage
-      }
+        last_page: Math.ceil(filtered.length / perPage) || 1,
+        total: filtered.length,
+        per_page: perPage,
+      },
     });
+  }),
+
+  http.patch(`${API}/candidate/applications/:id/withdraw`, ({ params }) => {
+    const app = mockApplications.find((a) => a.id === params.id);
+    if (app) {
+      app.status = APPLICATION_STATUS ? APPLICATION_STATUS.WITHDRAWN : 'withdrawn';
+      app.timeline.push({
+        status: 'withdrawn',
+        changed_at: new Date().toISOString(),
+        note: 'Candidate withdrew the application.',
+      });
+    }
+    return HttpResponse.json({ message: 'Application withdrawn successfully.' });
   }),
 
   http.get(`${API}/candidate/profile`, () => {
@@ -367,20 +416,32 @@ export const publicHandlers = [
   }),
 
   http.post(`${API}/candidate/profile/resume`, async () => {
-    return HttpResponse.json({ resume_url: 'https://example.com/resume.pdf' });
+    mockCandidateProfile.resume_url = 'https://example.com/rahul_sharma_resume.pdf';
+    mockCandidateProfile.resume_name = 'Rahul_Sharma_Resume.pdf';
+    return HttpResponse.json({
+      resume_url: 'https://example.com/rahul_sharma_resume.pdf',
+      resume_name: 'Rahul_Sharma_Resume.pdf',
+      parsed_data: {
+        suggested_skills: ['TypeScript', 'GraphQL', 'Docker', 'Next.js', 'Tailwind CSS'],
+        suggested_headline: 'Full Stack Engineer (React, Node, Cloud)',
+        confidence_score: 94,
+      },
+    });
   }),
 
   http.get(`${API}/candidate/dashboard`, () => {
     return HttpResponse.json({
       data: {
         stats: {
-          total_applications: 12,
-          shortlisted: 3,
-          interviews: 1,
-          saved_jobs: 5
+          total_applications: mockApplications.length,
+          shortlisted: mockApplications.filter((a) => a.status === 'shortlisted').length,
+          interviews: mockApplications.filter((a) => a.status === 'interview').length,
+          saved_jobs: mockJobs.filter((j) => j.is_saved).length,
         },
-        recent_applications: mockApplications
-      }
+        recent_applications: mockApplications.slice(0, 5),
+        profile_completion: mockCandidateProfile.profile_completion || 85,
+        recommended_jobs: mockJobs.slice(0, 3),
+      },
     });
-  })
+  }),
 ];
