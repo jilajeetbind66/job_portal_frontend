@@ -44,7 +44,7 @@ export default function AdminLayout() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[#E0ECE1] text-[#2F3542]">
       {/* Sidebar */}
       <Sidebar
         navItems={ADMIN_NAV}

@@ -230,17 +230,17 @@ export default function JobSearchPage() {
       {/* Active Filter Badges Ribbon */}
       {activeFilters.length > 0 && (
         <div className="mb-6 flex flex-wrap items-center gap-2 pt-1 pb-3">
-          <span className="text-xs font-medium text-slate-500">Active filters:</span>
+          <span className="text-xs font-medium text-[#747D8C]">Active filters:</span>
           {activeFilters.map((f) => (
             <span
               key={f.key}
-              className="inline-flex items-center gap-1.5 rounded-full bg-indigo-50 border border-indigo-100 px-3 py-1 text-xs font-semibold text-indigo-700"
+              className="inline-flex items-center gap-1.5 rounded-full bg-[#BFEDC1]/50 border border-[#6A8E7F]/30 px-3 py-1 text-xs font-bold text-[#6A8E7F]"
             >
               <span>{f.label}</span>
               <button
                 type="button"
                 onClick={() => removeFilter(f.key)}
-                className="hover:text-indigo-900 transition-colors"
+                className="hover:text-[#58796B] transition-colors"
                 aria-label={`Remove filter ${f.label}`}
               >
                 <X className="h-3 w-3" />
@@ -249,7 +249,7 @@ export default function JobSearchPage() {
           ))}
           <button
             onClick={resetFilters}
-            className="text-xs font-bold text-slate-500 hover:text-slate-800 transition-colors underline ml-2"
+            className="text-xs font-bold text-[#747D8C] hover:text-[#2F3542] transition-colors underline ml-2"
           >
             Clear all
           </button>
@@ -259,7 +259,7 @@ export default function JobSearchPage() {
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Desktop Sidebar Filters */}
         <div className="hidden lg:block w-64 flex-shrink-0">
-          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs sticky top-24">
+          <div className="bg-white p-5 rounded-2xl border border-[#CED6E0] shadow-2xs sticky top-24">
             <FiltersContent />
           </div>
         </div>
@@ -268,15 +268,15 @@ export default function JobSearchPage() {
         {isMobileFiltersOpen && (
           <div className="fixed inset-0 z-50 flex">
             <div
-              className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs"
+              className="fixed inset-0 bg-[#2F3542]/50 backdrop-blur-xs"
               onClick={() => setIsMobileFiltersOpen(false)}
             />
             <div className="relative flex w-full max-w-xs flex-col bg-white p-6 shadow-2xl h-full ml-auto">
-              <div className="flex items-center justify-between mb-6 pb-2 border-b border-slate-100">
-                <h2 className="text-base font-bold text-slate-900">Search Filters</h2>
+              <div className="flex items-center justify-between mb-6 pb-2 border-b border-[#CED6E0]/60">
+                <h2 className="text-base font-bold text-[#2F3542]">Search Filters</h2>
                 <button
                   onClick={() => setIsMobileFiltersOpen(false)}
-                  className="text-slate-400 hover:text-slate-700"
+                  className="text-[#747D8C] hover:text-[#2F3542]"
                 >
                   <X className="h-5 w-5" />
                 </button>
@@ -284,7 +284,7 @@ export default function JobSearchPage() {
               <div className="overflow-y-auto flex-1 pr-1">
                 <FiltersContent />
               </div>
-              <div className="mt-6 pt-3 border-t border-slate-100">
+              <div className="mt-6 pt-3 border-t border-[#CED6E0]/60">
                 <Button className="w-full" onClick={() => setIsMobileFiltersOpen(false)}>
                   Show {totalCount} Results
                 </Button>
@@ -300,7 +300,7 @@ export default function JobSearchPage() {
               {[1, 2, 3, 4].map((i) => (
                 <div
                   key={i}
-                  className="bg-white border border-slate-200 rounded-2xl p-6 animate-pulse space-y-4"
+                  className="bg-white border border-[#CED6E0] rounded-2xl p-6 animate-pulse space-y-4"
                 >
                   <div className="flex gap-4">
                     <div className="h-12 w-12 bg-slate-100 rounded-xl" />
@@ -339,7 +339,7 @@ export default function JobSearchPage() {
                 return (
                   <div
                     key={job.id}
-                    className="bg-white border border-slate-200 hover:border-indigo-300 hover:shadow-md transition-all rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row gap-4 sm:gap-6 group relative"
+                    className="bg-white border border-[#CED6E0] hover:border-[#6A8E7F] hover:shadow-md transition-all rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row gap-4 sm:gap-6 group relative"
                   >
                     {/* Company Logo */}
                     <div className="flex-shrink-0">
@@ -347,10 +347,10 @@ export default function JobSearchPage() {
                         <img
                           src={job.company_logo}
                           alt={job.company_name}
-                          className="h-14 w-14 rounded-2xl object-cover border border-slate-100"
+                          className="h-14 w-14 rounded-2xl object-cover border border-[#CED6E0]/60"
                         />
                       ) : (
-                        <div className="h-14 w-14 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-xl">
+                        <div className="h-14 w-14 rounded-2xl bg-[#BFEDC1]/40 border border-[#CED6E0] flex items-center justify-center text-[#6A8E7F] font-extrabold text-xl">
                           {job.company_name?.charAt(0) || 'C'}
                         </div>
                       )}
@@ -362,26 +362,26 @@ export default function JobSearchPage() {
                         <div>
                           <Link
                             to={`/jobs/${job.slug || job.id}`}
-                            className="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition-colors block line-clamp-1"
+                            className="text-lg font-bold text-[#2F3542] group-hover:text-[#6A8E7F] transition-colors block line-clamp-1"
                           >
                             {job.title}
                           </Link>
-                          <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-slate-500">
+                          <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-[#747D8C]">
                             <Link
                               to={`/companies/${companySlug}`}
-                              className="font-semibold text-slate-700 hover:text-indigo-600 transition-colors flex items-center gap-1"
+                              className="font-semibold text-[#2F3542] hover:text-[#6A8E7F] transition-colors flex items-center gap-1"
                             >
-                              <Building className="h-3.5 w-3.5 text-slate-400" />
+                              <Building className="h-3.5 w-3.5 text-[#747D8C]" />
                               <span>{job.company_name}</span>
                             </Link>
-                            <span className="text-slate-300">•</span>
+                            <span className="text-[#CED6E0]">•</span>
                             <span className="flex items-center gap-1">
-                              <MapPin className="h-3.5 w-3.5 text-slate-400" />
+                              <MapPin className="h-3.5 w-3.5 text-[#747D8C]" />
                               <span>{job.location}</span>
                             </span>
                             {job.created_at && (
                               <>
-                                <span className="text-slate-300">•</span>
+                                <span className="text-[#CED6E0]">•</span>
                                 <span>
                                   {formatDistanceToNow(new Date(job.created_at), { addSuffix: true })}
                                 </span>
@@ -407,12 +407,12 @@ export default function JobSearchPage() {
                                   isSaved: !!job.is_saved,
                                 })
                               }
-                              className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                              className="p-1.5 text-[#747D8C] hover:text-[#6A8E7F] hover:bg-[#BFEDC1]/30 rounded-lg transition-colors"
                               title={job.is_saved ? 'Remove bookmark' : 'Bookmark job'}
                               aria-label="Bookmark job"
                             >
                               {job.is_saved ? (
-                                <BookmarkCheck className="h-4 w-4 text-indigo-600 fill-indigo-100" />
+                                <BookmarkCheck className="h-4 w-4 text-[#6A8E7F] fill-[#BFEDC1]" />
                               ) : (
                                 <Bookmark className="h-4 w-4" />
                               )}
@@ -422,10 +422,10 @@ export default function JobSearchPage() {
                       </div>
 
                       {/* Badges & Tags */}
-                      <div className="mt-4 flex flex-wrap items-center gap-2 pt-2 border-t border-slate-100">
+                      <div className="mt-4 flex flex-wrap items-center gap-2 pt-2 border-t border-[#CED6E0]/60">
                         <StatusBadge status={job.workplace_type} />
                         {job.experience_level && (
-                          <span className="bg-slate-100 text-slate-700 border border-slate-200 px-2 py-0.5 rounded text-[10px] font-semibold capitalize">
+                          <span className="bg-[#E0ECE1] text-[#2F3542] border border-[#CED6E0] px-2 py-0.5 rounded text-[10px] font-semibold capitalize">
                             {job.experience_level}
                           </span>
                         )}
@@ -435,13 +435,13 @@ export default function JobSearchPage() {
                             {job.skills.slice(0, 3).map((skill, i) => (
                               <span
                                 key={i}
-                                className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-slate-50 text-slate-600 border border-slate-100"
+                                className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-[#E0ECE1] text-[#2F3542] border border-[#CED6E0]/80"
                               >
                                 {skill}
                               </span>
                             ))}
                             {job.skills.length > 3 && (
-                              <span className="text-[10px] text-slate-400 self-center">
+                              <span className="text-[10px] text-[#747D8C] self-center">
                                 +{job.skills.length - 3} more
                               </span>
                             )}
@@ -457,10 +457,10 @@ export default function JobSearchPage() {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="mt-8 flex justify-between items-center pt-4 border-t border-slate-200 text-xs">
-              <span className="text-slate-500">
-                Page <strong className="text-slate-900">{page}</strong> of{' '}
-                <strong className="text-slate-900">{totalPages}</strong>
+            <div className="mt-8 flex justify-between items-center pt-4 border-t border-[#CED6E0]/80 text-xs">
+              <span className="text-[#747D8C]">
+                Page <strong className="text-[#2F3542]">{page}</strong> of{' '}
+                <strong className="text-[#2F3542]">{totalPages}</strong>
               </span>
               <div className="flex gap-2">
                 <Button

@@ -20,8 +20,8 @@ export default function SidebarLink({ to, icon: Icon, label, collapsed }) {
         clsx(
           'group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-200',
           isActive
-            ? 'bg-indigo-600/20 text-indigo-400 border-l-[3px] border-indigo-400'
-            : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200 border-l-[3px] border-transparent',
+            ? 'bg-[#6A8E7F]/30 text-[#BFEDC1] border-l-[3px] border-[#BFEDC1] font-bold'
+            : 'text-slate-300 hover:bg-white/10 hover:text-white border-l-[3px] border-transparent',
           collapsed && 'justify-center px-2'
         )
       }

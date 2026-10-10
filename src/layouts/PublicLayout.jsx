@@ -14,7 +14,7 @@ export default function PublicLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 10)
+    const handleScroll = () => setIsScrolled(window.scrollY > 15)
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
@@ -31,48 +31,48 @@ export default function PublicLayout() {
   }, [mobileMenuOpen])
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-indigo-500 selection:text-white font-sans antialiased">
-      {/* Top Navbar */}
-      <header
-        className={`sticky top-0 z-50 w-full transition-all duration-200 bg-white ${
-          isScrolled ? 'shadow-sm border-b border-slate-200/80' : 'border-b border-slate-200'
-        }`}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          {/* Logo & Main Nav */}
-          <div className="flex items-center gap-8">
-            <Link to="/" className="flex items-center gap-2">
-              <Logo />
+    <div className="min-h-screen bg-[#E0ECE1] text-[#2F3542] selection:bg-[#6A8E7F] selection:text-white font-sans antialiased flex flex-col justify-between">
+      {/* Floating Translucent VECOR Navigation Bar */}
+      <header className="sticky top-3 z-50 px-4 sm:px-6 lg:px-8 w-full max-w-7xl mx-auto">
+        <div
+          className={`w-full h-16 rounded-full px-5 flex items-center justify-between transition-all duration-300 ${
+            isScrolled
+              ? 'vecor-glass-nav shadow-sm bg-white/85 border border-[#CED6E0]/80'
+              : 'vecor-glass-nav bg-white/70 border border-[#CED6E0]/60'
+          }`}
+        >
+          {/* VECOR Logo */}
+          <Link to="/" className="flex items-center gap-2">
+            <Logo />
+          </Link>
+
+          {/* Main Navigation Links */}
+          <nav className="hidden md:flex items-center gap-7 text-sm font-semibold text-[#2F3542]">
+            <Link to="/" className="hover:text-[#6A8E7F] transition-colors">
+              Home
             </Link>
+            <Link to="/jobs" className="hover:text-[#6A8E7F] transition-colors flex items-center gap-1.5">
+              Browse Jobs
+            </Link>
+            <Link to="/jobs?work_mode=remote" className="hover:text-[#6A8E7F] transition-colors">
+              Remote Jobs
+            </Link>
+            <Link to="/partner" className="hover:text-[#6A8E7F] transition-colors flex items-center gap-1.5">
+              <Building2 className="w-4 h-4 text-[#747D8C]" />
+              For Employers
+            </Link>
+          </nav>
 
-            <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
-              <Link to="/" className="hover:text-indigo-600 transition-colors">
-                Home
-              </Link>
-              <Link to="/jobs" className="hover:text-indigo-600 transition-colors flex items-center gap-1">
-                <Search className="w-4 h-4 text-slate-400" />
-                Browse Jobs
-              </Link>
-              <Link to="/jobs?work_mode=remote" className="hover:text-indigo-600 transition-colors">
-                Remote Jobs
-              </Link>
-              <Link to="/partner" className="hover:text-indigo-600 transition-colors flex items-center gap-1">
-                <Building2 className="w-4 h-4 text-slate-400" />
-                For Employers
-              </Link>
-            </nav>
-          </div>
-
-          {/* User Auth Controls */}
+          {/* User Actions */}
           <div className="hidden md:flex items-center gap-3 text-sm">
             {!loading &&
               (isAuthenticated ? (
                 <>
                   <Link
                     to={ROLE_HOME[role] ?? '/'}
-                    className="inline-flex items-center gap-1.5 font-medium px-4 py-2 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition-colors"
+                    className="inline-flex items-center gap-1.5 font-semibold px-4 py-2 rounded-xl bg-[#BFEDC1]/40 text-[#2F3542] hover:bg-[#BFEDC1]/70 transition-colors"
                   >
-                    <UserCheck className="w-4 h-4" />
+                    <UserCheck className="w-4 h-4 text-[#6A8E7F]" />
                     My Portal
                   </Link>
                   <LogoutButton />
@@ -81,7 +81,7 @@ export default function PublicLayout() {
                 <>
                   <Link
                     to="/login"
-                    className="font-medium text-slate-700 hover:text-indigo-600 px-3 py-2 transition-colors"
+                    className="font-semibold text-[#2F3542] hover:text-[#6A8E7F] px-3 py-2 transition-colors"
                   >
                     Log In
                   </Link>
@@ -92,11 +92,11 @@ export default function PublicLayout() {
               ))}
           </div>
 
-          {/* Mobile Hamburger Button */}
+          {/* Mobile Menu Trigger */}
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 border border-slate-200"
+            className="md:hidden p-2 rounded-full text-[#2F3542] hover:bg-slate-100 border border-[#CED6E0]"
             aria-label={mobileMenuOpen ? 'Close Menu' : 'Open Menu'}
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -104,7 +104,7 @@ export default function PublicLayout() {
         </div>
       </header>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Glass Navigation Drawer */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
@@ -112,46 +112,46 @@ export default function PublicLayout() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-x-0 top-16 z-40 bg-white border-b border-slate-200 p-5 shadow-lg md:hidden flex flex-col gap-4"
+            className="fixed inset-x-4 top-20 z-40 bg-white/95 backdrop-blur-xl border border-[#CED6E0] p-6 rounded-3xl shadow-xl md:hidden flex flex-col gap-4"
           >
-            <nav className="flex flex-col gap-3 font-medium text-slate-700">
+            <nav className="flex flex-col gap-3 font-semibold text-[#2F3542]">
               <Link
                 to="/"
                 onClick={() => setMobileMenuOpen(false)}
-                className="py-2 px-3 rounded-lg hover:bg-slate-50 hover:text-indigo-600"
+                className="py-2.5 px-3 rounded-xl hover:bg-[#E0ECE1] hover:text-[#6A8E7F]"
               >
                 Home
               </Link>
               <Link
                 to="/jobs"
                 onClick={() => setMobileMenuOpen(false)}
-                className="py-2 px-3 rounded-lg hover:bg-slate-50 hover:text-indigo-600"
+                className="py-2.5 px-3 rounded-xl hover:bg-[#E0ECE1] hover:text-[#6A8E7F]"
               >
                 Browse Jobs
               </Link>
               <Link
                 to="/jobs?work_mode=remote"
                 onClick={() => setMobileMenuOpen(false)}
-                className="py-2 px-3 rounded-lg hover:bg-slate-50 hover:text-indigo-600"
+                className="py-2.5 px-3 rounded-xl hover:bg-[#E0ECE1] hover:text-[#6A8E7F]"
               >
                 Remote Jobs
               </Link>
               <Link
                 to="/partner"
                 onClick={() => setMobileMenuOpen(false)}
-                className="py-2 px-3 rounded-lg hover:bg-slate-50 hover:text-indigo-600"
+                className="py-2.5 px-3 rounded-xl hover:bg-[#E0ECE1] hover:text-[#6A8E7F]"
               >
                 For Employers
               </Link>
             </nav>
 
-            <div className="pt-4 border-t border-slate-200 flex flex-col gap-2">
+            <div className="pt-4 border-t border-[#CED6E0] flex flex-col gap-2">
               {isAuthenticated ? (
                 <>
                   <Link
                     to={ROLE_HOME[role] ?? '/'}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="w-full text-center py-2.5 px-4 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-700"
+                    className="w-full text-center py-2.5 px-4 rounded-xl bg-[#6A8E7F] text-white font-semibold hover:bg-[#58796B]"
                   >
                     Go to Portal
                   </Link>
@@ -172,7 +172,7 @@ export default function PublicLayout() {
                   <Link
                     to="/login"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="w-full text-center py-2 text-sm text-slate-600 hover:text-indigo-600"
+                    className="w-full text-center py-2 text-sm font-semibold text-[#747D8C] hover:text-[#6A8E7F]"
                   >
                     Already have an account? Log In
                   </Link>
@@ -183,68 +183,69 @@ export default function PublicLayout() {
         )}
       </AnimatePresence>
 
-      <main className="min-h-[calc(100vh-4rem-24rem)]">
+      <main className="flex-1 min-h-[calc(100vh-5rem-24rem)]">
         <Outlet />
       </main>
 
-      {/* Clean Enterprise Job Portal Footer */}
-      <footer className="bg-slate-900 text-slate-300 pt-12 pb-8 border-t border-slate-800">
+      {/* VECOR Editorial Footer */}
+      <footer className="bg-[#2F3542] text-[#CED6E0] pt-16 pb-10 border-t border-[#2F3542]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 pb-10 border-b border-slate-800">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-slate-700/60">
             <div className="lg:col-span-2 space-y-4">
               <div className="text-white">
-                <Logo />
+                <Logo isDark={true} />
               </div>
-              <p className="text-sm text-slate-400 max-w-sm leading-relaxed">
-                Empowering top talent and innovative hiring teams with handpicked career opportunities and seamless hiring solutions.
+              <p className="text-sm text-slate-300 max-w-sm leading-relaxed">
+                VECOR is an editorial, modern career-discovery platform connecting ambitious talent with world-class tech companies.
               </p>
+              <div className="text-xs text-[#747D8C] pt-2">
+                Operated by <span className="text-white font-semibold">Vcreateventures</span>
+              </div>
             </div>
 
             <div>
-              <h4 className="text-xs font-semibold tracking-wider text-slate-200 uppercase mb-4">
-                Jobs by Category
+              <h4 className="text-xs font-bold tracking-wider text-white uppercase mb-4">
+                For Candidates
               </h4>
-              <ul className="space-y-2.5 text-sm text-slate-400">
-                <li><Link to="/jobs?category=engineering" className="hover:text-white transition-colors">Software Engineering</Link></li>
-                <li><Link to="/jobs?category=frontend" className="hover:text-white transition-colors">Frontend Development</Link></li>
-                <li><Link to="/jobs?category=backend" className="hover:text-white transition-colors">Backend Development</Link></li>
-                <li><Link to="/jobs?category=data" className="hover:text-white transition-colors">Data Science &amp; AI</Link></li>
-                <li><Link to="/jobs?category=design" className="hover:text-white transition-colors">UI/UX Design</Link></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-xs font-semibold tracking-wider text-slate-200 uppercase mb-4">
-                Jobs by Location
-              </h4>
-              <ul className="space-y-2.5 text-sm text-slate-400">
-                <li><Link to="/jobs?location=Bangalore" className="hover:text-white transition-colors">Bangalore</Link></li>
-                <li><Link to="/jobs?location=Delhi+NCR" className="hover:text-white transition-colors">Delhi NCR</Link></li>
-                <li><Link to="/jobs?location=Mumbai" className="hover:text-white transition-colors">Mumbai</Link></li>
-                <li><Link to="/jobs?location=Hyderabad" className="hover:text-white transition-colors">Hyderabad</Link></li>
-                <li><Link to="/jobs?work_mode=remote" className="hover:text-white transition-colors">Remote Jobs</Link></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-xs font-semibold tracking-wider text-slate-200 uppercase mb-4">
-                Quick Links
-              </h4>
-              <ul className="space-y-2.5 text-sm text-slate-400">
+              <ul className="space-y-2.5 text-sm text-slate-300">
+                <li><Link to="/jobs" className="hover:text-white transition-colors">Browse Jobs</Link></li>
+                <li><Link to="/jobs?work_mode=remote" className="hover:text-white transition-colors">Remote Opportunities</Link></li>
                 <li><Link to="/candidate" className="hover:text-white transition-colors">Candidate Dashboard</Link></li>
+                <li><Link to="/candidate/profile" className="hover:text-white transition-colors">Resume Profile</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-xs font-bold tracking-wider text-white uppercase mb-4">
+                For Employers
+              </h4>
+              <ul className="space-y-2.5 text-sm text-slate-300">
                 <li><Link to="/partner" className="hover:text-white transition-colors">Employer Panel</Link></li>
-                <li><Link to="/login" className="hover:text-white transition-colors">Sign In</Link></li>
-                <li><Link to="/register" className="hover:text-white transition-colors">Create Account</Link></li>
+                <li><Link to="/partner/jobs/new" className="hover:text-white transition-colors">Post a Job</Link></li>
+                <li><Link to="/partner/company" className="hover:text-white transition-colors">Company Branding</Link></li>
+                <li><Link to="/partner/recruiters" className="hover:text-white transition-colors">Team Access</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-xs font-bold tracking-wider text-white uppercase mb-4">
+                Company &amp; Legal
+              </h4>
+              <ul className="space-y-2.5 text-sm text-slate-300">
+                <li><a href="#about" className="hover:text-white transition-colors">About VECOR</a></li>
+                <li><a href="#vcreateventures" className="hover:text-white transition-colors">Vcreateventures</a></li>
+                <li><a href="#privacy" className="hover:text-white transition-colors">Privacy Policy</a></li>
+                <li><a href="#terms" className="hover:text-white transition-colors">Terms of Service</a></li>
               </ul>
             </div>
           </div>
 
-          <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
-            <p>© {new Date().getFullYear()} Job Portal. All rights reserved.</p>
-            <div className="flex gap-6">
-              <a href="#privacy" className="hover:text-slate-400">Privacy Policy</a>
-              <a href="#terms" className="hover:text-slate-400">Terms of Service</a>
-              <a href="#cookies" className="hover:text-slate-400">Cookie Preferences</a>
+          <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-4">
+            <p>© {new Date().getFullYear()} VECOR product by Vcreateventures. All rights reserved.</p>
+            <div className="flex gap-6 text-slate-400">
+              <a href="#privacy" className="hover:text-white transition-colors">Privacy</a>
+              <a href="#terms" className="hover:text-white transition-colors">Terms</a>
+              <a href="#contact" className="hover:text-white transition-colors">Contact</a>
             </div>
           </div>
         </div>
@@ -252,4 +253,5 @@ export default function PublicLayout() {
     </div>
   )
 }
+
 

@@ -73,7 +73,7 @@ export default function CandidateDashboardPage() {
 
         <Link
           to="/jobs"
-          className="inline-flex items-center gap-1.5 rounded-xl bg-indigo-600 px-4 py-2.5 text-xs font-semibold text-white hover:bg-indigo-500 shadow-sm transition-colors self-start sm:self-auto"
+          className="inline-flex items-center gap-1.5 rounded-xl bg-[#6A8E7F] px-4 py-2.5 text-xs font-semibold text-white hover:bg-[#58796B] shadow-xs transition-colors self-start sm:self-auto"
         >
           <Briefcase className="h-4 w-4" />
           <span>Find Jobs</span>
@@ -82,22 +82,22 @@ export default function CandidateDashboardPage() {
 
       {/* Profile Completeness Alert (if < 100%) */}
       {profileCompletion < 100 && (
-        <div className="rounded-2xl border border-indigo-100 bg-gradient-to-r from-indigo-50/80 via-white to-indigo-50/50 p-5 shadow-2xs">
+        <div className="rounded-2xl border border-[#6A8E7F]/30 bg-[#BFEDC1]/30 p-5 shadow-2xs">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex items-start gap-3.5">
-              <div className="rounded-xl bg-indigo-600 p-2 text-white shadow-2xs shrink-0">
+              <div className="rounded-xl bg-[#6A8E7F] p-2 text-white shadow-2xs shrink-0">
                 <Award className="h-5 w-5" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="text-xs font-bold text-slate-900">
+                  <h3 className="text-xs font-bold text-[#2F3542]">
                     Your Profile is {profileCompletion}% Complete
                   </h3>
-                  <span className="text-[10px] font-bold text-indigo-700 bg-indigo-100 px-2 py-0.2 rounded-full">
+                  <span className="text-[10px] font-bold text-[#6A8E7F] bg-white px-2 py-0.5 rounded-full border border-[#6A8E7F]/30">
                     Recruiter Visibility +75%
                   </span>
                 </div>
-                <p className="mt-0.5 text-xs text-slate-500">
+                <p className="mt-0.5 text-xs text-[#747D8C]">
                   Profiles with verified resume and comprehensive skills get 3x more interview invitations.
                 </p>
               </div>
@@ -105,7 +105,7 @@ export default function CandidateDashboardPage() {
 
             <Link
               to="/candidate/profile"
-              className="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition-colors whitespace-nowrap self-start sm:self-center"
+              className="inline-flex items-center gap-1 text-xs font-bold text-[#6A8E7F] hover:text-[#58796B] transition-colors whitespace-nowrap self-start sm:self-center"
             >
               <span>Complete Profile Now</span>
               <ArrowRight className="h-3.5 w-3.5" />

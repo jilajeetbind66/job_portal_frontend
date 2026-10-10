@@ -33,11 +33,11 @@ export default function Sidebar({
           collapsed ? 'justify-center' : 'gap-3'
         )}
       >
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-indigo-600 text-lg font-bold text-white">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#6A8E7F] text-lg font-extrabold text-[#BFEDC1]">
           {portalIcon}
         </div>
         {!collapsed && (
-          <span className="text-base font-semibold text-white truncate">
+          <span className="text-base font-extrabold text-white truncate">
             {portalName}
           </span>
         )}
@@ -60,7 +60,7 @@ export default function Sidebar({
       {/* Bottom section — version / branding */}
       {!collapsed && (
         <div className="border-t border-slate-700/50 px-4 py-3">
-          <p className="text-xs text-slate-500">Job Portal v1.0</p>
+          <p className="text-xs text-slate-400 font-semibold">VECOR Portal</p>
         </div>
       )}
     </div>
@@ -71,7 +71,7 @@ export default function Sidebar({
       {/* -------- Desktop sidebar -------- */}
       <aside
         className={clsx(
-          'hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:z-40 bg-slate-900 transition-all duration-300',
+          'hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:z-40 bg-[#2F3542] transition-all duration-300',
           collapsed ? 'lg:w-20' : 'lg:w-64'
         )}
       >

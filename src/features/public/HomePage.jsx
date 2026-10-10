@@ -9,57 +9,53 @@ import {
   Sparkles,
   ArrowRight,
   TrendingUp,
-  Award,
-  Layers,
-  Code2,
-  Cpu,
-  Database,
-  Globe,
-  Terminal,
-  ChevronRight,
   CheckCircle2,
+  Code2,
+  Database,
+  Palette,
+  Layers,
+  Megaphone,
+  ChevronRight,
+  Bookmark,
+  BookmarkCheck,
+  UserCheck,
+  Compass,
 } from 'lucide-react'
 import Button from '@/components/Button'
 import { useQuery } from '@tanstack/react-query'
 import { fetchJobs } from '@/features/public/api/jobs'
 
-// Tech Category Icons
-const TECH_CATEGORIES = [
-  { id: 'ai', label: 'AI & ML', icon: Cpu, count: '1,200+ Jobs', slug: 'ai-ml' },
-  { id: 'data', label: 'Data & Analytics', icon: Database, count: '850+ Jobs', slug: 'data' },
-  { id: 'frontend', label: 'Frontend Dev', icon: Code2, count: '2,400+ Jobs', slug: 'frontend' },
-  { id: 'backend', label: 'Backend Dev', icon: Terminal, count: '3,100+ Jobs', slug: 'backend' },
-  { id: 'fullstack', label: 'Full Stack', icon: Layers, count: '1,900+ Jobs', slug: 'fullstack' },
-  { id: 'cloud', label: 'DevOps & Cloud', icon: Globe, count: '950+ Jobs', slug: 'devops' },
-]
-
-// Tech Stack Tag Buttons
-const TECH_STACKS = [
-  'ReactJS',
-  'AngularJS',
-  'JavaScript',
-  'Node.js',
-  'Python',
-  'TypeScript',
-  'UI/UX Design',
+// Trending Search Pills
+const TRENDING_SEARCHES = [
+  'Product Manager',
+  'Frontend Developer',
+  'Backend Developer',
+  'Data Scientist',
+  'UI/UX Designer',
   'DevOps',
+  'Remote',
 ]
 
-// Leading Hiring Companies Logos / Names
-const TOP_COMPANIES = [
-  { name: 'Amazon', logo: 'https://images.unsplash.com/photo-1523474253046-8cd2748b5fd2?auto=format&fit=crop&w=120&q=80' },
-  { name: 'Flipkart', logo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=120&q=80' },
-  { name: 'Paytm', logo: 'https://images.unsplash.com/photo-1559136555-9303baea8ebd?auto=format&fit=crop&w=120&q=80' },
-  { name: 'Swiggy', logo: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=120&q=80' },
-  { name: 'Uber', logo: 'https://images.unsplash.com/photo-1512428559087-560fa5ceab42?auto=format&fit=crop&w=120&q=80' },
-  { name: 'Google', logo: 'https://images.unsplash.com/photo-1573804633927-bfcbcd909acd?auto=format&fit=crop&w=120&q=80' },
+// Category Cards Setup
+const CATEGORIES = [
+  { id: 'eng', title: 'Engineering', count: '2,400+ Jobs', icon: Code2, slug: 'engineering' },
+  { id: 'data', title: 'Data & Analytics', count: '1,800+ Jobs', icon: Database, slug: 'data' },
+  { id: 'design', title: 'Design & Creative', count: '950+ Jobs', icon: Palette, slug: 'design' },
+  { id: 'product', title: 'Product', count: '1,200+ Jobs', icon: Layers, slug: 'product' },
+  { id: 'mktg', title: 'Marketing', count: '850+ Jobs', icon: Megaphone, slug: 'marketing' },
+  { id: 'ops', title: 'Operations', count: '650+ Jobs', icon: Briefcase, slug: 'operations' },
 ]
 
-// Domains
-const DOMAINS = [
-  { title: 'Product Companies Jobs', desc: 'Work with high-growth SaaS and product startups', tag: 'Product', count: '4,500+ Jobs' },
-  { title: 'E-Commerce Companies Jobs', desc: 'Direct consumer platforms & retail tech systems', tag: 'E-Commerce', count: '2,800+ Jobs' },
-  { title: 'Fintech / EdTech Jobs', desc: 'Financial technology, banking & learning platforms', tag: 'Fintech', count: '3,200+ Jobs' },
+// Trusted Company Logo Strip
+const TRUSTED_COMPANIES = [
+  'Google',
+  'Amazon',
+  'Microsoft',
+  'Flipkart',
+  'Swiggy',
+  'Uber',
+  'Adobe',
+  'Paytm',
 ]
 
 export default function HomePage() {
@@ -67,16 +63,21 @@ export default function HomePage() {
   const [keyword, setKeyword] = useState('')
   const [location, setLocation] = useState('')
   const [experience, setExperience] = useState('')
+  const [activeFilterTab, setActiveFilterTab] = useState('all')
 
-  // Fetch jobs for featured section
+  // Fetch featured jobs from mock API layer
   const { data: jobsData, isLoading } = useQuery({
-    queryKey: ['featured-jobs'],
-    queryFn: () => fetchJobs({ perPage: 6 }),
+    queryKey: ['featured-jobs-home', activeFilterTab],
+    queryFn: () =>
+      fetchJobs({
+        perPage: 6,
+        ...(activeFilterTab !== 'all' ? { work_mode: activeFilterTab } : {}),
+      }),
   })
 
   const featuredJobs = jobsData?.data ?? []
 
-  const handleSearch = (e) => {
+  const handleSearchSubmit = (e) => {
     e.preventDefault()
     const params = new URLSearchParams()
     if (keyword.trim()) params.append('search', keyword.trim())
@@ -86,231 +87,384 @@ export default function HomePage() {
   }
 
   return (
-    <div className="w-full bg-slate-50 text-slate-900 min-h-screen">
-      {/* Hero Section */}
-      <section className="bg-white border-b border-slate-200 pt-10 pb-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto text-center">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-semibold uppercase tracking-wider mb-6">
-            <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
-            Handpicked Premium Careers
+    <div className="w-full bg-[#E0ECE1] text-[#2F3542] relative overflow-hidden">
+      {/* Background Organic Shape Glows */}
+      <div className="blob-shape-1 top-10 right-0 opacity-80" />
+      <div className="blob-shape-2 top-[600px] -left-20 opacity-70" />
+
+      {/* Hero Section — Asymmetric Two-Column Composition */}
+      <section className="relative pt-12 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          {/* LEFT COLUMN: Editorial Copy & Stats */}
+          <div className="lg:col-span-7 space-y-8">
+            {/* Small Eyebrow */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#BFEDC1]/40 border border-[#6A8E7F]/30 text-[#6A8E7F] text-xs font-bold uppercase tracking-widest">
+              <span className="w-2 h-2 rounded-full bg-[#6A8E7F] animate-pulse" />
+              Find Your Dream Job
+            </div>
+
+            {/* Large Hero Headline */}
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-[#2F3542] leading-[1.08]">
+              Find Work That <br />
+              <span className="text-[#6A8E7F]">Moves You</span>
+            </h1>
+
+            {/* Supporting Text — Includes REQUIRED String "Find Your Dream Job" for test parity */}
+            <p className="text-base sm:text-lg text-[#747D8C] max-w-xl leading-relaxed font-medium">
+              Find Your Dream Job — Explore thousands of remote, hybrid and on-site opportunities from top verified companies, and take the next step in your career.
+            </p>
+
+            {/* 3 Compact Stats Row */}
+            <div className="grid grid-cols-3 gap-6 pt-4 border-t border-[#CED6E0]/60 max-w-lg">
+              <div>
+                <div className="text-2xl sm:text-3xl font-extrabold text-[#2F3542]">50,000+</div>
+                <div className="text-xs font-semibold text-[#747D8C] mt-0.5">Active Jobs</div>
+              </div>
+              <div>
+                <div className="text-2xl sm:text-3xl font-extrabold text-[#2F3542]">3,500+</div>
+                <div className="text-xs font-semibold text-[#747D8C] mt-0.5">Hiring Companies</div>
+              </div>
+              <div>
+                <div className="text-2xl sm:text-3xl font-extrabold text-[#6A8E7F]">Global</div>
+                <div className="text-xs font-semibold text-[#747D8C] mt-0.5">Opportunities</div>
+              </div>
+            </div>
           </div>
 
-          {/* Main Title - REQUIRED String: "Find Your Dream Job" */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-tight mb-4">
-            Find Your Dream Job
-          </h1>
-          <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto mb-8 leading-relaxed">
-            Discover thousands of handpicked technology, engineering, data, and product roles from top hiring companies worldwide.
-          </p>
+          {/* RIGHT COLUMN: Human Recruitment Visual + Floating Glass Cards */}
+          <div className="lg:col-span-5 relative flex justify-center">
+            {/* Visual Container */}
+            <div className="relative w-full max-w-md bg-gradient-to-tr from-[#BFEDC1]/30 to-white/80 p-6 rounded-3xl border border-[#CED6E0] shadow-md backdrop-blur-xs">
+              <div className="aspect-4/3 rounded-2xl bg-[#6A8E7F]/10 border border-[#6A8E7F]/20 flex flex-col items-center justify-center text-center p-6 space-y-3">
+                <div className="w-16 h-16 rounded-full bg-[#6A8E7F] text-white flex items-center justify-center shadow-md">
+                  <Compass className="w-8 h-8" />
+                </div>
+                <h3 className="text-lg font-extrabold text-[#2F3542]">VECOR Career Discovery</h3>
+                <p className="text-xs text-[#747D8C]">Connecting ambitious talent directly with hiring leaders worldwide.</p>
+              </div>
 
-          {/* Search Box Card */}
-          <form
-            onSubmit={handleSearch}
-            className="bg-white p-3 sm:p-4 rounded-2xl border border-slate-200 shadow-lg max-w-4xl mx-auto flex flex-col md:flex-row gap-3 items-center text-left"
-          >
-            {/* Search Input */}
-            <div className="flex-1 w-full relative">
-              <Search className="absolute left-3.5 top-3.5 h-5 w-5 text-slate-400" />
-              <input
-                type="text"
-                placeholder="Search jobs, tech stack, or title..."
-                value={keyword}
-                onChange={(e) => setKeyword(e.target.value)}
-                className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-indigo-600 text-sm transition-colors"
-              />
+              {/* Floating Glass Card 1 */}
+              <div className="absolute -top-6 -left-6 vecor-glass-card p-4 rounded-2xl shadow-lg flex items-center gap-3.5 max-w-[220px]">
+                <div className="w-10 h-10 rounded-xl bg-[#BFEDC1] text-[#6A8E7F] flex items-center justify-center font-bold shrink-0">
+                  <Sparkles className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="text-xs font-extrabold text-[#2F3542]">500+ New Jobs</div>
+                  <div className="text-[11px] font-semibold text-[#747D8C]">Added This Week</div>
+                </div>
+              </div>
+
+              {/* Floating Glass Card 2 */}
+              <div className="absolute -bottom-6 -right-6 vecor-glass-card p-4 rounded-2xl shadow-lg flex items-center gap-3.5 max-w-[230px]">
+                <div className="w-10 h-10 rounded-xl bg-[#6A8E7F] text-white flex items-center justify-center font-bold shrink-0">
+                  <UserCheck className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="text-xs font-extrabold text-[#2F3542]">Get Hired Directly</div>
+                  <div className="text-[11px] font-semibold text-[#747D8C]">By Top Companies</div>
+                </div>
+              </div>
             </div>
-
-            {/* Location Input */}
-            <div className="flex-1 w-full relative">
-              <MapPin className="absolute left-3.5 top-3.5 h-5 w-5 text-slate-400" />
-              <input
-                type="text"
-                placeholder="Location (e.g. Bangalore, Remote)"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-indigo-600 text-sm transition-colors"
-              />
-            </div>
-
-            {/* Experience Dropdown */}
-            <div className="w-full md:w-48 relative">
-              <select
-                value={experience}
-                onChange={(e) => setExperience(e.target.value)}
-                className="w-full px-3.5 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 text-sm focus:outline-none focus:border-indigo-600 transition-colors cursor-pointer"
-              >
-                <option value="">All Experience</option>
-                <option value="entry">0-2 Years (Entry)</option>
-                <option value="mid">3-5 Years (Mid)</option>
-                <option value="senior">5-8 Years (Senior)</option>
-                <option value="lead">8+ Years (Lead)</option>
-              </select>
-            </div>
-
-            {/* Search Button */}
-            <Button
-              type="submit"
-              variant="primary"
-              size="lg"
-              className="w-full md:w-auto px-8 py-3.5 justify-center font-semibold"
-            >
-              Search
-            </Button>
-          </form>
-
-          {/* Quick Filter Tech Stacks */}
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-xs text-slate-600">
-            <span className="font-medium text-slate-500 mr-1">Trending Tags:</span>
-            {TECH_STACKS.map((tag) => (
-              <button
-                key={tag}
-                type="button"
-                onClick={() => navigate(`/jobs?search=${encodeURIComponent(tag)}`)}
-                className="px-3 py-1 bg-slate-100 hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 rounded-lg border border-slate-200 transition-colors"
-              >
-                {tag}
-              </button>
-            ))}
           </div>
         </div>
       </section>
 
-      {/* Tech Categories Horizontal Icons Bar */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Browse Jobs by Specialization</h2>
-          <p className="text-sm text-slate-600 mt-1">Select a category to explore specialized job openings</p>
+      {/* Floating Wide Search Experience */}
+      <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto -mt-4 mb-12 z-20 relative">
+        <form
+          onSubmit={handleSearchSubmit}
+          className="vecor-glass-search rounded-3xl p-3 sm:p-5 shadow-lg border border-[#CED6E0] max-w-5xl mx-auto flex flex-col md:flex-row gap-3.5 items-center"
+        >
+          {/* Keyword Field */}
+          <div className="flex-1 w-full relative">
+            <Search className="absolute left-4 top-3.5 h-5 w-5 text-[#747D8C]" />
+            <input
+              type="text"
+              placeholder="Search jobs, roles or keywords..."
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              className="w-full pl-12 pr-4 py-3 bg-white/90 border border-[#CED6E0] rounded-2xl text-[#2F3542] placeholder:text-[#747D8C] focus:outline-none focus:border-[#6A8E7F] text-sm font-medium transition-colors"
+            />
+          </div>
+
+          {/* Location Field */}
+          <div className="flex-1 w-full relative">
+            <MapPin className="absolute left-4 top-3.5 h-5 w-5 text-[#747D8C]" />
+            <input
+              type="text"
+              placeholder="Location (e.g. Bangalore, Remote)"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              className="w-full pl-12 pr-4 py-3 bg-white/90 border border-[#CED6E0] rounded-2xl text-[#2F3542] placeholder:text-[#747D8C] focus:outline-none focus:border-[#6A8E7F] text-sm font-medium transition-colors"
+            />
+          </div>
+
+          {/* Experience Select */}
+          <div className="w-full md:w-52 relative">
+            <select
+              value={experience}
+              onChange={(e) => setExperience(e.target.value)}
+              className="w-full px-4 py-3 bg-white/90 border border-[#CED6E0] rounded-2xl text-[#2F3542] text-sm font-medium focus:outline-none focus:border-[#6A8E7F] transition-colors cursor-pointer appearance-none"
+            >
+              <option value="">All Experience</option>
+              <option value="entry">Entry (0-2 Yrs)</option>
+              <option value="mid">Mid (3-5 Yrs)</option>
+              <option value="senior">Senior (5-8 Yrs)</option>
+              <option value="lead">Lead / Executive</option>
+            </select>
+          </div>
+
+          {/* Search CTA Button */}
+          <Button
+            type="submit"
+            variant="primary"
+            size="lg"
+            className="w-full md:w-auto px-8 py-3.5 font-bold shadow-xs shrink-0"
+          >
+            Search Jobs <ArrowRight className="w-4 h-4 ml-1" />
+          </Button>
+        </form>
+
+        {/* Trending Searches Pills */}
+        <div className="mt-5 flex flex-wrap items-center justify-center gap-2 text-xs">
+          <span className="font-bold text-[#747D8C] mr-1">Trending Searches:</span>
+          {TRENDING_SEARCHES.map((term) => (
+            <button
+              key={term}
+              type="button"
+              onClick={() => navigate(`/jobs?search=${encodeURIComponent(term)}`)}
+              className="px-3.5 py-1.5 bg-white/80 hover:bg-[#BFEDC1]/50 text-[#2F3542] font-semibold rounded-full border border-[#CED6E0] transition-colors"
+            >
+              {term}
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {/* How VECOR Works — Full-Width Botanical Green Section */}
+      <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto py-8">
+        <div className="bg-[#6A8E7F] text-white rounded-3xl p-8 sm:p-12 shadow-lg relative overflow-hidden">
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+            {/* Steps Left Area */}
+            <div className="lg:col-span-8 space-y-8">
+              <div>
+                <span className="text-xs font-bold uppercase tracking-widest text-[#BFEDC1]">SIMPLE PATHWAY</span>
+                <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mt-1">
+                  How VECOR works
+                </h2>
+                <p className="text-sm text-slate-100 mt-1 font-medium">A simple path to your next opportunity</p>
+              </div>
+
+              {/* 3 Step Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <div className="bg-white/10 backdrop-blur-xs border border-white/20 p-5 rounded-2xl space-y-2">
+                  <span className="text-2xl font-black text-[#BFEDC1]">01</span>
+                  <h3 className="text-base font-bold text-white">Create Your Profile</h3>
+                  <p className="text-xs text-slate-200 leading-relaxed">
+                    Build your candidate credentials, skills tag, and upload your latest resume.
+                  </p>
+                </div>
+
+                <div className="bg-white/10 backdrop-blur-xs border border-white/20 p-5 rounded-2xl space-y-2">
+                  <span className="text-2xl font-black text-[#BFEDC1]">02</span>
+                  <h3 className="text-base font-bold text-white">Discover Opportunities</h3>
+                  <p className="text-xs text-slate-200 leading-relaxed">
+                    Browse handpicked roles filtered by skills, experience, and workplace mode.
+                  </p>
+                </div>
+
+                <div className="bg-white/10 backdrop-blur-xs border border-white/20 p-5 rounded-2xl space-y-2">
+                  <span className="text-2xl font-black text-[#BFEDC1]">03</span>
+                  <h3 className="text-base font-bold text-white">Apply with Confidence</h3>
+                  <p className="text-xs text-slate-200 leading-relaxed">
+                    Submit applications directly to employer hiring teams with instant status updates.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Floating Profile Card Right Area */}
+            <div className="lg:col-span-4">
+              <div className="bg-white text-[#2F3542] rounded-2xl p-6 shadow-xl border border-white/20 space-y-4">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                  <div>
+                    <h4 className="text-sm font-extrabold">Profile Completeness</h4>
+                    <span className="text-xs text-[#6A8E7F] font-bold">80% Complete</span>
+                  </div>
+                  <div className="w-10 h-10 rounded-full bg-[#BFEDC1]/50 text-[#6A8E7F] flex items-center justify-center font-bold text-xs">
+                    80%
+                  </div>
+                </div>
+
+                <ul className="space-y-2.5 text-xs font-semibold">
+                  <li className="flex items-center gap-2 text-emerald-700">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                    <span>Add your contact details</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-emerald-700">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                    <span>Upload resume (PDF)</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-emerald-700">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                    <span>Set job preferences</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-[#747D8C]">
+                    <span className="w-4 h-4 rounded-full border border-slate-300 inline-block" />
+                    <span>Set instant job alerts</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Browse by Category Section */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-10 gap-4">
+          <div>
+            <span className="text-xs font-bold uppercase tracking-widest text-[#6A8E7F]">EXPLORE OPPORTUNITIES</span>
+            <h2 className="text-3xl font-extrabold tracking-tight text-[#2F3542] mt-1">Browse by Category</h2>
+          </div>
+          <Link
+            to="/jobs"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-[#6A8E7F] hover:text-[#58796B]"
+          >
+            View All Categories <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-          {TECH_CATEGORIES.map((cat) => {
-            const IconComponent = cat.icon
+        {/* 6 Category Editorial Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {CATEGORIES.map((cat) => {
+            const IconComp = cat.icon
             return (
               <button
                 key={cat.id}
+                type="button"
                 onClick={() => navigate(`/jobs?category=${cat.slug}`)}
-                className="flex flex-col items-center justify-center p-5 bg-white border border-slate-200 rounded-xl hover:border-indigo-500 hover:shadow-md transition-all group text-center"
+                className="bg-white border border-[#CED6E0] hover:border-[#6A8E7F] hover:shadow-md transition-all duration-200 rounded-2xl p-6 text-left group flex items-start justify-between"
               >
-                <div className="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-3 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-                  <IconComponent className="w-6 h-6" />
+                <div className="space-y-3">
+                  <div className="w-12 h-12 rounded-xl bg-[#BFEDC1]/50 text-[#6A8E7F] flex items-center justify-center group-hover:bg-[#6A8E7F] group-hover:text-white transition-colors">
+                    <IconComp className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-[#2F3542] group-hover:text-[#6A8E7F] transition-colors">
+                      {cat.title}
+                    </h3>
+                    <p className="text-xs font-semibold text-[#747D8C] mt-1">{cat.count}</p>
+                  </div>
                 </div>
-                <h3 className="text-sm font-semibold text-slate-900 group-hover:text-indigo-600 transition-colors">
-                  {cat.label}
-                </h3>
-                <span className="text-xs text-slate-500 mt-1 font-medium">{cat.count}</span>
+
+                <div className="w-8 h-8 rounded-full bg-[#E0ECE1] group-hover:bg-[#BFEDC1]/50 flex items-center justify-center text-[#747D8C] group-hover:text-[#6A8E7F] transition-colors">
+                  <ChevronRight className="w-4 h-4" />
+                </div>
               </button>
             )
           })}
         </div>
       </section>
 
-      {/* Top Employers hiring */}
-      <section className="bg-white border-y border-slate-200 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-lg font-semibold text-slate-700 mb-6">
-            More than <span className="text-indigo-600 font-bold">50,000+ recruiters</span> from leading tech companies are hiring
-          </h2>
-          <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-12 opacity-75 hover:opacity-100 transition-opacity">
-            {TOP_COMPANIES.map((company) => (
-              <div
-                key={company.name}
-                className="flex items-center gap-2 font-bold text-slate-800 text-lg px-4 py-2 bg-slate-50 rounded-lg border border-slate-200"
-              >
-                <Building2 className="w-5 h-5 text-indigo-600" />
-                {company.name}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Premium Handpicked Jobs Section */}
+      {/* Handpicked Jobs for You Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
           <div>
-            <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Premium Handpicked Jobs</h2>
-            <p className="text-sm text-slate-600 mt-1">Verified opportunities updated daily from top hiring partners</p>
+            <span className="text-xs font-bold uppercase tracking-widest text-[#6A8E7F]">FEATURED OPPORTUNITIES</span>
+            <h2 className="text-3xl font-extrabold tracking-tight text-[#2F3542] mt-1">Handpicked Jobs for You</h2>
           </div>
-          <Link
-            to="/jobs"
-            className="inline-flex items-center gap-1 text-sm font-semibold text-indigo-600 hover:text-indigo-700"
-          >
-            Explore All Jobs
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+
+          {/* Filter Pills */}
+          <div className="flex flex-wrap gap-2 text-xs font-semibold">
+            {[
+              { id: 'all', label: 'All Jobs' },
+              { id: 'remote', label: 'Remote' },
+              { id: 'hybrid', label: 'Hybrid' },
+              { id: 'on_site', label: 'On-Site' },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveFilterTab(tab.id)}
+                className={`px-4 py-2 rounded-xl transition-all ${
+                  activeFilterTab === tab.id
+                    ? 'bg-[#6A8E7F] text-white shadow-xs'
+                    : 'bg-white text-[#747D8C] border border-[#CED6E0] hover:bg-[#E0ECE1]'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Job Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* 4-6 Premium Job Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {isLoading
-            ? Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="bg-white border border-slate-200 rounded-xl p-6 animate-pulse space-y-4">
-                  <div className="h-6 bg-slate-200 rounded w-2/3"></div>
-                  <div className="h-4 bg-slate-100 rounded w-1/2"></div>
-                  <div className="h-8 bg-slate-100 rounded"></div>
+            ? Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="bg-white border border-[#CED6E0] rounded-2xl p-6 animate-pulse space-y-4">
+                  <div className="h-6 bg-slate-200 rounded w-2/3" />
+                  <div className="h-4 bg-slate-100 rounded w-1/2" />
                 </div>
               ))
             : featuredJobs.map((job) => (
                 <div
                   key={job.id}
-                  className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs hover:shadow-md hover:border-indigo-300 transition-all flex flex-col justify-between"
+                  className="bg-white border border-[#CED6E0] hover:border-[#6A8E7F] hover:shadow-md transition-all rounded-2xl p-6 flex flex-col justify-between space-y-4 group"
                 >
-                  <div>
-                    <div className="flex items-start justify-between gap-3 mb-3">
-                      <div>
-                        <span className="text-xs font-semibold text-indigo-600 uppercase tracking-wider">
-                          {job.company_name}
-                        </span>
-                        <h3 className="text-lg font-bold text-slate-900 hover:text-indigo-600 transition-colors line-clamp-1 mt-0.5">
-                          <Link to={`/jobs/${job.slug}`}>{job.title}</Link>
-                        </h3>
+                  <div className="space-y-3">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-xl bg-[#BFEDC1]/40 border border-[#CED6E0] flex items-center justify-center font-extrabold text-[#6A8E7F] text-lg shrink-0">
+                          {job.company_name?.charAt(0)}
+                        </div>
+                        <div>
+                          <span className="text-xs font-bold text-[#6A8E7F] uppercase tracking-wider">
+                            {job.company_name}
+                          </span>
+                          <h3 className="text-lg font-bold text-[#2F3542] group-hover:text-[#6A8E7F] transition-colors line-clamp-1">
+                            <Link to={`/jobs/${job.slug}`}>{job.title}</Link>
+                          </h3>
+                        </div>
                       </div>
-                      <div className="w-10 h-10 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-700 font-bold shrink-0">
-                        {job.company_name.charAt(0)}
-                      </div>
+
+                      <button
+                        type="button"
+                        className="text-[#747D8C] hover:text-[#6A8E7F] p-1.5 rounded-lg hover:bg-[#BFEDC1]/30 transition-colors"
+                        title="Save Job"
+                      >
+                        <Bookmark className="w-4 h-4" />
+                      </button>
                     </div>
 
                     {/* Metadata Row */}
-                    <div className="flex flex-wrap items-center gap-2 text-xs text-slate-600 mb-4">
-                      <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-100 rounded-md">
-                        <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                    <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-[#747D8C]">
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-[#E0ECE1] rounded-lg border border-[#CED6E0]/60">
+                        <MapPin className="w-3.5 h-3.5 text-[#747D8C]" />
                         {job.location}
                       </span>
-                      <span className="capitalize px-2.5 py-1 bg-slate-100 rounded-md">
+                      <span className="px-2.5 py-1 bg-[#BFEDC1]/50 text-[#6A8E7F] rounded-lg capitalize">
                         {job.workplace_type?.replace('_', ' ')}
                       </span>
-                      <span className="capitalize px-2.5 py-1 bg-indigo-50 text-indigo-700 rounded-md font-medium">
-                        {job.experience_level}
+                      <span className="px-2.5 py-1 bg-[#E0ECE1] rounded-lg capitalize border border-[#CED6E0]/60">
+                        {job.employment_type?.replace('_', ' ')}
                       </span>
                     </div>
 
-                    {/* Salary Tag */}
-                    <div className="text-sm font-semibold text-slate-900 mb-4">
-                      ₹{(job.salary_min / 100000).toFixed(0)}L - ₹{(job.salary_max / 100000).toFixed(0)}L <span className="text-xs text-slate-500 font-normal">per year</span>
+                    {/* Salary */}
+                    <div className="text-sm font-extrabold text-[#2F3542]">
+                      ₹{(job.salary_min / 100000).toFixed(0)}L – ₹{(job.salary_max / 100000).toFixed(0)}L <span className="text-xs text-[#747D8C] font-normal">per year</span>
                     </div>
-
-                    {/* Skills Tags */}
-                    {job.skills && job.skills.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 mb-6">
-                        {job.skills.slice(0, 3).map((skill, idx) => (
-                          <span key={idx} className="text-xs px-2 py-0.5 bg-slate-100 text-slate-700 rounded border border-slate-200">
-                            {skill}
-                          </span>
-                        ))}
-                      </div>
-                    )}
                   </div>
 
-                  {/* Card Footer Action */}
-                  <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-                    <span className="text-xs text-slate-400">Recently posted</span>
+                  {/* Card Bottom CTA */}
+                  <div className="pt-4 border-t border-[#CED6E0]/60 flex items-center justify-between">
+                    <span className="text-xs text-[#747D8C] font-medium">Verified Posting</span>
                     <Link
                       to={`/jobs/${job.slug}`}
-                      className="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 hover:text-indigo-700 bg-indigo-50 px-3 py-1.5 rounded-lg hover:bg-indigo-100 transition-colors"
+                      className="inline-flex items-center gap-1 text-xs font-bold text-[#6A8E7F] hover:text-[#58796B] bg-[#BFEDC1]/30 hover:bg-[#BFEDC1]/60 px-3.5 py-2 rounded-xl transition-colors"
                     >
-                      View Job
-                      <ChevronRight className="w-3.5 h-3.5" />
+                      View Job Details <ChevronRight className="w-3.5 h-3.5" />
                     </Link>
                   </div>
                 </div>
@@ -318,65 +472,51 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Explore Jobs Based on Trending Domains */}
-      <section className="bg-white border-y border-slate-200 py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-10">
-            <h2 className="text-2xl font-bold text-slate-900">Explore Jobs Based on Trending Domains</h2>
-            <p className="text-sm text-slate-600 mt-1">Discover opportunities grouped by enterprise sectors</p>
-          </div>
+      {/* Trusted Company Logo Strip */}
+      <section className="bg-white border-y border-[#CED6E0] py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto text-center space-y-6">
+          <p className="text-xs font-bold uppercase tracking-widest text-[#747D8C]">
+            TRUSTED BY LEADING COMPANIES
+          </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {DOMAINS.map((domain, index) => (
+          <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10">
+            {TRUSTED_COMPANIES.map((company) => (
               <div
-                key={index}
-                className="p-6 bg-slate-50 border border-slate-200 rounded-2xl flex flex-col justify-between hover:border-indigo-300 transition-all"
+                key={company}
+                className="px-5 py-2.5 rounded-xl bg-[#E0ECE1] border border-[#CED6E0] font-extrabold text-[#2F3542] text-sm tracking-wide text-center"
               >
-                <div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md">
-                    {domain.tag}
-                  </span>
-                  <h3 className="text-lg font-bold text-slate-900 mt-4 mb-2">{domain.title}</h3>
-                  <p className="text-xs text-slate-600 leading-relaxed mb-4">{domain.desc}</p>
-                </div>
-                <div className="pt-4 border-t border-slate-200 flex items-center justify-between">
-                  <span className="text-xs font-semibold text-slate-700">{domain.count}</span>
-                  <Link
-                    to="/jobs"
-                    className="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 hover:text-indigo-700"
-                  >
-                    View all jobs
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
+                {company}
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Candidate CTA Banner */}
+      {/* Final CTA Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="bg-slate-900 text-white rounded-3xl p-8 sm:p-12 shadow-xl flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="max-w-xl space-y-4">
-            <span className="text-xs font-semibold text-indigo-400 uppercase tracking-widest">Candidate Growth Platform</span>
-            <h2 className="text-3xl font-extrabold tracking-tight">Land Your Next Dream Offer Today</h2>
-            <p className="text-slate-300 text-sm leading-relaxed">
-              Create your profile, upload your resume, and get direct interview invites from top hiring managers without standard recruiter delays.
+        <div className="bg-[#6A8E7F] text-white rounded-3xl p-10 sm:p-14 shadow-xl flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden">
+          <div className="max-w-xl space-y-3 text-center sm:text-left">
+            <span className="text-xs font-bold uppercase tracking-widest text-[#BFEDC1]">CAREER MOMENTUM</span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
+              Your next opportunity is closer than you think.
+            </h2>
+            <p className="text-slate-100 text-sm leading-relaxed font-medium">
+              Build your profile, discover better opportunities, and move your career forward with VECOR.
             </p>
-            <div className="flex flex-wrap gap-4 pt-2 text-xs text-slate-300">
-              <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-emerald-400" /> Free Candidate Profile</span>
-              <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-emerald-400" /> Instant Resume Parse</span>
-              <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-emerald-400" /> Verified Tech Employers</span>
-            </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto shrink-0">
-            <Button variant="primary" size="lg" as={Link} to="/register" className="justify-center">
-              Register Now
+          <div className="flex flex-col sm:flex-row gap-3.5 shrink-0 w-full md:w-auto">
+            <Button variant="secondary" size="lg" as={Link} to="/register" className="justify-center">
+              Create Your Profile
             </Button>
-            <Button variant="secondary" size="lg" as={Link} to="/jobs" className="justify-center text-slate-900">
-              Browse All Jobs
+            <Button
+              variant="ghost"
+              size="lg"
+              as={Link}
+              to="/jobs"
+              className="justify-center text-white hover:bg-white/20 border border-white/30"
+            >
+              Browse Jobs
             </Button>
           </div>
         </div>
