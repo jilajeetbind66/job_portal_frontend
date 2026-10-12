@@ -73,23 +73,23 @@ export default function SavedJobsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#F7F8F5]">
               Saved Jobs
             </h1>
             {!isLoading && (
-              <span className="bg-indigo-50 border border-indigo-100 text-indigo-700 py-0.5 px-2.5 rounded-full text-xs font-bold">
+              <span className="bg-[#102A2B] border border-[#D6A84F]/30 text-[#D6A84F] py-0.5 px-3 rounded-full text-xs font-bold">
                 {savedJobs.length} Saved
               </span>
             )}
           </div>
-          <p className="text-sm text-slate-500 mt-1">
+          <p className="text-sm text-[#91A6A0] mt-1">
             Positions you bookmarked to review or apply to later.
           </p>
         </div>
 
         <Link
           to="/jobs"
-          className="inline-flex items-center gap-1.5 rounded-xl bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white hover:bg-indigo-500 shadow-sm transition-colors self-start sm:self-auto"
+          className="inline-flex items-center gap-2 rounded-xl bg-[#2F7D5B] px-4 py-2.5 text-xs font-semibold text-[#F7F8F5] hover:bg-[#25684a] shadow-lg shadow-[#2F7D5B]/20 transition-all self-start sm:self-auto"
         >
           <Briefcase className="h-4 w-4" />
           <span>Explore More Jobs</span>
@@ -101,7 +101,7 @@ export default function SavedJobsPage() {
           {[1, 2, 3, 4].map((i) => (
             <div
               key={i}
-              className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 animate-pulse h-48"
+              className="bg-[#0D2224] p-6 rounded-2xl border border-[#294341] animate-pulse h-48"
             />
           ))}
         </div>
@@ -112,25 +112,24 @@ export default function SavedJobsPage() {
           action={
             <Link
               to="/jobs"
-              className="inline-flex items-center gap-1.5 rounded-xl bg-indigo-600 px-4 py-2 text-xs font-semibold text-white hover:bg-indigo-500 shadow-sm"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-[#2F7D5B] px-4 py-2 text-xs font-semibold text-[#F7F8F5] hover:bg-[#25684a]"
             >
               <Briefcase className="h-4 w-4" />
               <span>Browse Active Jobs</span>
             </Link>
           }
-          icon={Bookmark}
         />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {savedJobs.map((job) => (
             <div
               key={job.id}
-              className="bg-white rounded-2xl shadow-2xs border border-slate-200 p-5 flex flex-col justify-between hover:border-indigo-300 hover:shadow-md transition-all group"
+              className="bg-[#0D2224] rounded-2xl border border-[#294341] p-5 flex flex-col justify-between hover:border-[#2F7D5B] hover:bg-[#102A2B] transition-all group"
             >
               <div>
                 <div className="flex justify-between items-start gap-3 mb-3">
                   <div className="flex gap-3 min-w-0">
-                    <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center overflow-hidden shrink-0 border border-slate-200">
+                    <div className="w-12 h-12 rounded-xl bg-[#102A2B] border border-[#294341] flex items-center justify-center overflow-hidden shrink-0">
                       {job.company_logo ? (
                         <img
                           src={job.company_logo}
@@ -138,7 +137,7 @@ export default function SavedJobsPage() {
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <span className="text-lg font-bold text-indigo-600">
+                        <span className="text-lg font-bold text-[#D6A84F]">
                           {job.company_name?.charAt(0) || 'C'}
                         </span>
                       )}
@@ -146,19 +145,19 @@ export default function SavedJobsPage() {
                     <div className="min-w-0">
                       <Link
                         to={`/jobs/${job.slug || job.id}`}
-                        className="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors line-clamp-1 block"
+                        className="text-sm font-bold text-[#F7F8F5] group-hover:text-[#D6A84F] transition-colors line-clamp-1 block"
                       >
                         {job.title}
                       </Link>
-                      <span className="flex items-center gap-1 font-medium text-slate-500 text-xs mt-0.5 truncate">
-                        <Building size={13} className="text-slate-400" /> {job.company_name}
+                      <span className="flex items-center gap-1 font-medium text-[#91A6A0] text-xs mt-0.5 truncate">
+                        <Building size={13} className="text-[#91A6A0]" /> {job.company_name}
                       </span>
                     </div>
                   </div>
 
                   <button
                     onClick={() => setJobToRemove(job.id)}
-                    className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                    className="p-1.5 text-[#91A6A0] hover:text-rose-400 hover:bg-[#153536] rounded-lg transition-colors"
                     title="Remove from saved"
                     aria-label="Remove saved job"
                   >
@@ -168,25 +167,25 @@ export default function SavedJobsPage() {
 
                 <div className="flex flex-wrap items-center gap-2 mb-3 text-xs">
                   {job.location && (
-                    <span className="inline-flex items-center gap-1 bg-slate-100 text-slate-700 px-2.5 py-0.5 rounded-full text-[11px] font-medium">
-                      <MapPin size={11} className="text-slate-400" /> {job.location}
+                    <span className="inline-flex items-center gap-1 bg-[#102A2B] border border-[#294341] text-[#91A6A0] px-2.5 py-0.5 rounded-full text-[11px] font-medium">
+                      <MapPin size={11} className="text-[#91A6A0]" /> {job.location}
                     </span>
                   )}
                   {job.workplace_type && (
-                    <span className="inline-flex items-center bg-indigo-50 text-indigo-700 px-2.5 py-0.5 rounded-full text-[11px] font-semibold capitalize">
+                    <span className="inline-flex items-center bg-[#102A2B] border border-[#294341] text-[#B9D8C4] px-2.5 py-0.5 rounded-full text-[11px] font-semibold capitalize">
                       {job.workplace_type.replace('_', ' ')}
                     </span>
                   )}
                   {job.experience_level && (
-                    <span className="inline-flex items-center gap-1 bg-slate-100 text-slate-700 px-2.5 py-0.5 rounded-full text-[11px] font-medium capitalize">
-                      <Briefcase size={11} className="text-slate-400" /> {job.experience_level}
+                    <span className="inline-flex items-center gap-1 bg-[#102A2B] border border-[#294341] text-[#91A6A0] px-2.5 py-0.5 rounded-full text-[11px] font-medium capitalize">
+                      <Briefcase size={11} className="text-[#91A6A0]" /> {job.experience_level}
                     </span>
                   )}
                 </div>
 
                 {formatSalary(job.salary_min, job.salary_max, job.currency) && (
-                  <p className="text-xs font-semibold text-slate-800 mb-3 flex items-center gap-1">
-                    <Banknote size={13} className="text-slate-400" />
+                  <p className="text-xs font-semibold text-[#E5B866] mb-3 flex items-center gap-1">
+                    <Banknote size={13} className="text-[#D6A84F]" />
                     <span>{formatSalary(job.salary_min, job.salary_max, job.currency)}</span>
                   </p>
                 )}
@@ -196,13 +195,13 @@ export default function SavedJobsPage() {
                     {job.skills.slice(0, 4).map((skill, idx) => (
                       <span
                         key={idx}
-                        className="bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md text-[10px] font-medium"
+                        className="bg-[#102A2B] border border-[#294341] text-[#B9D8C4] px-2.5 py-0.5 rounded-md text-[10px] font-medium"
                       >
                         {skill}
                       </span>
                     ))}
                     {job.skills.length > 4 && (
-                      <span className="text-[10px] text-slate-400 self-center">
+                      <span className="text-[10px] text-[#91A6A0] self-center">
                         +{job.skills.length - 4} more
                       </span>
                     )}
@@ -210,7 +209,7 @@ export default function SavedJobsPage() {
                 )}
               </div>
 
-              <div className="flex items-center gap-2 pt-3 border-t border-slate-100">
+              <div className="flex items-center gap-2 pt-3 border-t border-[#294341]">
                 <Link to={`/jobs/${job.slug || job.id}`} className="flex-1">
                   <Button variant="primary" size="sm" className="w-full justify-center text-xs">
                     <span>View Role & Apply</span>

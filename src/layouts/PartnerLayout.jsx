@@ -57,7 +57,7 @@ export default function PartnerLayout() {
   // })
 
   return (
-    <div className="min-h-screen bg-[#E0ECE1] text-[#2F3542]">
+    <div className="min-h-screen bg-[#07151A] text-[#F7F8F5]">
       <Sidebar
         navItems={PARTNER_NAV}
         portalName="Partner Panel"

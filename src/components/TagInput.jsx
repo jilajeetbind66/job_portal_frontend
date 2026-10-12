@@ -31,21 +31,22 @@ export default function TagInput({
   return (
     <div>
       {label && (
-        <label htmlFor={id} className="mb-1 block text-sm font-medium text-gray-700">
+        <label htmlFor={id} className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-[#91A6A0]">
           {label}
         </label>
       )}
-      <div className="flex flex-wrap gap-1.5 rounded-md border border-gray-300 p-2 focus-within:outline-2 focus-within:outline-indigo-600">
+      <div className="flex flex-wrap gap-2 rounded-xl border border-[#294341] bg-[#102A2B] p-2.5 transition-colors focus-within:border-[#2F7D5B] focus-within:ring-1 focus-within:ring-[#2F7D5B]">
         {value.map((tag) => (
           <span
             key={tag}
-            className="inline-flex items-center gap-1 rounded bg-indigo-50 px-2 py-0.5 text-sm text-indigo-700"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-[#153536] border border-[#294341] px-2.5 py-1 text-xs font-medium text-[#B9D8C4]"
           >
             {tag}
             <button
               type="button"
               onClick={() => onChange(value.filter((t) => t !== tag))}
               aria-label={`Remove ${tag}`}
+              className="text-[#91A6A0] hover:text-[#F7F8F5]"
             >
               <X className="h-3 w-3" />
             </button>
@@ -61,10 +62,10 @@ export default function TagInput({
             setText('')
           }}
           placeholder={value.length ? '' : placeholder}
-          className="min-w-24 flex-1 border-0 bg-transparent text-sm focus:outline-none"
+          className="min-w-24 flex-1 border-0 bg-transparent text-sm text-[#F7F8F5] placeholder-[#91A6A0]/50 focus:outline-none"
         />
       </div>
-      {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-1 text-xs text-red-400">{error}</p>}
     </div>
   )
 }

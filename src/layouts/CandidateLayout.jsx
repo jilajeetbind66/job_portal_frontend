@@ -15,14 +15,14 @@ export default function CandidateLayout() {
   const { user } = useAuth()
 
   return (
-    <div className="min-h-screen bg-[#E0ECE1] text-[#2F3542]">
-      <header className="border-b border-[#CED6E0] bg-white">
+    <div className="min-h-screen bg-[#07151A] text-[#F7F8F5]">
+      <header className="border-b border-[#294341] bg-[#0D2224]">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
           <Link to="/" className="flex items-center gap-2">
-            <Logo />
+            <Logo isDark={true} />
           </Link>
-          <div className="flex items-center gap-3 text-sm text-[#747D8C]">
-            <span className="font-semibold text-[#2F3542]">{user?.name}</span>
+          <div className="flex items-center gap-3 text-sm text-[#91A6A0]">
+            <span className="font-semibold text-[#F7F8F5]">{user?.name}</span>
             <LogoutButton />
           </div>
         </div>
@@ -36,8 +36,8 @@ export default function CandidateLayout() {
                 clsx(
                   'border-b-2 px-1 py-2.5 transition-colors',
                   isActive
-                    ? 'border-[#6A8E7F] text-[#6A8E7F]'
-                    : 'border-transparent text-[#747D8C] hover:text-[#2F3542]',
+                    ? 'border-[#D6A84F] text-[#D6A84F] font-bold'
+                    : 'border-transparent text-[#91A6A0] hover:text-[#F7F8F5]',
                 )
               }
             >

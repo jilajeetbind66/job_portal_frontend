@@ -15,8 +15,10 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import { StatusBadge, EmptyState, Button } from '@/components';
+import { StatusBadge, EmptyState, Button, Breadcrumbs, SEO } from '@/components';
 import { fetchCompanyBySlug } from '@/features/public/api/jobs';
+import { createOrganizationSchema, createBreadcrumbSchema } from '@/utils/schema';
+import { formatMetaDescription } from '@/utils/seo';
 
 const formatSalary = (min, max, currency = '₹') => {
   if (!min && !max) return null;
@@ -52,6 +54,7 @@ export default function CompanyPage() {
   if (isError || !company) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-16 text-center">
+        <SEO title="Company Not Found" description="The requested company showcase could not be found or has been unlisted." robots="noindex, nofollow" />
         <Building className="mx-auto h-12 w-12 text-slate-300" />
         <h2 className="mt-4 text-2xl font-bold text-slate-900">Company Not Found</h2>
         <p className="mt-2 text-sm text-slate-500">
@@ -69,37 +72,33 @@ export default function CompanyPage() {
   }
 
   const openJobs = company.jobs || [];
+  const breadcrumbs = [
+    { label: 'Jobs in India', to: '/jobs-in-india' },
+    { label: 'Companies', to: '/jobs' },
+    { label: company.name },
+  ];
+
+  const seoTitle = `${company.name} Careers & Job Openings | Vcreateventures`;
+  const seoDesc = `Explore verified career openings and jobs at ${company.name}. ${formatMetaDescription(company.description || `Find hiring opportunities at ${company.name} on Vcreateventures.`)}`;
+  const schemas = [
+    createOrganizationSchema(company),
+    createBreadcrumbSchema(breadcrumbs),
+  ];
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-16">
-      {/* Breadcrumb Navigation */}
-      <nav className="flex text-xs text-slate-500 mb-6" aria-label="Breadcrumb">
-        <ol className="inline-flex items-center space-x-1.5">
-          <li>
-            <Link to="/" className="hover:text-slate-900 transition-colors">
-              Home
-            </Link>
-          </li>
-          <li>
-            <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
-          </li>
-          <li>
-            <Link to="/jobs" className="hover:text-slate-900 transition-colors">
-              Jobs
-            </Link>
-          </li>
-          <li>
-            <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
-          </li>
-          <li aria-current="page">
-            <span className="font-semibold text-slate-900">{company.name}</span>
-          </li>
-        </ol>
-      </nav>
+      <SEO
+        title={seoTitle}
+        description={seoDesc}
+        canonical={`/company/${company.slug || slug}`}
+        schema={schemas}
+      />
+
+      <Breadcrumbs items={breadcrumbs} className="mb-6" />
 
       {/* Hero Showcase Banner */}
-      <div className="bg-white rounded-3xl p-6 sm:p-10 mb-8 border border-slate-200 shadow-sm relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-indigo-50/70 rounded-full blur-3xl pointer-events-none" />
+      <div className="bg-[#0D2224] rounded-3xl p-6 sm:p-10 mb-8 border border-[#294341] shadow-xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-80 h-80 bg-[#2F7D5B]/15 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center gap-6 sm:gap-8">
           <div className="flex-shrink-0">

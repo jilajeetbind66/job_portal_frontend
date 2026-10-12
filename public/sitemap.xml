@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>https://vcreateventures.com/sitemaps/categories.xml</loc>
+    <lastmod>2026-10-12T06:18:34.686Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://vcreateventures.com/sitemaps/locations.xml</loc>
+    <lastmod>2026-10-12T06:18:34.686Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://vcreateventures.com/sitemaps/jobs.xml</loc>
+    <lastmod>2026-10-12T06:18:34.686Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://vcreateventures.com/sitemaps/companies.xml</loc>
+    <lastmod>2026-10-12T06:18:34.686Z</lastmod>
+  </sitemap>
+</sitemapindex>

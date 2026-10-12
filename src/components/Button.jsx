@@ -2,10 +2,11 @@ import clsx from 'clsx'
 import { Loader2 } from 'lucide-react'
 
 const variants = {
-  primary: 'bg-[#6A8E7F] text-white hover:bg-[#58796B] shadow-xs border border-[#6A8E7F] transition-all duration-200',
-  secondary: 'bg-white text-[#2F3542] border border-[#CED6E0] hover:bg-[#F7F8F5] hover:border-[#747D8C] shadow-2xs transition-all duration-200',
+  primary: 'bg-[#2F7D5B] text-white hover:bg-[#25684B] shadow-xs border border-[#2F7D5B] transition-all duration-200',
+  secondary: 'bg-[#0D2224] text-[#F7F8F5] border border-[#294341] hover:bg-[#102A2B] hover:border-[#8FAF9A] shadow-2xs transition-all duration-200',
+  gold: 'bg-[#D6A84F] text-[#172026] hover:bg-[#E5B866] font-bold shadow-md border border-[#D6A84F] transition-all duration-200',
   danger: 'bg-rose-600 text-white hover:bg-rose-700 border border-rose-600 shadow-2xs transition-colors',
-  ghost: 'text-[#2F3542] hover:bg-[#BFEDC1]/30 hover:text-[#6A8E7F] transition-colors',
+  ghost: 'text-[#F7F8F5] hover:bg-[#102A2B] hover:text-[#B9D8C4] transition-colors',
 }
 
 const sizes = {

@@ -2,12 +2,12 @@ import clsx from 'clsx'
 import { ACCOUNT_STATUS, APPLICATION_STATUS, JOB_STATUS } from '@/constants'
 
 const styles = {
-  gray: 'bg-gray-100 text-gray-700',
-  yellow: 'bg-yellow-100 text-yellow-800',
-  green: 'bg-green-100 text-green-800',
-  red: 'bg-red-100 text-red-800',
-  blue: 'bg-blue-100 text-blue-800',
-  purple: 'bg-purple-100 text-purple-800',
+  gray: 'bg-[#102A2B] text-[#91A6A0] border border-[#294341]',
+  yellow: 'bg-[#D6A84F]/15 text-[#E5B866] border border-[#D6A84F]/30',
+  green: 'bg-[#2F7D5B]/20 text-[#B9D8C4] border border-[#2F7D5B]/40',
+  red: 'bg-red-950/40 text-red-300 border border-red-800/40',
+  blue: 'bg-[#2F7D5B]/25 text-[#B9D8C4] border border-[#2F7D5B]/50',
+  purple: 'bg-[#D6A84F]/20 text-[#E5B866] border border-[#D6A84F]/40',
 }
 
 // Job, application aur account status ke rang ek jagah tay hain

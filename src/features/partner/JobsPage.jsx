@@ -111,10 +111,10 @@ export default function JobsPage() {
 
   // Quick stats computed from current or all items
   const stats = [
-    { label: 'Published Jobs', value: jobs.filter((j) => j.status === JOB_STATUS.PUBLISHED).length, icon: CheckCircle2, color: 'text-emerald-600 bg-emerald-50' },
-    { label: 'Under Review', value: jobs.filter((j) => j.status === JOB_STATUS.PENDING_REVIEW).length, icon: Clock, color: 'text-amber-600 bg-amber-50' },
-    { label: 'Needs Revision', value: jobs.filter((j) => j.status === JOB_STATUS.REJECTED).length, icon: AlertTriangle, color: 'text-rose-600 bg-rose-50' },
-    { label: 'Total Applicants', value: jobs.reduce((acc, curr) => acc + (curr.applicants_count || 0), 0), icon: Users, color: 'text-indigo-600 bg-indigo-50' },
+    { label: 'Published Jobs', value: jobs.filter((j) => j.status === JOB_STATUS.PUBLISHED).length, icon: CheckCircle2, color: 'text-[#B9D8C4] bg-[#2F7D5B]/20 border border-[#2F7D5B]/30' },
+    { label: 'Under Review', value: jobs.filter((j) => j.status === JOB_STATUS.PENDING_REVIEW).length, icon: Clock, color: 'text-[#E5B866] bg-[#D6A84F]/15 border border-[#D6A84F]/30' },
+    { label: 'Needs Revision', value: jobs.filter((j) => j.status === JOB_STATUS.REJECTED).length, icon: AlertTriangle, color: 'text-rose-300 bg-rose-950/40 border border-rose-800/40' },
+    { label: 'Total Applicants', value: jobs.reduce((acc, curr) => acc + (curr.applicants_count || 0), 0), icon: Users, color: 'text-[#E5B866] bg-[#D6A84F]/20 border border-[#D6A84F]/30' },
   ]
 
   return (
@@ -122,14 +122,14 @@ export default function JobsPage() {
       {/* Page Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">Job Postings</h1>
-          <p className="mt-1 text-sm text-slate-500">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#F7F8F5]">Job Postings</h1>
+          <p className="mt-1 text-sm text-[#91A6A0]">
             Create and manage your open positions, track applicant responses, and view moderation updates.
           </p>
         </div>
         <Link
           to="/partner/jobs/new"
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 transition-colors"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#2F7D5B] px-5 py-2.5 text-sm font-semibold text-[#F7F8F5] shadow-lg shadow-[#2F7D5B]/20 hover:bg-[#25684a] transition-all"
         >
           <Plus className="h-4 w-4" />
           Post a New Job
@@ -141,14 +141,14 @@ export default function JobsPage() {
         {stats.map((stat) => {
           const Icon = stat.icon
           return (
-            <div key={stat.label} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+            <div key={stat.label} className="rounded-2xl border border-[#294341] bg-[#0D2224] p-4">
               <div className="flex items-center gap-3">
                 <div className={clsx('flex h-10 w-10 items-center justify-center rounded-xl', stat.color)}>
                   <Icon className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="text-xs font-medium text-slate-500">{stat.label}</p>
-                  <p className="text-xl font-bold text-slate-900">{stat.value}</p>
+                  <p className="text-xs font-medium text-[#91A6A0]">{stat.label}</p>
+                  <p className="text-xl font-bold text-[#F7F8F5]">{stat.value}</p>
                 </div>
               </div>
             </div>
@@ -157,10 +157,10 @@ export default function JobsPage() {
       </div>
 
       {/* Search and Filters Bar */}
-      <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-4">
+      <div className="rounded-2xl border border-[#294341] bg-[#0D2224] p-5 space-y-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           {/* Status Tabs */}
-          <div className="flex flex-wrap items-center gap-1.5 border-b border-slate-100 pb-2 sm:border-b-0 sm:pb-0">
+          <div className="flex flex-wrap items-center gap-1.5 border-b border-[#294341] pb-3 sm:border-b-0 sm:pb-0">
             {[
               { id: 'all', label: 'All Jobs' },
               { id: JOB_STATUS.PUBLISHED, label: 'Published' },
@@ -175,10 +175,10 @@ export default function JobsPage() {
                   key={tab.id}
                   onClick={() => handleStatusTab(tab.id)}
                   className={clsx(
-                    'rounded-lg px-3 py-1.5 text-xs font-medium transition-colors',
+                    'rounded-xl px-3.5 py-1.5 text-xs font-medium transition-all',
                     active
-                      ? 'bg-indigo-50 text-indigo-700 font-semibold'
-                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                      ? 'bg-[#153536] text-[#B9D8C4] border border-[#294341] font-semibold'
+                      : 'text-[#91A6A0] hover:bg-[#102A2B] hover:text-[#F7F8F5]'
                   )}
                 >
                   {tab.label}
@@ -189,49 +189,49 @@ export default function JobsPage() {
 
           {/* Search Box */}
           <div className="relative w-full sm:w-72">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#91A6A0]" />
             <input
               type="text"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               placeholder="Search by title, dept, location..."
-              className="w-full rounded-xl border border-slate-200 pl-9 pr-3 py-1.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+              className="w-full rounded-xl border border-[#294341] bg-[#102A2B] pl-10 pr-3.5 py-2 text-sm text-[#F7F8F5] placeholder:text-[#91A6A0]/50 focus:border-[#2F7D5B] focus:outline-none focus:ring-1 focus:ring-[#2F7D5B]"
             />
           </div>
         </div>
 
         {/* Table Content */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-slate-600">
-            <thead className="bg-slate-50 text-xs uppercase tracking-wider text-slate-500">
+        <div className="overflow-x-auto rounded-xl border border-[#294341]">
+          <table className="w-full text-left text-sm text-[#91A6A0]">
+            <thead className="bg-[#102A2B] text-xs uppercase tracking-wider text-[#91A6A0]">
               <tr>
-                <th className="px-4 py-3 font-semibold">Job Title & Spec</th>
-                <th className="px-4 py-3 font-semibold">Department</th>
-                <th className="px-4 py-3 font-semibold">Compensation</th>
-                <th className="px-4 py-3 font-semibold">Status</th>
-                <th className="px-4 py-3 font-semibold">Applicants</th>
-                <th className="px-4 py-3 text-right font-semibold">Actions</th>
+                <th className="px-4 py-3.5 font-semibold">Job Title & Spec</th>
+                <th className="px-4 py-3.5 font-semibold">Department</th>
+                <th className="px-4 py-3.5 font-semibold">Compensation</th>
+                <th className="px-4 py-3.5 font-semibold">Status</th>
+                <th className="px-4 py-3.5 font-semibold">Applicants</th>
+                <th className="px-4 py-3.5 text-right font-semibold">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-[#294341]/60 bg-[#0D2224]">
               {isLoading ? (
                 Array.from({ length: 4 }).map((_, i) => (
                   <tr key={i} className="animate-pulse">
-                    <td className="px-4 py-4"><div className="h-4 w-48 bg-slate-200 rounded" /></td>
-                    <td className="px-4 py-4"><div className="h-4 w-24 bg-slate-200 rounded" /></td>
-                    <td className="px-4 py-4"><div className="h-4 w-28 bg-slate-200 rounded" /></td>
-                    <td className="px-4 py-4"><div className="h-6 w-20 bg-slate-200 rounded-full" /></td>
-                    <td className="px-4 py-4"><div className="h-4 w-12 bg-slate-200 rounded" /></td>
-                    <td className="px-4 py-4 text-right"><div className="h-8 w-16 bg-slate-200 rounded ml-auto" /></td>
+                    <td className="px-4 py-4"><div className="h-4 w-48 bg-[#102A2B] rounded" /></td>
+                    <td className="px-4 py-4"><div className="h-4 w-24 bg-[#102A2B] rounded" /></td>
+                    <td className="px-4 py-4"><div className="h-4 w-28 bg-[#102A2B] rounded" /></td>
+                    <td className="px-4 py-4"><div className="h-6 w-20 bg-[#102A2B] rounded-full" /></td>
+                    <td className="px-4 py-4"><div className="h-4 w-12 bg-[#102A2B] rounded" /></td>
+                    <td className="px-4 py-4 text-right"><div className="h-8 w-16 bg-[#102A2B] rounded ml-auto" /></td>
                   </tr>
                 ))
               ) : isError ? (
                 <tr>
                   <td colSpan={6} className="py-12 text-center">
-                    <p className="text-sm font-medium text-rose-600">Failed to load jobs: {error?.message}</p>
+                    <p className="text-sm font-medium text-rose-400">Failed to load jobs: {error?.message}</p>
                     <button
                       onClick={() => refetch()}
-                      className="mt-2 text-xs font-semibold text-indigo-600 hover:underline"
+                      className="mt-2 text-xs font-semibold text-[#D6A84F] hover:underline"
                     >
                       Try Again
                     </button>
@@ -240,11 +240,11 @@ export default function JobsPage() {
               ) : jobs.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="py-12 text-center">
-                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 mb-3">
+                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[#102A2B] text-[#D6A84F] border border-[#294341] mb-3">
                       <Briefcase className="h-6 w-6" />
                     </div>
-                    <p className="text-base font-semibold text-slate-800">No jobs found</p>
-                    <p className="mt-1 text-sm text-slate-500">
+                    <p className="text-base font-semibold text-[#F7F8F5]">No jobs found</p>
+                    <p className="mt-1 text-sm text-[#91A6A0]">
                       {debouncedSearch || currentStatus !== 'all'
                         ? 'Try clearing filters or search keyword.'
                         : 'Post your first opening to start receiving candidates.'}
@@ -252,7 +252,7 @@ export default function JobsPage() {
                     {currentStatus === 'all' && !debouncedSearch && (
                       <Link
                         to="/partner/jobs/new"
-                        className="mt-4 inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2 text-xs font-semibold text-white hover:bg-indigo-500"
+                        className="mt-4 inline-flex items-center gap-2 rounded-xl bg-[#2F7D5B] px-4 py-2 text-xs font-semibold text-[#F7F8F5] hover:bg-[#25684a]"
                       >
                         <Plus className="h-4 w-4" /> Create Opening
                       </Link>
@@ -266,17 +266,17 @@ export default function JobsPage() {
                   const isPublished = job.status === JOB_STATUS.PUBLISHED
 
                   return (
-                    <tr key={job.id} className="hover:bg-slate-50/70 transition-colors">
+                    <tr key={job.id} className="hover:bg-[#153536]/50 transition-colors">
                       {/* Job Title & Details */}
                       <td className="px-4 py-4">
                         <div>
                           <Link
                             to={`/partner/jobs/${job.id}/edit`}
-                            className="font-semibold text-slate-900 hover:text-indigo-600 line-clamp-1"
+                            className="font-semibold text-[#F7F8F5] hover:text-[#D6A84F] line-clamp-1 transition-colors"
                           >
                             {job.title}
                           </Link>
-                          <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-slate-500">
+                          <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-[#91A6A0]">
                             <span className="capitalize">{job.workplace_type?.replace('_', ' ')}</span>
                             <span>•</span>
                             <span className="capitalize">{job.employment_type?.replace('_', ' ')}</span>
@@ -286,16 +286,16 @@ export default function JobsPage() {
 
                           {/* Rejection Alert Box */}
                           {isRejected && job.rejection_reason && (
-                            <div className="mt-2.5 rounded-xl border border-rose-200 bg-rose-50/80 p-2.5 text-xs text-rose-800">
+                            <div className="mt-2.5 rounded-xl border border-rose-900/50 bg-rose-950/40 p-2.5 text-xs text-rose-300">
                               <div className="flex items-start gap-2">
-                                <AlertTriangle className="h-4 w-4 shrink-0 text-rose-600 mt-0.5" />
+                                <AlertTriangle className="h-4 w-4 shrink-0 text-rose-400 mt-0.5" />
                                 <div>
                                   <span className="font-semibold">Reviewer Feedback: </span>
                                   {job.rejection_reason}
                                   <div className="mt-1">
                                     <Link
                                       to={`/partner/jobs/${job.id}/edit`}
-                                      className="font-bold underline hover:text-rose-900"
+                                      className="font-bold underline text-[#D6A84F] hover:text-[#E5B866]"
                                     >
                                       Edit & Resubmit Job →
                                     </Link>
@@ -308,12 +308,12 @@ export default function JobsPage() {
                       </td>
 
                       {/* Department */}
-                      <td className="px-4 py-4 text-sm text-slate-700">
+                      <td className="px-4 py-4 text-sm text-[#F7F8F5]">
                         {job.department || 'General'}
                       </td>
 
                       {/* Compensation */}
-                      <td className="px-4 py-4 text-sm text-slate-700">
+                      <td className="px-4 py-4 text-sm font-medium text-[#E5B866]">
                         {formatSalary(job.salary_min, job.salary_max, job.currency)}
                       </td>
 
@@ -326,7 +326,7 @@ export default function JobsPage() {
                       <td className="px-4 py-4">
                         <Link
                           to={`/partner/jobs/${job.id}/applicants`}
-                          className="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-600 hover:text-indigo-800"
+                          className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#D6A84F] hover:text-[#E5B866] transition-colors"
                         >
                           <Users className="h-4 w-4" />
                           <span>{job.applicants_count || 0} applicants</span>
@@ -338,7 +338,7 @@ export default function JobsPage() {
                         <div className="flex items-center justify-end gap-1.5">
                           <Link
                             to={`/partner/jobs/${job.id}/edit`}
-                            className="rounded-lg p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-800"
+                            className="rounded-lg p-1.5 text-[#91A6A0] hover:bg-[#153536] hover:text-[#F7F8F5] transition-colors"
                             title="Edit Job"
                           >
                             <Pencil className="h-4 w-4" />
@@ -354,7 +354,7 @@ export default function JobsPage() {
                                 })
                               }
                               disabled={statusMutation.isPending}
-                              className="inline-flex items-center gap-1 rounded-lg bg-amber-50 px-2 py-1 text-xs font-medium text-amber-700 hover:bg-amber-100"
+                              className="inline-flex items-center gap-1 rounded-lg bg-[#D6A84F]/15 border border-[#D6A84F]/30 px-2 py-1 text-xs font-medium text-[#E5B866] hover:bg-[#D6A84F]/25 transition-colors"
                               title="Submit for Review"
                             >
                               <Send className="h-3.5 w-3.5" />
@@ -372,7 +372,7 @@ export default function JobsPage() {
                                 })
                               }
                               disabled={statusMutation.isPending}
-                              className="inline-flex items-center gap-1 rounded-lg bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200"
+                              className="inline-flex items-center gap-1 rounded-lg bg-[#102A2B] border border-[#294341] px-2 py-1 text-xs font-medium text-[#91A6A0] hover:bg-[#153536] hover:text-[#F7F8F5] transition-colors"
                               title="Close Job"
                             >
                               <Lock className="h-3.5 w-3.5" />
@@ -389,7 +389,7 @@ export default function JobsPage() {
                                 }
                               }}
                               disabled={deleteMutation.isPending}
-                              className="rounded-lg p-1.5 text-slate-400 hover:bg-rose-50 hover:text-rose-600"
+                              className="rounded-lg p-1.5 text-[#91A6A0] hover:bg-rose-950/40 hover:text-rose-400 transition-colors"
                               title="Delete Draft"
                             >
                               <Trash2 className="h-4 w-4" />
@@ -407,10 +407,10 @@ export default function JobsPage() {
 
         {/* Pagination Bar */}
         {meta.total > 0 && (
-          <div className="flex items-center justify-between border-t border-slate-100 pt-3 text-xs text-slate-500">
+          <div className="flex items-center justify-between border-t border-[#294341] pt-4 text-xs text-[#91A6A0]">
             <p>
-              Showing page <span className="font-semibold text-slate-700">{meta.current_page}</span> of{' '}
-              <span className="font-semibold text-slate-700">{meta.last_page}</span> ({meta.total} jobs)
+              Showing page <span className="font-semibold text-[#F7F8F5]">{meta.current_page}</span> of{' '}
+              <span className="font-semibold text-[#F7F8F5]">{meta.last_page}</span> ({meta.total} jobs)
             </p>
             <div className="flex items-center gap-2">
               <button
@@ -420,7 +420,7 @@ export default function JobsPage() {
                   p.set('page', String(meta.current_page - 1))
                   setSearchParams(p)
                 }}
-                className="rounded-lg border border-slate-200 px-2.5 py-1 font-medium hover:bg-slate-50 disabled:opacity-40"
+                className="rounded-lg border border-[#294341] bg-[#102A2B] px-3 py-1 font-medium text-[#91A6A0] hover:bg-[#153536] hover:text-[#F7F8F5] disabled:opacity-40 transition-colors"
               >
                 Previous
               </button>
@@ -431,7 +431,7 @@ export default function JobsPage() {
                   p.set('page', String(meta.current_page + 1))
                   setSearchParams(p)
                 }}
-                className="rounded-lg border border-slate-200 px-2.5 py-1 font-medium hover:bg-slate-50 disabled:opacity-40"
+                className="rounded-lg border border-[#294341] bg-[#102A2B] px-3 py-1 font-medium text-[#91A6A0] hover:bg-[#153536] hover:text-[#F7F8F5] disabled:opacity-40 transition-colors"
               >
                 Next
               </button>

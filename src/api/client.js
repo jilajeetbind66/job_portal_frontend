@@ -2,8 +2,10 @@ import axios from 'axios'
 
 export const UNAUTHORIZED_EVENT = 'auth:unauthorized'
 
+const API_BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:8000'
+
 export const api = axios.create({
-  baseURL: `${import.meta.env.VITE_API_URL}/api/v1`,
+  baseURL: `${API_BASE}/api/v1`,
   withCredentials: true,
   withXSRFToken: true,
   headers: { Accept: 'application/json' },
@@ -11,7 +13,7 @@ export const api = axios.create({
 
 // Sanctum SPA login se pehle ek baar CSRF cookie leni padti hai
 export function getCsrfCookie() {
-  return axios.get(`${import.meta.env.VITE_API_URL}/sanctum/csrf-cookie`, {
+  return axios.get(`${API_BASE}/sanctum/csrf-cookie`, {
     withCredentials: true,
   })
 }

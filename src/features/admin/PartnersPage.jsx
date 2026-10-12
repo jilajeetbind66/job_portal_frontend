@@ -46,7 +46,7 @@ export default function PartnersPage() {
     } else {
       newParams.delete('status');
     }
-    newParams.set('page', '1'); // reset to page 1 on filter
+    newParams.set('page', '1');
     setSearchParams(newParams);
   };
 
@@ -65,26 +65,29 @@ export default function PartnersPage() {
   const totalPages = data?.meta?.last_page || data?.totalPages || 1;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-12">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold text-gray-900">Partners</h1>
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#F7F8F5]">Partners</h1>
+          <p className="mt-1 text-sm text-[#91A6A0]">Manage enterprise employer accounts and hiring organizations.</p>
+        </div>
         <Link
           to="/admin/partners/new"
-          className="inline-flex items-center justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:w-auto"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#2F7D5B] px-5 py-2.5 text-sm font-semibold text-[#F7F8F5] shadow-lg shadow-[#2F7D5B]/20 hover:bg-[#25684a] transition-all"
         >
-          <Plus className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
+          <Plus className="h-4 w-4" aria-hidden="true" />
           Add Partner
         </Link>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
-          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <Search className="h-5 w-5 text-gray-400" aria-hidden="true" />
+          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
+            <Search className="h-4 w-4 text-[#91A6A0]" aria-hidden="true" />
           </div>
           <input
             type="text"
-            className="block w-full rounded-md border-gray-300 pl-10 focus:border-blue-500 focus:ring-blue-500 sm:text-sm shadow-sm"
+            className="block w-full rounded-xl border border-[#294341] bg-[#102A2B] pl-10 pr-3.5 py-2.5 text-sm text-[#F7F8F5] placeholder:text-[#91A6A0]/50 focus:border-[#2F7D5B] focus:outline-none focus:ring-1 focus:ring-[#2F7D5B]"
             placeholder="Search partners by name..."
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
@@ -92,7 +95,7 @@ export default function PartnersPage() {
         </div>
         <div className="sm:w-64">
           <select
-            className="block w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500 sm:text-sm shadow-sm"
+            className="block w-full rounded-xl border border-[#294341] bg-[#102A2B] px-3.5 py-2.5 text-sm text-[#F7F8F5] focus:border-[#2F7D5B] focus:outline-none focus:ring-1 focus:ring-[#2F7D5B]"
             value={statusFilter}
             onChange={handleStatusChange}
           >
@@ -103,205 +106,163 @@ export default function PartnersPage() {
         </div>
       </div>
 
-      <div className="overflow-hidden bg-white shadow sm:rounded-lg border border-gray-200">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Partner
-              </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Website
-              </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Status
-              </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Jobs
-              </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Recruiters
-              </th>
-              <th scope="col" className="relative px-6 py-3">
-                <span className="sr-only">Actions</span>
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {isLoading ? (
-              // Loading skeleton
-              Array.from({ length: 5 }).map((_, i) => (
-                <tr key={i}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="h-10 w-10 flex-shrink-0 rounded-full bg-gray-200 animate-pulse"></div>
-                      <div className="ml-4">
-                        <div className="h-4 w-24 bg-gray-200 rounded animate-pulse"></div>
+      <div className="overflow-hidden rounded-2xl border border-[#294341] bg-[#0D2224] shadow-sm">
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-[#294341]/60">
+            <thead className="bg-[#102A2B]">
+              <tr>
+                <th scope="col" className="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-[#91A6A0]">
+                  Partner
+                </th>
+                <th scope="col" className="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-[#91A6A0]">
+                  Website
+                </th>
+                <th scope="col" className="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-[#91A6A0]">
+                  Status
+                </th>
+                <th scope="col" className="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-[#91A6A0]">
+                  Jobs
+                </th>
+                <th scope="col" className="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-[#91A6A0]">
+                  Recruiters
+                </th>
+                <th scope="col" className="relative px-6 py-3.5">
+                  <span className="sr-only">Actions</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[#294341]/60 bg-[#0D2224]">
+              {isLoading ? (
+                Array.from({ length: 5 }).map((_, i) => (
+                  <tr key={i} className="animate-pulse">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <div className="h-10 w-10 flex-shrink-0 rounded-xl bg-[#102A2B]"></div>
+                        <div className="ml-4">
+                          <div className="h-4 w-28 bg-[#102A2B] rounded"></div>
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="h-4 w-32 bg-gray-200 rounded animate-pulse"></div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="h-6 w-16 bg-gray-200 rounded-full animate-pulse"></div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="h-4 w-8 bg-gray-200 rounded animate-pulse"></div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="h-4 w-8 bg-gray-200 rounded animate-pulse"></div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <div className="flex justify-end gap-2">
-                      <div className="h-5 w-5 bg-gray-200 rounded animate-pulse"></div>
-                      <div className="h-5 w-5 bg-gray-200 rounded animate-pulse"></div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="h-4 w-32 bg-[#102A2B] rounded"></div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="h-6 w-16 bg-[#102A2B] rounded-full"></div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="h-4 w-8 bg-[#102A2B] rounded"></div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="h-4 w-8 bg-[#102A2B] rounded"></div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right">
+                      <div className="h-5 w-16 bg-[#102A2B] rounded ml-auto"></div>
+                    </td>
+                  </tr>
+                ))
+              ) : isError ? (
+                <tr>
+                  <td colSpan={6} className="px-6 py-12 text-center">
+                    <div className="flex flex-col items-center justify-center">
+                      <AlertCircle className="h-10 w-10 text-rose-400 mb-2" />
+                      <p className="text-rose-400 font-medium mb-4">Error loading partners: {error?.message || 'Something went wrong'}</p>
+                      <button
+                        onClick={() => refetch()}
+                        className="px-4 py-2 text-xs font-semibold rounded-xl bg-[#102A2B] border border-[#294341] text-[#D6A84F] hover:bg-[#153536]"
+                      >
+                        Retry
+                      </button>
                     </div>
                   </td>
                 </tr>
-              ))
-            ) : isError ? (
-              // Error state
-              <tr>
-                <td colSpan={6} className="px-6 py-12 text-center">
-                  <div className="flex flex-col items-center justify-center">
-                    <AlertCircle className="h-10 w-10 text-red-500 mb-2" />
-                    <p className="text-red-500 font-medium mb-4">Error loading partners: {error?.message || 'Something went wrong'}</p>
-                    <button
-                      onClick={() => refetch()}
-                      className="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                    >
-                      Retry
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ) : partners.length === 0 ? (
-              // Empty state
-              <tr>
-                <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
-                  <div className="flex flex-col items-center justify-center">
-                    <svg className="h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                      <path vectorEffect="non-scaling-stroke" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-                    </svg>
-                    <p className="text-lg font-medium text-gray-900">No partners found</p>
-                    <p className="mt-1">Adjust your search or filter to find what you're looking for.</p>
-                  </div>
-                </td>
-              </tr>
-            ) : (
-              // Data rows
-              partners.map((partner) => (
-                <tr key={partner.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="h-10 w-10 flex-shrink-0">
-                        {(partner.logo || partner.logoUrl) ? (
-                          <img className="h-10 w-10 rounded-full object-cover" src={partner.logo || partner.logoUrl} alt="" />
-                        ) : (
-                          <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-lg">
-                            {partner.name.charAt(0).toUpperCase()}
-                          </div>
-                        )}
+              ) : partners.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="px-6 py-12 text-center text-[#91A6A0]">
+                    <div className="flex flex-col items-center justify-center">
+                      <p className="text-base font-semibold text-[#F7F8F5]">No partners found</p>
+                      <p className="mt-1 text-xs">Adjust your search or filter to find what you&apos;re looking for.</p>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                partners.map((partner) => (
+                  <tr key={partner.id} className="hover:bg-[#153536]/50 transition-colors">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <div className="h-10 w-10 flex-shrink-0">
+                          {(partner.logo || partner.logoUrl) ? (
+                            <img className="h-10 w-10 rounded-xl object-cover border border-[#294341]" src={partner.logo || partner.logoUrl} alt="" />
+                          ) : (
+                            <div className="h-10 w-10 rounded-xl bg-[#102A2B] border border-[#294341] flex items-center justify-center text-[#D6A84F] font-bold text-base">
+                              {partner.name.charAt(0).toUpperCase()}
+                            </div>
+                          )}
+                        </div>
+                        <div className="ml-4">
+                          <Link to={`/admin/partners/${partner.id}`} className="text-sm font-semibold text-[#F7F8F5] hover:text-[#D6A84F] transition-colors">
+                            {partner.name}
+                          </Link>
+                        </div>
                       </div>
-                      <div className="ml-4">
-                        <Link to={`/admin/partners/${partner.id}`} className="text-sm font-medium text-blue-600 hover:text-blue-900">
-                          {partner.name}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-[#91A6A0]">
+                      {partner.website ? (
+                        <a href={partner.website} target="_blank" rel="noopener noreferrer" className="hover:text-[#D6A84F]">
+                          {partner.website.replace(/^https?:\/\//, '')}
+                        </a>
+                      ) : (
+                        '-'
+                      )}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <StatusBadge status={partner.status} />
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-[#F7F8F5]">
+                      {partner.jobsCount || 0}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-[#F7F8F5]">
+                      {partner.recruitersCount || 0}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <div className="flex justify-end gap-3">
+                        <Link to={`/admin/partners/${partner.id}`} className="text-[#91A6A0] hover:text-[#F7F8F5] transition-colors" title="View details">
+                          <Eye className="h-4 w-4" />
+                        </Link>
+                        <Link to={`/admin/partners/${partner.id}/edit`} className="text-[#91A6A0] hover:text-[#D6A84F] transition-colors" title="Edit partner">
+                          <Pencil className="h-4 w-4" />
                         </Link>
                       </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {partner.website ? (
-                      <a href={partner.website} target="_blank" rel="noopener noreferrer" className="hover:underline">
-                        {partner.website.replace(/^https?:\/\//, '')}
-                      </a>
-                    ) : (
-                      '-'
-                    )}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <StatusBadge status={partner.status} />
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {partner.jobsCount || 0}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {partner.recruitersCount || 0}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <div className="flex justify-end gap-3">
-                      <Link to={`/admin/partners/${partner.id}`} className="text-gray-400 hover:text-gray-900" title="View details">
-                        <Eye className="h-5 w-5" />
-                      </Link>
-                      <Link to={`/admin/partners/${partner.id}/edit`} className="text-gray-400 hover:text-blue-600" title="Edit partner">
-                        <Pencil className="h-5 w-5" />
-                      </Link>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
         
         {/* Pagination */}
         {!isLoading && !isError && partners.length > 0 && (
-          <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
-            <div className="flex-1 flex justify-between sm:hidden">
+          <div className="bg-[#102A2B] px-6 py-3.5 flex items-center justify-between border-t border-[#294341] text-xs text-[#91A6A0]">
+            <div>
+              <p>
+                Showing page <span className="font-semibold text-[#F7F8F5]">{page}</span> of <span className="font-semibold text-[#F7F8F5]">{totalPages}</span>
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
               <button
                 onClick={() => handlePageChange(Math.max(1, page - 1))}
                 disabled={page === 1}
-                className={clsx(
-                  "relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md",
-                  page === 1 ? "bg-gray-100 text-gray-400 cursor-not-allowed" : "bg-white text-gray-700 hover:bg-gray-50"
-                )}
+                className="rounded-lg border border-[#294341] bg-[#0D2224] px-3 py-1 font-medium text-[#91A6A0] hover:bg-[#153536] hover:text-[#F7F8F5] disabled:opacity-40 transition-colors"
               >
                 Previous
               </button>
               <button
                 onClick={() => handlePageChange(Math.min(totalPages, page + 1))}
                 disabled={page === totalPages}
-                className={clsx(
-                  "ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md",
-                  page === totalPages ? "bg-gray-100 text-gray-400 cursor-not-allowed" : "bg-white text-gray-700 hover:bg-gray-50"
-                )}
+                className="rounded-lg border border-[#294341] bg-[#0D2224] px-3 py-1 font-medium text-[#91A6A0] hover:bg-[#153536] hover:text-[#F7F8F5] disabled:opacity-40 transition-colors"
               >
                 Next
               </button>
-            </div>
-            <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-              <div>
-                <p className="text-sm text-gray-700">
-                  Showing page <span className="font-medium">{page}</span> of <span className="font-medium">{totalPages}</span>
-                </p>
-              </div>
-              <div>
-                <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                  <button
-                    onClick={() => handlePageChange(Math.max(1, page - 1))}
-                    disabled={page === 1}
-                    className={clsx(
-                      "relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium",
-                      page === 1 ? "text-gray-300 cursor-not-allowed" : "text-gray-500 hover:bg-gray-50"
-                    )}
-                  >
-                    <span className="sr-only">Previous</span>
-                    <ChevronLeft className="h-5 w-5" aria-hidden="true" />
-                  </button>
-                  <button
-                    onClick={() => handlePageChange(Math.min(totalPages, page + 1))}
-                    disabled={page === totalPages}
-                    className={clsx(
-                      "relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium",
-                      page === totalPages ? "text-gray-300 cursor-not-allowed" : "text-gray-500 hover:bg-gray-50"
-                    )}
-                  >
-                    <span className="sr-only">Next</span>
-                    <ChevronRight className="h-5 w-5" aria-hidden="true" />
-                  </button>
-                </nav>
-              </div>
             </div>
           </div>
         )}

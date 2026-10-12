@@ -11,11 +11,19 @@ import HomePage from '@/features/public/HomePage'
 import JobSearchPage from '@/features/public/JobSearchPage'
 import JobDetailPage from '@/features/public/JobDetailPage'
 import CompanyPage from '@/features/public/CompanyPage'
+import JobOrCategoryDispatcher from '@/features/public/JobOrCategoryDispatcher'
+import FresherJobsPage from '@/features/public/FresherJobsPage'
 import LoginPage from '@/features/public/LoginPage'
 import RegisterPage from '@/features/public/RegisterPage'
 import ForgotPasswordPage from '@/features/public/ForgotPasswordPage'
 import ResetPasswordPage from '@/features/public/ResetPasswordPage'
 import VerifyEmailNoticePage from '@/features/public/VerifyEmailNoticePage'
+
+import JobsInIndiaPage from '@/features/public/geo/JobsInIndiaPage'
+import StateJobsPage from '@/features/public/geo/StateJobsPage'
+import CityJobsPage from '@/features/public/geo/CityJobsPage'
+import CityCategoryJobsPage from '@/features/public/geo/CityCategoryJobsPage'
+import { GeoDispatcherPage, GeoSubDispatcherPage } from '@/features/public/geo/GeoDispatcher'
 
 import CandidateDashboardPage from '@/features/candidate/DashboardPage'
 import ProfilePage from '@/features/candidate/ProfilePage'
@@ -44,13 +52,35 @@ export const routes = [
     children: [
       { path: '/', element: <HomePage /> },
       { path: '/jobs', element: <JobSearchPage /> },
-      { path: '/jobs/:slug', element: <JobDetailPage /> },
+      { path: '/jobs/:slug', element: <JobOrCategoryDispatcher /> },
       { path: '/companies/:slug', element: <CompanyPage /> },
+      { path: '/company/:slug', element: <CompanyPage /> },
       { path: '/login', element: <LoginPage /> },
       { path: '/register', element: <RegisterPage /> },
       { path: '/forgot-password', element: <ForgotPasswordPage /> },
       { path: '/reset-password', element: <ResetPasswordPage /> },
       { path: '/verify-email', element: <VerifyEmailNoticePage /> },
+      // Dedicated Fresher & Internship Architecture
+      { path: '/fresher-jobs', element: <FresherJobsPage /> },
+      { path: '/fresher-jobs-in-prayagraj', element: <FresherJobsPage /> },
+      { path: '/fresher-jobs-in-uttar-pradesh', element: <FresherJobsPage /> },
+      { path: '/fresher-jobs-in-bangalore', element: <FresherJobsPage /> },
+      { path: '/fresher-jobs-in-hyderabad', element: <FresherJobsPage /> },
+      { path: '/software-jobs-for-freshers', element: <FresherJobsPage /> },
+      { path: '/remote-jobs-for-freshers', element: <FresherJobsPage /> },
+      { path: '/internships', element: <FresherJobsPage /> },
+      // Geographic SEO Architecture Routes
+      { path: '/jobs-in-india', element: <JobsInIndiaPage /> },
+      { path: '/jobs-in-prayagraj', element: <CityJobsPage /> },
+      { path: '/jobs-in-allahabad', element: <CityJobsPage /> },
+      { path: '/jobs-in-prayagraj/:categorySlug', element: <CityCategoryJobsPage /> },
+      { path: '/jobs-in-allahabad/:categorySlug', element: <CityCategoryJobsPage /> },
+      { path: '/jobs-in-uttar-pradesh', element: <StateJobsPage /> },
+      { path: '/jobs-in-uttar-pradesh/:citySlug', element: <CityJobsPage /> },
+      { path: '/jobs-in-uttar-pradesh/:citySlug/:categorySlug', element: <CityCategoryJobsPage /> },
+      { path: '/jobs-in-:stateSlug/:citySlug/:categorySlug', element: <CityCategoryJobsPage /> },
+      { path: '/jobs-in-:geoSlug/:subSlug', element: <GeoSubDispatcherPage /> },
+      { path: '/jobs-in-:geoSlug', element: <GeoDispatcherPage /> },
     ],
   },
   {

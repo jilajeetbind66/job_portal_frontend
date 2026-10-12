@@ -29,7 +29,7 @@ export default function ConfirmDialog({
         </>
       }
     >
-      {message && <p className="text-sm text-gray-600">{message}</p>}
+      {message && <p className="text-sm text-[#91A6A0]">{message}</p>}
     </Modal>
   )
 }

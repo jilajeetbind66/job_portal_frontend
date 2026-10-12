@@ -16,11 +16,12 @@ import {
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import clsx from 'clsx';
-import { Button, Input, Select, EmptyState, StatusBadge } from '@/components';
+import { Button, Input, Select, EmptyState, StatusBadge, SEO } from '@/components';
 import { fetchJobs, saveJob, unsaveJob } from '@/features/public/api/jobs';
 import { useAuth } from '@/auth/useAuth';
 import { useToast } from '@/hooks/useToast';
 import { useDebounce } from '@/hooks/useDebounce';
+import { createBreadcrumbSchema } from '@/utils/schema';
 
 const WORK_MODES = ['All', 'Remote', 'Hybrid', 'On-Site'];
 const EXPERIENCE_LEVELS = ['All', 'Entry', 'Mid', 'Senior', 'Lead'];
@@ -132,12 +133,12 @@ export default function JobSearchPage() {
 
   const FiltersContent = () => (
     <div className="space-y-5 text-xs">
-      <div className="flex justify-between items-center pb-3 border-b border-slate-100">
-        <h3 className="font-bold text-slate-900 text-sm">Refine Search</h3>
+      <div className="flex justify-between items-center pb-3 border-b border-[#294341]">
+        <h3 className="font-bold text-[#F7F8F5] text-sm">Refine Search</h3>
         {activeFilters.length > 0 && (
           <button
             onClick={resetFilters}
-            className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition-colors flex items-center gap-1"
+            className="text-xs font-semibold text-[#D6A84F] hover:text-[#E5B866] transition-colors flex items-center gap-1"
           >
             <RotateCcw className="h-3 w-3" />
             <span>Reset all</span>
@@ -147,29 +148,29 @@ export default function JobSearchPage() {
 
       <div className="space-y-4">
         <div>
-          <label className="block text-xs font-semibold text-slate-700 mb-1.5">Keywords & Skills</label>
+          <label className="block text-xs font-semibold text-[#B9D8C4] mb-1.5">Keywords & Skills</label>
           <div className="relative">
-            <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-400" />
+            <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-[#8FAF9A]" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="e.g. React, Engineer, Lead..."
-              className="w-full rounded-xl border border-slate-200 bg-slate-50/50 py-2 pl-9 pr-3 text-xs text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              className="w-full rounded-xl border border-[#294341] bg-[#07151A] py-2 pl-9 pr-3 text-xs text-[#F7F8F5] placeholder-[#91A6A0] focus:border-[#2F7D5B] focus:outline-none"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-slate-700 mb-1.5">Location</label>
+          <label className="block text-xs font-semibold text-[#B9D8C4] mb-1.5">Location</label>
           <div className="relative">
-            <MapPin className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-400" />
+            <MapPin className="absolute left-3 top-2.5 h-3.5 w-3.5 text-[#8FAF9A]" />
             <input
               type="text"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
               placeholder="City, state, or remote..."
-              className="w-full rounded-xl border border-slate-200 bg-slate-50/50 py-2 pl-9 pr-3 text-xs text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              className="w-full rounded-xl border border-[#294341] bg-[#07151A] py-2 pl-9 pr-3 text-xs text-[#F7F8F5] placeholder-[#91A6A0] focus:border-[#2F7D5B] focus:outline-none"
             />
           </div>
         </div>
@@ -204,14 +205,30 @@ export default function JobSearchPage() {
     </div>
   );
 
+  const isFiltered = activeFilters.length > 0;
+  const seoTitle = isFiltered
+    ? `Jobs Search: ${search || location || 'Filtered Results'} | Vcreateventures`
+    : 'Find Jobs in India – Browse Verified Tech & Corporate Openings | Vcreateventures';
+  const seoDesc = isFiltered
+    ? `Explore matching job vacancies matching ${search || ''} ${location ? `in ${location}` : ''} on Vcreateventures.`
+    : 'Browse thousands of active and verified job vacancies across India. Filter by skills, location, workplace type, and experience level on Vcreateventures.';
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-16">
+      <SEO
+        title={seoTitle}
+        description={seoDesc}
+        canonical="/jobs"
+        robots={isFiltered ? 'noindex, follow' : 'index, follow'}
+        schema={createBreadcrumbSchema([{ label: 'Jobs in India', to: '/jobs-in-india' }, { label: 'Find Jobs' }])}
+      />
+
       {/* Title & Filter Trigger */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">Find Jobs</h1>
-          <p className="mt-1 text-sm text-slate-500">
-            Showing <strong className="text-slate-800">{totalCount}</strong> active position
+          <h1 className="text-3xl font-extrabold tracking-tight text-[#F7F8F5]">Find Jobs</h1>
+          <p className="mt-1 text-sm text-[#91A6A0]">
+            Showing <strong className="text-[#B9D8C4]">{totalCount}</strong> active position
             {totalCount !== 1 ? 's' : ''} matching your criteria
           </p>
         </div>
@@ -230,17 +247,17 @@ export default function JobSearchPage() {
       {/* Active Filter Badges Ribbon */}
       {activeFilters.length > 0 && (
         <div className="mb-6 flex flex-wrap items-center gap-2 pt-1 pb-3">
-          <span className="text-xs font-medium text-[#747D8C]">Active filters:</span>
+          <span className="text-xs font-medium text-[#91A6A0]">Active filters:</span>
           {activeFilters.map((f) => (
             <span
               key={f.key}
-              className="inline-flex items-center gap-1.5 rounded-full bg-[#BFEDC1]/50 border border-[#6A8E7F]/30 px-3 py-1 text-xs font-bold text-[#6A8E7F]"
+              className="inline-flex items-center gap-1.5 rounded-full bg-[#102A2B] border border-[#294341] px-3 py-1 text-xs font-bold text-[#B9D8C4]"
             >
               <span>{f.label}</span>
               <button
                 type="button"
                 onClick={() => removeFilter(f.key)}
-                className="hover:text-[#58796B] transition-colors"
+                className="hover:text-white transition-colors"
                 aria-label={`Remove filter ${f.label}`}
               >
                 <X className="h-3 w-3" />
@@ -249,7 +266,7 @@ export default function JobSearchPage() {
           ))}
           <button
             onClick={resetFilters}
-            className="text-xs font-bold text-[#747D8C] hover:text-[#2F3542] transition-colors underline ml-2"
+            className="text-xs font-bold text-[#D6A84F] hover:text-[#E5B866] transition-colors underline ml-2"
           >
             Clear all
           </button>
@@ -259,7 +276,7 @@ export default function JobSearchPage() {
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Desktop Sidebar Filters */}
         <div className="hidden lg:block w-64 flex-shrink-0">
-          <div className="bg-white p-5 rounded-2xl border border-[#CED6E0] shadow-2xs sticky top-24">
+          <div className="bg-[#0D2224] p-5 rounded-2xl border border-[#294341] shadow-xl sticky top-24">
             <FiltersContent />
           </div>
         </div>
@@ -339,7 +356,7 @@ export default function JobSearchPage() {
                 return (
                   <div
                     key={job.id}
-                    className="bg-white border border-[#CED6E0] hover:border-[#6A8E7F] hover:shadow-md transition-all rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row gap-4 sm:gap-6 group relative"
+                    className="bg-[#0D2224] border border-[#294341] hover:border-[#8FAF9A] hover:bg-[#102A2B] hover:shadow-xl transition-all duration-200 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row gap-4 sm:gap-6 group relative"
                   >
                     {/* Company Logo */}
                     <div className="flex-shrink-0">
@@ -347,10 +364,10 @@ export default function JobSearchPage() {
                         <img
                           src={job.company_logo}
                           alt={job.company_name}
-                          className="h-14 w-14 rounded-2xl object-cover border border-[#CED6E0]/60"
+                          className="h-14 w-14 rounded-2xl object-cover border border-[#294341]"
                         />
                       ) : (
-                        <div className="h-14 w-14 rounded-2xl bg-[#BFEDC1]/40 border border-[#CED6E0] flex items-center justify-center text-[#6A8E7F] font-extrabold text-xl">
+                        <div className="h-14 w-14 rounded-2xl bg-[#102A2B] border border-[#294341] flex items-center justify-center text-[#B9D8C4] font-extrabold text-xl">
                           {job.company_name?.charAt(0) || 'C'}
                         </div>
                       )}
@@ -362,26 +379,26 @@ export default function JobSearchPage() {
                         <div>
                           <Link
                             to={`/jobs/${job.slug || job.id}`}
-                            className="text-lg font-bold text-[#2F3542] group-hover:text-[#6A8E7F] transition-colors block line-clamp-1"
+                            className="text-lg font-bold text-[#F7F8F5] group-hover:text-[#B9D8C4] transition-colors block line-clamp-1"
                           >
                             {job.title}
                           </Link>
-                          <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-[#747D8C]">
+                          <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-[#91A6A0]">
                             <Link
                               to={`/companies/${companySlug}`}
-                              className="font-semibold text-[#2F3542] hover:text-[#6A8E7F] transition-colors flex items-center gap-1"
+                              className="font-semibold text-[#F7F8F5] hover:text-[#B9D8C4] transition-colors flex items-center gap-1"
                             >
-                              <Building className="h-3.5 w-3.5 text-[#747D8C]" />
+                              <Building className="h-3.5 w-3.5 text-[#8FAF9A]" />
                               <span>{job.company_name}</span>
                             </Link>
-                            <span className="text-[#CED6E0]">•</span>
+                            <span className="text-[#294341]">•</span>
                             <span className="flex items-center gap-1">
-                              <MapPin className="h-3.5 w-3.5 text-[#747D8C]" />
+                              <MapPin className="h-3.5 w-3.5 text-[#8FAF9A]" />
                               <span>{job.location}</span>
                             </span>
                             {job.created_at && (
                               <>
-                                <span className="text-[#CED6E0]">•</span>
+                                <span className="text-[#294341]">•</span>
                                 <span>
                                   {formatDistanceToNow(new Date(job.created_at), { addSuffix: true })}
                                 </span>
@@ -393,7 +410,7 @@ export default function JobSearchPage() {
                         {/* Salary Pill & Bookmark */}
                         <div className="flex items-center gap-2 shrink-0">
                           {formatSalary(job.salary_min, job.salary_max, job.currency) && (
-                            <div className="text-xs font-bold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                            <div className="text-xs font-bold text-[#D6A84F] bg-[#102A2B] px-2.5 py-1 rounded-full border border-[#294341]">
                               {formatSalary(job.salary_min, job.salary_max, job.currency)}
                             </div>
                           )}
@@ -407,12 +424,12 @@ export default function JobSearchPage() {
                                   isSaved: !!job.is_saved,
                                 })
                               }
-                              className="p-1.5 text-[#747D8C] hover:text-[#6A8E7F] hover:bg-[#BFEDC1]/30 rounded-lg transition-colors"
+                              className="p-1.5 text-[#91A6A0] hover:text-[#D6A84F] hover:bg-[#102A2B] rounded-lg transition-colors"
                               title={job.is_saved ? 'Remove bookmark' : 'Bookmark job'}
                               aria-label="Bookmark job"
                             >
                               {job.is_saved ? (
-                                <BookmarkCheck className="h-4 w-4 text-[#6A8E7F] fill-[#BFEDC1]" />
+                                <BookmarkCheck className="h-4 w-4 text-[#D6A84F] fill-[#D6A84F]" />
                               ) : (
                                 <Bookmark className="h-4 w-4" />
                               )}
@@ -422,10 +439,10 @@ export default function JobSearchPage() {
                       </div>
 
                       {/* Badges & Tags */}
-                      <div className="mt-4 flex flex-wrap items-center gap-2 pt-2 border-t border-[#CED6E0]/60">
+                      <div className="mt-4 flex flex-wrap items-center gap-2 pt-2 border-t border-[#294341]">
                         <StatusBadge status={job.workplace_type} />
                         {job.experience_level && (
-                          <span className="bg-[#E0ECE1] text-[#2F3542] border border-[#CED6E0] px-2 py-0.5 rounded text-[10px] font-semibold capitalize">
+                          <span className="bg-[#102A2B] text-[#B9D8C4] border border-[#294341] px-2 py-0.5 rounded text-[10px] font-semibold capitalize">
                             {job.experience_level}
                           </span>
                         )}
@@ -435,13 +452,13 @@ export default function JobSearchPage() {
                             {job.skills.slice(0, 3).map((skill, i) => (
                               <span
                                 key={i}
-                                className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-[#E0ECE1] text-[#2F3542] border border-[#CED6E0]/80"
+                                className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-[#102A2B] text-[#91A6A0] border border-[#294341]"
                               >
                                 {skill}
                               </span>
                             ))}
                             {job.skills.length > 3 && (
-                              <span className="text-[10px] text-[#747D8C] self-center">
+                              <span className="text-[10px] text-[#91A6A0] self-center">
                                 +{job.skills.length - 3} more
                               </span>
                             )}
@@ -457,10 +474,10 @@ export default function JobSearchPage() {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="mt-8 flex justify-between items-center pt-4 border-t border-[#CED6E0]/80 text-xs">
-              <span className="text-[#747D8C]">
-                Page <strong className="text-[#2F3542]">{page}</strong> of{' '}
-                <strong className="text-[#2F3542]">{totalPages}</strong>
+            <div className="mt-8 flex justify-between items-center pt-4 border-t border-[#294341] text-xs">
+              <span className="text-[#91A6A0]">
+                Page <strong className="text-[#F7F8F5]">{page}</strong> of{' '}
+                <strong className="text-[#F7F8F5]">{totalPages}</strong>
               </span>
               <div className="flex gap-2">
                 <Button

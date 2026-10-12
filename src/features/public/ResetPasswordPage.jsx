@@ -36,9 +36,9 @@ export default function ResetPasswordPage() {
   if (!token || !email) {
     return (
       <AuthCard title="Link sahi nahi hai">
-        <p className="text-sm text-gray-600">
+        <p className="text-xs text-[#91A6A0] leading-relaxed">
           Ye reset link adhura ya purana hai.{' '}
-          <Link to="/forgot-password" className="text-indigo-600 hover:underline">
+          <Link to="/forgot-password" className="font-semibold text-[#D6A84F] hover:text-[#E5B866] underline">
             Naya link mangao
           </Link>
         </p>
@@ -59,11 +59,19 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <AuthCard title="Naya password set karo" subtitle={email}>
+    <AuthCard
+      title="Naya password set karo"
+      subtitle={`${email} ke liye naya password chun lo`}
+      footer={
+        <Link to="/login" className="font-semibold text-[#D6A84F] hover:text-[#E5B866] underline">
+          Login par wapas jao
+        </Link>
+      }
+    >
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
-        {(errors.root || errors.email) && (
-          <div role="alert" className="rounded-md bg-red-50 p-3 text-sm text-red-700">
-            {errors.root?.message ?? errors.email?.message}
+        {errors.root && (
+          <div role="alert" className="rounded-xl bg-rose-950/40 border border-rose-800/40 p-3 text-xs text-rose-300">
+            {errors.root.message}
           </div>
         )}
         <Input

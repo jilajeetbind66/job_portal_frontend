@@ -49,14 +49,14 @@ export default function ProfilePage() {
   }, [profile]);
 
   const progressColor =
-    completeness < 40 ? 'bg-red-500' : completeness < 80 ? 'bg-amber-500' : 'bg-emerald-500';
+    completeness < 40 ? 'bg-red-500' : completeness < 80 ? 'bg-[#D6A84F]' : 'bg-[#2F7D5B]';
 
   if (isLoading) {
     return (
       <div className="p-6 max-w-4xl mx-auto space-y-6 animate-pulse">
-        <div className="h-10 bg-slate-200 rounded-xl w-full" />
+        <div className="h-10 bg-[#102A2B] rounded-xl w-full" />
         {[1, 2, 3].map((i) => (
-          <div key={i} className="h-64 bg-slate-100 rounded-2xl" />
+          <div key={i} className="h-64 bg-[#0D2224] border border-[#294341] rounded-2xl" />
         ))}
       </div>
     );
@@ -67,47 +67,47 @@ export default function ProfilePage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">Your Profile</h1>
-          <p className="text-sm text-slate-500 mt-1">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#F7F8F5]">Your Profile</h1>
+          <p className="text-sm text-[#91A6A0] mt-1">
             Manage your credentials, professional experience, skills, and resume for recruiters.
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-600 text-lg font-bold text-white shadow-sm">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#2F7D5B] text-lg font-bold text-[#F7F8F5] shadow-lg shadow-[#2F7D5B]/20">
             {profile?.name ? profile.name[0].toUpperCase() : 'C'}
           </div>
         </div>
       </div>
 
       {/* Completeness Card */}
-      <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+      <div className="bg-[#0D2224] p-6 rounded-2xl border border-[#294341]">
         <div className="flex justify-between items-center mb-3">
           <div className="flex items-center gap-2">
-            <Award className="h-5 w-5 text-indigo-600" />
-            <h2 className="text-sm font-bold text-slate-800">Profile Completeness</h2>
+            <Award className="h-5 w-5 text-[#D6A84F]" />
+            <h2 className="text-sm font-bold text-[#F7F8F5]">Profile Completeness</h2>
           </div>
-          <span className="text-sm font-bold text-slate-900 bg-slate-100 px-2.5 py-0.5 rounded-full">
+          <span className="text-xs font-bold text-[#D6A84F] bg-[#102A2B] border border-[#D6A84F]/30 px-3 py-1 rounded-full">
             {completeness}% Complete
           </span>
         </div>
-        <div className="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
+        <div className="w-full bg-[#102A2B] rounded-full h-2.5 overflow-hidden border border-[#294341]">
           <div
             className={`h-full rounded-full transition-all duration-500 ${progressColor}`}
             style={{ width: `${completeness}%` }}
           />
         </div>
         {completeness < 100 && (
-          <div className="mt-3 flex flex-wrap gap-2 text-xs text-slate-500">
-            <span className="font-medium text-slate-700">Quick tip to reach 100%:</span>
-            {!profile?.resume_url && <span className="text-indigo-600">• Upload your resume</span>}
+          <div className="mt-3 flex flex-wrap gap-2 text-xs text-[#91A6A0]">
+            <span className="font-medium text-[#F7F8F5]">Quick tips to reach 100%:</span>
+            {!profile?.resume_url && <span className="text-[#D6A84F]">• Upload your resume</span>}
             {(!profile?.skills || profile.skills.length < 3) && (
-              <span className="text-indigo-600">• Add at least 3 skills</span>
+              <span className="text-[#D6A84F]">• Add at least 3 skills</span>
             )}
             {(!profile?.experience || profile.experience.length === 0) && (
-              <span className="text-indigo-600">• Add past work experience</span>
+              <span className="text-[#D6A84F]">• Add past work experience</span>
             )}
             {(!profile?.education || profile.education.length === 0) && (
-              <span className="text-indigo-600">• Add education details</span>
+              <span className="text-[#D6A84F]">• Add education details</span>
             )}
           </div>
         )}
@@ -166,10 +166,10 @@ function PersonalInfoSection({ profile }) {
   });
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-      <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">
-        <User className="h-5 w-5 text-indigo-600" />
-        <h2 className="text-base font-bold text-slate-900">Personal Information</h2>
+    <div className="bg-[#0D2224] p-6 rounded-2xl border border-[#294341]">
+      <div className="flex items-center gap-2 mb-4 pb-3 border-b border-[#294341]">
+        <User className="h-5 w-5 text-[#2F7D5B]" />
+        <h2 className="text-base font-bold text-[#F7F8F5]">Personal Information</h2>
       </div>
       <form onSubmit={handleSubmit((data) => mutation.mutate(data))} className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -196,18 +196,18 @@ function PersonalInfoSection({ profile }) {
           />
         </div>
         <div>
-          <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-[#91A6A0] mb-1.5">
             About Me / Summary
           </label>
           <textarea
             rows={3}
             placeholder="Brief overview of your experience, key skills, and what kind of roles you are targeting..."
-            className="w-full rounded-xl border border-slate-200 bg-slate-50/50 p-3 text-xs text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all"
+            className="w-full rounded-xl border border-[#294341] bg-[#102A2B] p-3 text-sm text-[#F7F8F5] placeholder-[#91A6A0]/50 focus:border-[#2F7D5B] focus:outline-none focus:ring-1 focus:ring-[#2F7D5B] transition-colors"
             {...register('bio')}
           />
         </div>
         <div className="flex justify-end pt-2">
-          <Button type="submit" loading={mutation.isPending}>
+          <Button type="submit" variant="primary" loading={mutation.isPending}>
             Save Personal Info
           </Button>
         </div>
@@ -269,26 +269,26 @@ function ResumeSection({ profile }) {
   };
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-      <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
+    <div className="bg-[#0D2224] p-6 rounded-2xl border border-[#294341]">
+      <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#294341]">
         <div className="flex items-center gap-2">
-          <FileText className="h-5 w-5 text-indigo-600" />
-          <h2 className="text-base font-bold text-slate-900">Resume & CV</h2>
+          <FileText className="h-5 w-5 text-[#2F7D5B]" />
+          <h2 className="text-base font-bold text-[#F7F8F5]">Resume & CV</h2>
         </div>
-        <span className="text-xs text-slate-500">PDF, DOC, DOCX up to 5MB</span>
+        <span className="text-xs text-[#91A6A0]">PDF, DOC, DOCX up to 5MB</span>
       </div>
 
       {resumeUrl && (
-        <div className="mb-4 p-4 bg-indigo-50/70 border border-indigo-100 rounded-xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="mb-4 p-4 bg-[#102A2B] border border-[#294341] rounded-xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="h-10 w-10 rounded-xl bg-indigo-100 flex items-center justify-center text-indigo-600 shrink-0">
+            <div className="h-10 w-10 rounded-xl bg-[#2F7D5B]/20 border border-[#2F7D5B]/30 flex items-center justify-center text-[#B9D8C4] shrink-0">
               <FileText className="h-5 w-5" />
             </div>
             <div className="min-w-0">
-              <p className="text-xs font-bold text-slate-900 truncate">
+              <p className="text-xs font-bold text-[#F7F8F5] truncate">
                 {profile?.resume_name || 'Uploaded_Resume.pdf'}
               </p>
-              <p className="text-[11px] text-indigo-600 flex items-center gap-1">
+              <p className="text-[11px] text-[#B9D8C4] flex items-center gap-1">
                 <CheckCircle2 className="h-3.5 w-3.5" />
                 <span>Ready for job applications</span>
               </p>
@@ -300,9 +300,9 @@ function ResumeSection({ profile }) {
               href={resumeUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-lg border border-indigo-200 bg-white px-3 py-1.5 text-xs font-semibold text-indigo-700 hover:bg-indigo-50 shadow-2xs transition-colors"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-[#294341] bg-[#0D2224] px-3.5 py-1.5 text-xs font-semibold text-[#F7F8F5] hover:border-[#D6A84F] transition-colors"
             >
-              <Download className="h-3.5 w-3.5" />
+              <Download className="h-3.5 w-3.5 text-[#D6A84F]" />
               <span>View Resume</span>
             </a>
           </div>
@@ -311,26 +311,26 @@ function ResumeSection({ profile }) {
 
       {/* Smart Resume Parser Suggestion Box */}
       {parsedData && (
-        <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50/70 p-4 transition-all">
+        <div className="mb-4 rounded-xl border border-[#2F7D5B]/40 bg-[#102A2B] p-4 transition-all">
           <div className="flex items-start gap-3">
-            <div className="rounded-lg bg-emerald-100 p-2 text-emerald-700 shrink-0">
+            <div className="rounded-lg bg-[#2F7D5B]/20 p-2 text-[#B9D8C4] shrink-0">
               <Sparkles className="h-4 w-4" />
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between">
-                <h4 className="text-xs font-bold text-emerald-900">
+                <h4 className="text-xs font-bold text-[#F7F8F5]">
                   Smart Resume Parser Found Details
                 </h4>
-                <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
+                <span className="text-[10px] font-semibold text-[#D6A84F] bg-[#0D2224] border border-[#D6A84F]/30 px-2.5 py-0.5 rounded-full">
                   {parsedData.confidence_score}% match
                 </span>
               </div>
-              <p className="mt-1 text-xs text-emerald-800">
-                Suggested skills: <strong>{parsedData.suggested_skills?.join(', ')}</strong>
+              <p className="mt-1 text-xs text-[#91A6A0]">
+                Suggested skills: <strong className="text-[#F7F8F5]">{parsedData.suggested_skills?.join(', ')}</strong>
               </p>
               {parsedData.suggested_headline && (
-                <p className="mt-0.5 text-xs text-emerald-800">
-                  Suggested headline: <em>"{parsedData.suggested_headline}"</em>
+                <p className="mt-0.5 text-xs text-[#91A6A0]">
+                  Suggested headline: <em className="text-[#F7F8F5]">&quot;{parsedData.suggested_headline}&quot;</em>
                 </p>
               )}
               <div className="mt-3 flex gap-2">
@@ -359,24 +359,9 @@ function ResumeSection({ profile }) {
         <FileUpload
           accept=".pdf,.doc,.docx"
           maxSizeMB={5}
-          onFileSelect={handleUpload}
-          disabled={mutation.isPending}
+          onSelect={(file) => handleUpload([file])}
+          progress={mutation.isPending ? progress : undefined}
         />
-
-        {mutation.isPending && (
-          <div className="w-full space-y-1">
-            <div className="flex justify-between text-xs font-medium text-slate-700">
-              <span>Uploading & parsing resume...</span>
-              <span>{progress}%</span>
-            </div>
-            <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
-              <div
-                className="bg-indigo-600 h-full rounded-full transition-all duration-300"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
@@ -402,23 +387,23 @@ function SkillsSection({ initialSkills }) {
   });
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-      <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
+    <div className="bg-[#0D2224] p-6 rounded-2xl border border-[#294341]">
+      <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#294341]">
         <div className="flex items-center gap-2">
-          <Award className="h-5 w-5 text-indigo-600" />
-          <h2 className="text-base font-bold text-slate-900">Key Skills & Competencies</h2>
+          <Award className="h-5 w-5 text-[#D6A84F]" />
+          <h2 className="text-base font-bold text-[#F7F8F5]">Key Skills & Competencies</h2>
         </div>
-        <span className="text-xs text-slate-500">{skills.length} skills added</span>
+        <span className="text-xs text-[#91A6A0]">{skills.length} skills added</span>
       </div>
 
       <div className="space-y-4">
         <TagInput
-          tags={skills}
-          setTags={setSkills}
+          value={skills}
+          onChange={setSkills}
           placeholder="Type skill (e.g. React, Node.js, AWS) and press Enter..."
         />
         <div className="flex justify-end">
-          <Button onClick={() => mutation.mutate(skills)} loading={mutation.isPending}>
+          <Button onClick={() => mutation.mutate(skills)} variant="primary" loading={mutation.isPending}>
             Save Skills
           </Button>
         </div>
@@ -467,11 +452,11 @@ function ExperienceSection({ initialExperience }) {
   };
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-      <div className="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
+    <div className="bg-[#0D2224] p-6 rounded-2xl border border-[#294341]">
+      <div className="flex justify-between items-center mb-4 pb-3 border-b border-[#294341]">
         <div className="flex items-center gap-2">
-          <Briefcase className="h-5 w-5 text-indigo-600" />
-          <h2 className="text-base font-bold text-slate-900">Work Experience</h2>
+          <Briefcase className="h-5 w-5 text-[#2F7D5B]" />
+          <h2 className="text-base font-bold text-[#F7F8F5]">Work Experience</h2>
         </div>
         <Button variant="secondary" size="sm" onClick={addEntry}>
           <Plus size={15} className="mr-1" /> Add Experience
@@ -482,11 +467,11 @@ function ExperienceSection({ initialExperience }) {
         {experience.map((exp, index) => (
           <div
             key={index}
-            className="p-5 border border-slate-200 rounded-xl relative bg-slate-50/60 shadow-2xs space-y-4"
+            className="p-5 border border-[#294341] rounded-xl relative bg-[#102A2B] space-y-4"
           >
             <button
               onClick={() => removeEntry(index)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-rose-600 transition-colors"
+              className="absolute top-4 right-4 text-[#91A6A0] hover:text-rose-400 transition-colors"
               type="button"
               aria-label="Remove experience entry"
             >
@@ -520,12 +505,12 @@ function ExperienceSection({ initialExperience }) {
                   onChange={(e) => updateEntry(index, 'to', e.target.value)}
                   disabled={exp.current}
                 />
-                <label className="flex items-center mt-2 text-xs font-medium text-slate-600 cursor-pointer">
+                <label className="flex items-center mt-2 text-xs font-medium text-[#91A6A0] cursor-pointer">
                   <input
                     type="checkbox"
                     checked={exp.current || false}
                     onChange={(e) => updateEntry(index, 'current', e.target.checked)}
-                    className="mr-2 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                    className="mr-2 rounded border-[#294341] bg-[#0D2224] text-[#2F7D5B] focus:ring-[#2F7D5B]"
                   />
                   I currently work here
                 </label>
@@ -533,13 +518,13 @@ function ExperienceSection({ initialExperience }) {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-[#91A6A0] mb-1.5">
                 Key Responsibilities & Achievements
               </label>
               <textarea
                 rows={3}
                 placeholder="Led development of key features, optimized application performance..."
-                className="w-full rounded-xl border border-slate-200 bg-white p-3 text-xs text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all"
+                className="w-full rounded-xl border border-[#294341] bg-[#0D2224] p-3 text-sm text-[#F7F8F5] placeholder-[#91A6A0]/50 focus:border-[#2F7D5B] focus:outline-none focus:ring-1 focus:ring-[#2F7D5B] transition-colors"
                 value={exp.description || ''}
                 onChange={(e) => updateEntry(index, 'description', e.target.value)}
               />
@@ -548,13 +533,13 @@ function ExperienceSection({ initialExperience }) {
         ))}
 
         {experience.length === 0 && (
-          <p className="text-xs text-slate-400 text-center py-6">
+          <p className="text-xs text-[#91A6A0] text-center py-6">
             No work experience added yet. Click &quot;Add Experience&quot; to showcase your employment background.
           </p>
         )}
 
         <div className="flex justify-end pt-2">
-          <Button onClick={() => mutation.mutate(experience)} loading={mutation.isPending}>
+          <Button onClick={() => mutation.mutate(experience)} variant="primary" loading={mutation.isPending}>
             Save Experience
           </Button>
         </div>
@@ -600,11 +585,11 @@ function EducationSection({ initialEducation }) {
   };
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-      <div className="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
+    <div className="bg-[#0D2224] p-6 rounded-2xl border border-[#294341]">
+      <div className="flex justify-between items-center mb-4 pb-3 border-b border-[#294341]">
         <div className="flex items-center gap-2">
-          <GraduationCap className="h-5 w-5 text-indigo-600" />
-          <h2 className="text-base font-bold text-slate-900">Education & Qualifications</h2>
+          <GraduationCap className="h-5 w-5 text-[#D6A84F]" />
+          <h2 className="text-base font-bold text-[#F7F8F5]">Education & Qualifications</h2>
         </div>
         <Button variant="secondary" size="sm" onClick={addEntry}>
           <Plus size={15} className="mr-1" /> Add Education
@@ -615,11 +600,11 @@ function EducationSection({ initialEducation }) {
         {education.map((edu, index) => (
           <div
             key={index}
-            className="p-5 border border-slate-200 rounded-xl relative bg-slate-50/60 shadow-2xs space-y-4"
+            className="p-5 border border-[#294341] rounded-xl relative bg-[#102A2B] space-y-4"
           >
             <button
               onClick={() => removeEntry(index)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-rose-600 transition-colors"
+              className="absolute top-4 right-4 text-[#91A6A0] hover:text-rose-400 transition-colors"
               type="button"
               aria-label="Remove education entry"
             >
@@ -666,13 +651,13 @@ function EducationSection({ initialEducation }) {
         ))}
 
         {education.length === 0 && (
-          <p className="text-xs text-slate-400 text-center py-6">
+          <p className="text-xs text-[#91A6A0] text-center py-6">
             No education entries added yet. Click &quot;Add Education&quot; to add your academic background.
           </p>
         )}
 
         <div className="flex justify-end pt-2">
-          <Button onClick={() => mutation.mutate(education)} loading={mutation.isPending}>
+          <Button onClick={() => mutation.mutate(education)} variant="primary" loading={mutation.isPending}>
             Save Education
           </Button>
         </div>

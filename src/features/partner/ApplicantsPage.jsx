@@ -100,16 +100,16 @@ export default function ApplicantsPage() {
       <div>
         <Link
           to="/partner/jobs"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-800 mb-2"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#91A6A0] hover:text-[#F7F8F5] mb-2 transition-colors"
         >
           <ArrowLeft className="h-3.5 w-3.5" /> Back to Jobs List
         </Link>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-              {job ? `Applicants: ${job.title}` : 'Applicant Tracking (ATS)'}
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#F7F8F5]">
+              Applicant Tracking (ATS){job ? `: ${job.title}` : ''}
             </h1>
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-1 text-sm text-[#91A6A0]">
               {job
                 ? `${job.department} • ${job.location} • Review and move candidates through recruitment stages.`
                 : 'Manage talent pipeline, evaluate candidate profiles, and schedule interviews.'}
@@ -121,15 +121,15 @@ export default function ApplicantsPage() {
       {/* Metrics Row */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
         {[
-          { label: 'Total In Pipeline', count: counts.all || 0, color: 'text-slate-700 bg-slate-50' },
-          { label: 'Shortlisted', count: counts[APPLICATION_STATUS.SHORTLISTED] || 0, color: 'text-purple-700 bg-purple-50' },
-          { label: 'Interviewing', count: counts[APPLICATION_STATUS.INTERVIEW] || 0, color: 'text-amber-700 bg-amber-50' },
-          { label: 'Offer Stage', count: counts[APPLICATION_STATUS.OFFERED] || 0, color: 'text-teal-700 bg-teal-50' },
-          { label: 'Hired 🎉', count: counts[APPLICATION_STATUS.HIRED] || 0, color: 'text-emerald-700 bg-emerald-50' },
+          { label: 'Total In Pipeline', count: counts.all || 0, color: 'text-[#F7F8F5]' },
+          { label: 'Shortlisted', count: counts[APPLICATION_STATUS.SHORTLISTED] || 0, color: 'text-[#E5B866]' },
+          { label: 'Interviewing', count: counts[APPLICATION_STATUS.INTERVIEW] || 0, color: 'text-[#E5B866]' },
+          { label: 'Offer Stage', count: counts[APPLICATION_STATUS.OFFERED] || 0, color: 'text-[#B9D8C4]' },
+          { label: 'Hired 🎉', count: counts[APPLICATION_STATUS.HIRED] || 0, color: 'text-[#B9D8C4]' },
         ].map((stat) => (
-          <div key={stat.label} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-            <p className="text-xs font-medium text-slate-500">{stat.label}</p>
-            <p className={clsx('mt-1 text-xl font-bold', stat.color.split(' ')[0])}>
+          <div key={stat.label} className="rounded-2xl border border-[#294341] bg-[#0D2224] p-4">
+            <p className="text-xs font-medium text-[#91A6A0]">{stat.label}</p>
+            <p className={clsx('mt-1 text-xl font-bold', stat.color)}>
               {stat.count}
             </p>
           </div>
@@ -137,11 +137,11 @@ export default function ApplicantsPage() {
       </div>
 
       {/* Main Filter & Table Card */}
-      <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-4">
+      <div className="rounded-2xl border border-[#294341] bg-[#0D2224] p-5 space-y-4">
         {/* Navigation Tabs & Search */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           {/* Status Tabs */}
-          <div className="flex flex-wrap items-center gap-1.5 border-b border-slate-100 pb-2 sm:border-b-0 sm:pb-0">
+          <div className="flex flex-wrap items-center gap-1.5 border-b border-[#294341] pb-3 sm:border-b-0 sm:pb-0">
             {[
               { id: 'all', label: 'All' },
               { id: APPLICATION_STATUS.APPLIED, label: 'Applied' },
@@ -158,10 +158,10 @@ export default function ApplicantsPage() {
                   key={tab.id}
                   onClick={() => handleStatusTab(tab.id)}
                   className={clsx(
-                    'flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors',
+                    'flex items-center gap-1.5 rounded-xl px-3.5 py-1.5 text-xs font-semibold transition-all',
                     active
-                      ? 'bg-indigo-600 text-white shadow-sm'
-                      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                      ? 'bg-[#153536] text-[#B9D8C4] border border-[#294341]'
+                      : 'text-[#91A6A0] hover:bg-[#102A2B] hover:text-[#F7F8F5]'
                   )}
                 >
                   <span>{tab.label}</span>
@@ -169,7 +169,7 @@ export default function ApplicantsPage() {
                     <span
                       className={clsx(
                         'rounded-full px-1.5 py-0.2 text-[10px] font-bold',
-                        active ? 'bg-indigo-500 text-white' : 'bg-slate-200 text-slate-700'
+                        active ? 'bg-[#2F7D5B] text-[#F7F8F5]' : 'bg-[#102A2B] text-[#91A6A0]'
                       )}
                     >
                       {tabCount}
@@ -182,48 +182,48 @@ export default function ApplicantsPage() {
 
           {/* Search Bar */}
           <div className="relative w-full sm:w-72">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#91A6A0]" />
             <input
               type="text"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               placeholder="Search candidate, skill, email..."
-              className="w-full rounded-xl border border-slate-200 pl-9 pr-3 py-1.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+              className="w-full rounded-xl border border-[#294341] bg-[#102A2B] pl-10 pr-3.5 py-2 text-sm text-[#F7F8F5] placeholder:text-[#91A6A0]/50 focus:border-[#2F7D5B] focus:outline-none focus:ring-1 focus:ring-[#2F7D5B]"
             />
           </div>
         </div>
 
         {/* Table View */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-slate-600">
-            <thead className="bg-slate-50 text-xs uppercase tracking-wider text-slate-500">
+        <div className="overflow-x-auto rounded-xl border border-[#294341]">
+          <table className="w-full text-left text-sm text-[#91A6A0]">
+            <thead className="bg-[#102A2B] text-xs uppercase tracking-wider text-[#91A6A0]">
               <tr>
-                <th className="px-4 py-3 font-semibold">Candidate Profile</th>
-                <th className="px-4 py-3 font-semibold">Experience & Role</th>
-                <th className="px-4 py-3 font-semibold">Stage Status</th>
-                <th className="px-4 py-3 font-semibold">Applied On</th>
-                <th className="px-4 py-3 font-semibold">Resume</th>
-                <th className="px-4 py-3 text-right font-semibold">Actions</th>
+                <th className="px-4 py-3.5 font-semibold">Candidate Profile</th>
+                <th className="px-4 py-3.5 font-semibold">Experience & Role</th>
+                <th className="px-4 py-3.5 font-semibold">Stage Status</th>
+                <th className="px-4 py-3.5 font-semibold">Applied On</th>
+                <th className="px-4 py-3.5 font-semibold">Resume</th>
+                <th className="px-4 py-3.5 text-right font-semibold">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-[#294341]/60 bg-[#0D2224]">
               {isLoading ? (
                 Array.from({ length: 4 }).map((_, i) => (
                   <tr key={i} className="animate-pulse">
-                    <td className="px-4 py-4"><div className="h-4 w-40 bg-slate-200 rounded" /></td>
-                    <td className="px-4 py-4"><div className="h-4 w-32 bg-slate-200 rounded" /></td>
-                    <td className="px-4 py-4"><div className="h-6 w-20 bg-slate-200 rounded-full" /></td>
-                    <td className="px-4 py-4"><div className="h-4 w-20 bg-slate-200 rounded" /></td>
-                    <td className="px-4 py-4"><div className="h-6 w-16 bg-slate-200 rounded" /></td>
-                    <td className="px-4 py-4 text-right"><div className="h-8 w-24 bg-slate-200 rounded ml-auto" /></td>
+                    <td className="px-4 py-4"><div className="h-4 w-40 bg-[#102A2B] rounded" /></td>
+                    <td className="px-4 py-4"><div className="h-4 w-32 bg-[#102A2B] rounded" /></td>
+                    <td className="px-4 py-4"><div className="h-6 w-20 bg-[#102A2B] rounded-full" /></td>
+                    <td className="px-4 py-4"><div className="h-4 w-20 bg-[#102A2B] rounded" /></td>
+                    <td className="px-4 py-4"><div className="h-6 w-16 bg-[#102A2B] rounded" /></td>
+                    <td className="px-4 py-4 text-right"><div className="h-8 w-24 bg-[#102A2B] rounded ml-auto" /></td>
                   </tr>
                 ))
               ) : isError ? (
                 <tr>
-                  <td colSpan={6} className="py-12 text-center text-sm font-medium text-rose-600">
+                  <td colSpan={6} className="py-12 text-center text-sm font-medium text-rose-400">
                     Failed to load applicants: {error?.message}
                     <div className="mt-2">
-                      <button onClick={() => refetch()} className="text-xs text-indigo-600 underline">
+                      <button onClick={() => refetch()} className="text-xs text-[#D6A84F] underline">
                         Try Again
                       </button>
                     </div>
@@ -232,11 +232,11 @@ export default function ApplicantsPage() {
               ) : applications.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="py-12 text-center">
-                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 mb-3">
+                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[#102A2B] text-[#D6A84F] border border-[#294341] mb-3">
                       <Users className="h-6 w-6" />
                     </div>
-                    <p className="text-base font-semibold text-slate-800">No applicants found</p>
-                    <p className="mt-1 text-sm text-slate-500">
+                    <p className="text-base font-semibold text-[#F7F8F5]">No applicants found</p>
+                    <p className="mt-1 text-sm text-[#91A6A0]">
                       {debouncedSearch || currentStatus !== 'all'
                         ? 'Try clearing filters or search keywords.'
                         : 'New candidate applications will appear here as soon as candidates apply.'}
@@ -250,28 +250,28 @@ export default function ApplicantsPage() {
                   return (
                     <tr
                       key={app.id}
-                      className="hover:bg-slate-50/70 transition-colors cursor-pointer"
+                      className="hover:bg-[#153536]/50 transition-colors cursor-pointer"
                       onClick={() => setSelectedAppId(app.id)}
                     >
                       {/* Candidate */}
                       <td className="px-4 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50 font-bold text-sm text-indigo-600">
+                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#102A2B] border border-[#294341] font-bold text-sm text-[#D6A84F]">
                             {candidate.name?.charAt(0) || 'C'}
                           </div>
                           <div>
-                            <p className="font-semibold text-slate-900 hover:text-indigo-600">
+                            <p className="font-semibold text-[#F7F8F5] hover:text-[#D6A84F] transition-colors">
                               {candidate.name}
                             </p>
-                            <p className="text-xs text-slate-500">{candidate.email}</p>
+                            <p className="text-xs text-[#91A6A0]">{candidate.email}</p>
                           </div>
                         </div>
                       </td>
 
                       {/* Experience & Title */}
                       <td className="px-4 py-4 text-xs">
-                        <p className="font-semibold text-slate-800">{candidate.current_title}</p>
-                        <p className="mt-0.5 text-slate-500">
+                        <p className="font-semibold text-[#F7F8F5]">{candidate.current_title}</p>
+                        <p className="mt-0.5 text-[#91A6A0]">
                           {candidate.experience_years} yrs • {candidate.location}
                         </p>
                       </td>
@@ -282,7 +282,7 @@ export default function ApplicantsPage() {
                       </td>
 
                       {/* Applied Date */}
-                      <td className="px-4 py-4 text-xs text-slate-500">
+                      <td className="px-4 py-4 text-xs text-[#91A6A0]">
                         {app.applied_at ? new Date(app.applied_at).toLocaleDateString() : 'N/A'}
                       </td>
 
@@ -296,13 +296,13 @@ export default function ApplicantsPage() {
                                 url: candidate.resume_url,
                               })
                             }
-                            className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2 py-1 text-xs font-semibold text-indigo-600 hover:bg-indigo-50 shadow-sm"
+                            className="inline-flex items-center gap-1 rounded-lg border border-[#294341] bg-[#102A2B] px-2.5 py-1 text-xs font-semibold text-[#B9D8C4] hover:border-[#D6A84F] transition-colors"
                           >
                             <FileText className="h-3.5 w-3.5" />
                             PDF
                           </button>
                         ) : (
-                          <span className="text-xs text-slate-400">None</span>
+                          <span className="text-xs text-[#91A6A0]/40">None</span>
                         )}
                       </td>
 
@@ -310,7 +310,7 @@ export default function ApplicantsPage() {
                       <td className="px-4 py-4 text-right" onClick={(e) => e.stopPropagation()}>
                         <button
                           onClick={() => setSelectedAppId(app.id)}
-                          className="inline-flex items-center gap-1 rounded-xl bg-indigo-50 px-3 py-1.5 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 transition-colors"
+                          className="inline-flex items-center gap-1 rounded-xl bg-[#102A2B] border border-[#294341] px-3 py-1.5 text-xs font-semibold text-[#D6A84F] hover:bg-[#153536] hover:text-[#E5B866] transition-colors"
                         >
                           Review & Advance →
                         </button>
@@ -325,10 +325,10 @@ export default function ApplicantsPage() {
 
         {/* Pagination Bar */}
         {meta.total > 0 && (
-          <div className="flex items-center justify-between border-t border-slate-100 pt-3 text-xs text-slate-500">
+          <div className="flex items-center justify-between border-t border-[#294341] pt-4 text-xs text-[#91A6A0]">
             <p>
-              Showing page <span className="font-semibold text-slate-700">{meta.current_page}</span> of{' '}
-              <span className="font-semibold text-slate-700">{meta.last_page}</span> ({meta.total} candidates)
+              Showing page <span className="font-semibold text-[#F7F8F5]">{meta.current_page}</span> of{' '}
+              <span className="font-semibold text-[#F7F8F5]">{meta.last_page}</span> ({meta.total} candidates)
             </p>
             <div className="flex items-center gap-2">
               <button
@@ -338,7 +338,7 @@ export default function ApplicantsPage() {
                   p.set('page', String(meta.current_page - 1))
                   setSearchParams(p)
                 }}
-                className="rounded-lg border border-slate-200 px-2.5 py-1 font-medium hover:bg-slate-50 disabled:opacity-40"
+                className="rounded-lg border border-[#294341] bg-[#102A2B] px-3 py-1 font-medium text-[#91A6A0] hover:bg-[#153536] hover:text-[#F7F8F5] disabled:opacity-40 transition-colors"
               >
                 Previous
               </button>
@@ -349,7 +349,7 @@ export default function ApplicantsPage() {
                   p.set('page', String(meta.current_page + 1))
                   setSearchParams(p)
                 }}
-                className="rounded-lg border border-slate-200 px-2.5 py-1 font-medium hover:bg-slate-50 disabled:opacity-40"
+                className="rounded-lg border border-[#294341] bg-[#102A2B] px-3 py-1 font-medium text-[#91A6A0] hover:bg-[#153536] hover:text-[#F7F8F5] disabled:opacity-40 transition-colors"
               >
                 Next
               </button>

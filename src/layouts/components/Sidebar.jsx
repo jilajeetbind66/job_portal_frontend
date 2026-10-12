@@ -29,17 +29,24 @@ export default function Sidebar({
       {/* Logo / Brand area */}
       <div
         className={clsx(
-          'flex h-16 items-center border-b border-slate-700/50 px-4',
+          'flex h-16 items-center border-b border-[#294341] px-4',
           collapsed ? 'justify-center' : 'gap-3'
         )}
       >
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#6A8E7F] text-lg font-extrabold text-[#BFEDC1]">
-          {portalIcon}
-        </div>
+        <img
+          src="/logo.png"
+          alt="Vcreateventures"
+          className="h-9 w-9 object-contain shrink-0 drop-shadow-[0_2px_4px_rgba(255,255,255,0.25)]"
+        />
         {!collapsed && (
-          <span className="text-base font-extrabold text-white truncate">
-            {portalName}
-          </span>
+          <div className="flex flex-col min-w-0">
+            <span className="text-sm font-extrabold text-[#F7F8F5] truncate leading-tight">
+              Vcreateventures
+            </span>
+            <span className="text-xs font-semibold text-[#B9D8C4] truncate">
+              {portalName}
+            </span>
+          </div>
         )}
       </div>
 
@@ -59,8 +66,9 @@ export default function Sidebar({
 
       {/* Bottom section — version / branding */}
       {!collapsed && (
-        <div className="border-t border-slate-700/50 px-4 py-3">
-          <p className="text-xs text-slate-400 font-semibold">VECOR Portal</p>
+        <div className="border-t border-[#294341] px-4 py-3 flex items-center justify-between">
+          <p className="text-xs text-[#91A6A0] font-semibold">Vcreateventures</p>
+          <span className="text-[10px] font-bold uppercase tracking-wider text-[#D6A84F]">Pro</span>
         </div>
       )}
     </div>
@@ -71,7 +79,7 @@ export default function Sidebar({
       {/* -------- Desktop sidebar -------- */}
       <aside
         className={clsx(
-          'hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:z-40 bg-[#2F3542] transition-all duration-300',
+          'hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:z-40 bg-[#0D2224] border-r border-[#294341] transition-all duration-300',
           collapsed ? 'lg:w-20' : 'lg:w-64'
         )}
       >
@@ -83,18 +91,18 @@ export default function Sidebar({
         <div className="fixed inset-0 z-50 lg:hidden">
           {/* Backdrop */}
           <div
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
             onClick={onMobileClose}
             aria-hidden="true"
           />
 
           {/* Drawer */}
-          <aside className="fixed inset-y-0 left-0 z-50 flex w-64 flex-col bg-slate-900 shadow-2xl animate-slide-in">
+          <aside className="fixed inset-y-0 left-0 z-50 flex w-64 flex-col bg-[#0D2224] border-r border-[#294341] shadow-2xl animate-slide-in">
             {/* Close button */}
             <button
               type="button"
               onClick={onMobileClose}
-              className="absolute right-3 top-4 rounded-lg p-1.5 text-slate-400 hover:bg-slate-800 hover:text-white transition-colors"
+              className="absolute right-3 top-4 rounded-lg p-1.5 text-[#91A6A0] hover:bg-[#102A2B] hover:text-white transition-colors"
               aria-label="Close sidebar"
             >
               <X className="h-5 w-5" />

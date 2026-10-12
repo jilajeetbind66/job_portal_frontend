@@ -12,7 +12,6 @@ import {
   UserX,
   Trash2,
   Eye,
-  AlertCircle,
   Building2,
   ChevronLeft,
   ChevronRight,
@@ -132,29 +131,29 @@ export default function UsersPage() {
         return {
           label: 'Super Admin',
           icon: Shield,
-          color: 'bg-rose-50 text-rose-700 ring-rose-600/20',
-          avatarBg: 'bg-rose-100 text-rose-700',
+          color: 'bg-rose-950/40 text-rose-400 border border-rose-800/40',
+          avatarBg: 'bg-rose-950/50 text-rose-300 border border-rose-800/40',
         }
       case ROLES.PARTNER_ADMIN:
         return {
           label: 'Partner Admin',
           icon: ShieldCheck,
-          color: 'bg-purple-50 text-purple-700 ring-purple-600/20',
-          avatarBg: 'bg-purple-100 text-purple-700',
+          color: 'bg-[#D6A84F]/15 text-[#E5B866] border border-[#D6A84F]/30',
+          avatarBg: 'bg-[#D6A84F]/20 text-[#E5B866] border border-[#D6A84F]/30',
         }
       case ROLES.PARTNER_RECRUITER:
         return {
           label: 'Recruiter',
           icon: Briefcase,
-          color: 'bg-indigo-50 text-indigo-700 ring-indigo-600/20',
-          avatarBg: 'bg-indigo-100 text-indigo-700',
+          color: 'bg-[#2F7D5B]/20 text-[#B9D8C4] border border-[#2F7D5B]/30',
+          avatarBg: 'bg-[#2F7D5B]/25 text-[#B9D8C4] border border-[#2F7D5B]/30',
         }
       default:
         return {
           label: 'Candidate',
           icon: User,
-          color: 'bg-blue-50 text-blue-700 ring-blue-600/20',
-          avatarBg: 'bg-blue-100 text-blue-700',
+          color: 'bg-[#102A2B] text-[#8FAF9A] border border-[#294341]',
+          avatarBg: 'bg-[#102A2B] text-[#8FAF9A] border border-[#294341]',
         }
     }
   }
@@ -164,10 +163,10 @@ export default function UsersPage() {
       {/* Page Header */}
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+          <h1 className="text-2xl font-bold tracking-tight text-[#F7F8F5]">
             User Management
           </h1>
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mt-1 text-xs text-[#91A6A0]">
             Oversee registered candidates, partner recruitment staff, and platform administrators.
           </p>
         </div>
@@ -180,37 +179,37 @@ export default function UsersPage() {
             label: 'Total Platform Users',
             count: counts.total || 0,
             icon: Users,
-            color: 'text-slate-700 bg-slate-50',
+            color: 'text-[#F7F8F5] bg-[#102A2B] border border-[#294341]',
           },
           {
             label: 'Candidates',
             count: counts.candidates || 0,
             icon: User,
-            color: 'text-blue-700 bg-blue-50',
+            color: 'text-[#8FAF9A] bg-[#102A2B] border border-[#294341]',
           },
           {
             label: 'Partner Staff',
             count: (counts.partner_admins || 0) + (counts.partner_recruiters || 0),
             icon: Briefcase,
-            color: 'text-purple-700 bg-purple-50',
+            color: 'text-[#B9D8C4] bg-[#2F7D5B]/20 border border-[#2F7D5B]/30',
           },
           {
             label: 'Super Admins',
             count: counts.super_admins || 0,
             icon: Shield,
-            color: 'text-rose-700 bg-rose-50',
+            color: 'text-rose-400 bg-rose-950/40 border border-rose-800/40',
           },
         ].map((stat) => {
           const Icon = stat.icon
           return (
-            <div key={stat.label} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+            <div key={stat.label} className="rounded-2xl border border-[#294341] bg-[#0D2224] p-4 shadow-xl">
               <div className="flex items-center gap-3">
                 <div className={clsx('flex h-10 w-10 items-center justify-center rounded-xl', stat.color)}>
                   <Icon className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="text-xs font-medium text-slate-500">{stat.label}</p>
-                  <p className="text-xl font-bold text-slate-900">{stat.count}</p>
+                  <p className="text-[11px] font-medium text-[#8FAF9A]">{stat.label}</p>
+                  <p className="text-xl font-bold text-[#F7F8F5] mt-0.5">{stat.count}</p>
                 </div>
               </div>
             </div>
@@ -219,11 +218,11 @@ export default function UsersPage() {
       </div>
 
       {/* Main Filter & Table Card */}
-      <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-4">
+      <div className="rounded-2xl border border-[#294341] bg-[#0D2224] p-5 shadow-xl space-y-4">
         {/* Navigation Tabs & Search Controls */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           {/* Role Tabs */}
-          <div className="flex flex-wrap items-center gap-1.5 border-b border-slate-100 pb-2 sm:border-b-0 sm:pb-0">
+          <div className="flex flex-wrap items-center gap-1.5 border-b border-[#294341]/60 pb-2 sm:border-b-0 sm:pb-0">
             {[
               { id: 'all', label: 'All Users' },
               { id: ROLES.CANDIDATE, label: 'Candidates' },
@@ -237,10 +236,10 @@ export default function UsersPage() {
                   key={tab.id}
                   onClick={() => handleRoleTab(tab.id)}
                   className={clsx(
-                    'rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors',
+                    'rounded-xl px-3 py-1.5 text-xs font-semibold transition-all',
                     active
-                      ? 'bg-indigo-600 text-white shadow-sm'
-                      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                      ? 'bg-[#2F7D5B] text-white shadow-md'
+                      : 'text-[#8FAF9A] bg-[#102A2B]/60 border border-[#294341] hover:bg-[#153536] hover:text-[#F7F8F5]'
                   )}
                 >
                   {tab.label}
@@ -254,7 +253,7 @@ export default function UsersPage() {
             <select
               value={statusFilter}
               onChange={handleStatusFilter}
-              className="rounded-xl border border-slate-200 px-3 py-1.5 text-xs text-slate-800 bg-white focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+              className="rounded-xl border border-[#294341] px-3 py-2 text-xs text-[#F7F8F5] bg-[#102A2B] focus:border-[#2F7D5B] focus:outline-none focus:ring-1 focus:ring-[#2F7D5B]"
             >
               <option value="all">All Statuses</option>
               <option value={ACCOUNT_STATUS.ACTIVE}>Active</option>
@@ -262,22 +261,22 @@ export default function UsersPage() {
             </select>
 
             <div className="relative w-full sm:w-64">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#91A6A0]" />
               <input
                 type="text"
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 placeholder="Search by name, email..."
-                className="w-full rounded-xl border border-slate-200 pl-9 pr-3 py-1.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                className="w-full rounded-xl border border-[#294341] bg-[#102A2B] pl-9 pr-3 py-2 text-xs text-[#F7F8F5] placeholder-[#91A6A0]/50 focus:border-[#2F7D5B] focus:outline-none focus:ring-1 focus:ring-[#2F7D5B]"
               />
             </div>
           </div>
         </div>
 
         {/* Table View */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-slate-600">
-            <thead className="bg-slate-50 text-xs uppercase tracking-wider text-slate-500">
+        <div className="overflow-x-auto rounded-xl border border-[#294341]/60">
+          <table className="w-full text-left text-sm text-[#F7F8F5]">
+            <thead className="bg-[#102A2B] text-xs uppercase tracking-wider text-[#8FAF9A] border-b border-[#294341]">
               <tr>
                 <th className="px-4 py-3 font-semibold">User Details</th>
                 <th className="px-4 py-3 font-semibold">Role</th>
@@ -287,24 +286,24 @@ export default function UsersPage() {
                 <th className="px-4 py-3 text-right font-semibold">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-[#294341]/50 bg-[#0D2224]">
               {isLoading ? (
                 Array.from({ length: 5 }).map((_, i) => (
                   <tr key={i} className="animate-pulse">
-                    <td className="px-4 py-4"><div className="h-4 w-44 bg-slate-200 rounded" /></td>
-                    <td className="px-4 py-4"><div className="h-6 w-24 bg-slate-200 rounded-full" /></td>
-                    <td className="px-4 py-4"><div className="h-4 w-32 bg-slate-200 rounded" /></td>
-                    <td className="px-4 py-4"><div className="h-6 w-16 bg-slate-200 rounded-full" /></td>
-                    <td className="px-4 py-4"><div className="h-4 w-20 bg-slate-200 rounded" /></td>
-                    <td className="px-4 py-4 text-right"><div className="h-8 w-20 bg-slate-200 rounded ml-auto" /></td>
+                    <td className="px-4 py-4"><div className="h-4 w-44 bg-[#102A2B] rounded" /></td>
+                    <td className="px-4 py-4"><div className="h-6 w-24 bg-[#102A2B] rounded-full" /></td>
+                    <td className="px-4 py-4"><div className="h-4 w-32 bg-[#102A2B] rounded" /></td>
+                    <td className="px-4 py-4"><div className="h-6 w-16 bg-[#102A2B] rounded-full" /></td>
+                    <td className="px-4 py-4"><div className="h-4 w-20 bg-[#102A2B] rounded" /></td>
+                    <td className="px-4 py-4 text-right"><div className="h-8 w-20 bg-[#102A2B] rounded ml-auto" /></td>
                   </tr>
                 ))
               ) : isError ? (
                 <tr>
-                  <td colSpan={6} className="py-12 text-center text-sm font-medium text-rose-600">
+                  <td colSpan={6} className="py-12 text-center text-xs font-medium text-rose-400">
                     Failed to load users: {error?.message}
                     <div className="mt-2">
-                      <button onClick={() => refetch()} className="text-xs text-indigo-600 underline">
+                      <button onClick={() => refetch()} className="text-xs text-[#D6A84F] hover:underline">
                         Try Again
                       </button>
                     </div>
@@ -313,11 +312,11 @@ export default function UsersPage() {
               ) : users.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="py-12 text-center">
-                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 mb-3">
+                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[#102A2B] border border-[#294341] text-[#8FAF9A] mb-3">
                       <Users className="h-6 w-6" />
                     </div>
-                    <p className="text-base font-semibold text-slate-800">No users found</p>
-                    <p className="mt-1 text-sm text-slate-500">
+                    <p className="text-sm font-bold text-[#F7F8F5]">No users found</p>
+                    <p className="mt-1 text-xs text-[#91A6A0]">
                       Try clearing search keywords or role/status filters.
                     </p>
                   </td>
@@ -331,7 +330,7 @@ export default function UsersPage() {
                   return (
                     <tr
                       key={user.id}
-                      className="hover:bg-slate-50/70 transition-colors cursor-pointer"
+                      className="hover:bg-[#102A2B]/50 transition-colors cursor-pointer"
                       onClick={() => setSelectedUserId(user.id)}
                     >
                       {/* User Identity */}
@@ -347,16 +346,16 @@ export default function UsersPage() {
                           </div>
                           <div>
                             <div className="flex items-center gap-2">
-                              <span className="font-semibold text-slate-900 hover:text-indigo-600">
+                              <span className="font-semibold text-xs text-[#F7F8F5] hover:text-[#B9D8C4] transition-colors">
                                 {user.name}
                               </span>
                               {user.is_protected && (
-                                <span className="rounded-full bg-rose-50 px-2 py-0.5 text-[10px] font-bold text-rose-700 border border-rose-200">
+                                <span className="rounded-full bg-rose-950/40 px-2 py-0.5 text-[10px] font-bold text-rose-400 border border-rose-800/40">
                                   Root Admin
                                 </span>
                               )}
                             </div>
-                            <p className="text-xs text-slate-500">{user.email}</p>
+                            <p className="text-xs text-[#91A6A0] mt-0.5">{user.email}</p>
                           </div>
                         </div>
                       </td>
@@ -365,7 +364,7 @@ export default function UsersPage() {
                       <td className="px-4 py-4">
                         <span
                           className={clsx(
-                            'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset',
+                            'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold',
                             roleConfig.color
                           )}
                         >
@@ -375,14 +374,14 @@ export default function UsersPage() {
                       </td>
 
                       {/* Partner Tenant */}
-                      <td className="px-4 py-4 text-xs font-medium text-slate-700">
+                      <td className="px-4 py-4 text-xs font-medium text-[#F7F8F5]">
                         {user.partner_name ? (
-                          <div className="flex items-center gap-1.5 text-slate-800">
-                            <Building2 className="h-3.5 w-3.5 text-slate-400" />
+                          <div className="flex items-center gap-1.5 text-[#F7F8F5]">
+                            <Building2 className="h-3.5 w-3.5 text-[#8FAF9A]" />
                             <span>{user.partner_name}</span>
                           </div>
                         ) : (
-                          <span className="text-slate-400">—</span>
+                          <span className="text-[#91A6A0]/50">—</span>
                         )}
                       </td>
 
@@ -390,14 +389,16 @@ export default function UsersPage() {
                       <td className="px-4 py-4">
                         <span
                           className={clsx(
-                            'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium',
-                            isActive ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'
+                            'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold border',
+                            isActive 
+                              ? 'bg-[#2F7D5B]/20 text-[#B9D8C4] border-[#2F7D5B]/40' 
+                              : 'bg-rose-950/40 text-rose-400 border-rose-800/40'
                           )}
                         >
                           <span
                             className={clsx(
                               'h-1.5 w-1.5 rounded-full',
-                              isActive ? 'bg-emerald-500' : 'bg-rose-500'
+                              isActive ? 'bg-[#2F7D5B]' : 'bg-rose-400'
                             )}
                           />
                           <span className="capitalize">{user.status}</span>
@@ -405,7 +406,7 @@ export default function UsersPage() {
                       </td>
 
                       {/* Registered Date */}
-                      <td className="px-4 py-4 text-xs text-slate-500">
+                      <td className="px-4 py-4 text-xs text-[#91A6A0]">
                         {user.created_at ? new Date(user.created_at).toLocaleDateString() : 'N/A'}
                       </td>
 
@@ -415,7 +416,7 @@ export default function UsersPage() {
                           {/* View details */}
                           <button
                             onClick={() => setSelectedUserId(user.id)}
-                            className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors"
+                            className="rounded-xl p-1.5 text-[#91A6A0] hover:bg-[#102A2B] hover:text-[#F7F8F5] transition-colors"
                             title="View Full Profile"
                           >
                             <Eye className="h-4 w-4" />
@@ -425,7 +426,7 @@ export default function UsersPage() {
                           {!user.is_protected && (
                             <button
                               onClick={() => setRoleModalUser(user)}
-                              className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-indigo-600 transition-colors"
+                              className="rounded-xl p-1.5 text-[#91A6A0] hover:bg-[#102A2B] hover:text-[#B9D8C4] transition-colors"
                               title="Edit Role & Permissions"
                             >
                               <ShieldCheck className="h-4 w-4" />
@@ -443,10 +444,10 @@ export default function UsersPage() {
                               }
                               disabled={statusMutation.isPending}
                               className={clsx(
-                                'rounded-lg p-1.5 transition-colors',
+                                'rounded-xl p-1.5 transition-colors',
                                 isActive
-                                  ? 'text-slate-400 hover:bg-amber-50 hover:text-amber-600'
-                                  : 'text-emerald-600 hover:bg-emerald-50'
+                                  ? 'text-[#91A6A0] hover:bg-[#D6A84F]/15 hover:text-[#E5B866]'
+                                  : 'text-[#B9D8C4] hover:bg-[#2F7D5B]/20'
                               )}
                               title={isActive ? 'Suspend User Access' : 'Reactivate User Account'}
                             >
@@ -458,7 +459,7 @@ export default function UsersPage() {
                           {!user.is_protected && (
                             <button
                               onClick={() => setDeletingUser(user)}
-                              className="rounded-lg p-1.5 text-slate-400 hover:bg-rose-50 hover:text-rose-600 transition-colors"
+                              className="rounded-xl p-1.5 text-[#91A6A0] hover:bg-rose-950/40 hover:text-rose-400 transition-colors"
                               title="Delete User Account"
                             >
                               <Trash2 className="h-4 w-4" />
@@ -476,10 +477,10 @@ export default function UsersPage() {
 
         {/* Pagination Bar */}
         {meta.total > 0 && (
-          <div className="flex items-center justify-between border-t border-slate-100 pt-3 text-xs text-slate-500">
+          <div className="flex items-center justify-between border-t border-[#294341] pt-3 text-xs text-[#91A6A0]">
             <p>
-              Showing page <span className="font-semibold text-slate-700">{meta.current_page}</span> of{' '}
-              <span className="font-semibold text-slate-700">{meta.last_page}</span> ({meta.total} platform users)
+              Showing page <span className="font-semibold text-[#F7F8F5]">{meta.current_page}</span> of{' '}
+              <span className="font-semibold text-[#F7F8F5]">{meta.last_page}</span> ({meta.total} platform users)
             </p>
             <div className="flex items-center gap-2">
               <button
@@ -489,7 +490,7 @@ export default function UsersPage() {
                   p.set('page', String(meta.current_page - 1))
                   setSearchParams(p)
                 }}
-                className="rounded-lg border border-slate-200 px-2.5 py-1 font-medium hover:bg-slate-50 disabled:opacity-40"
+                className="rounded-xl border border-[#294341] bg-[#102A2B] px-3 py-1.5 font-semibold text-[#8FAF9A] hover:bg-[#153536] hover:text-[#F7F8F5] disabled:opacity-40 transition-colors"
               >
                 Previous
               </button>
@@ -500,7 +501,7 @@ export default function UsersPage() {
                   p.set('page', String(meta.current_page + 1))
                   setSearchParams(p)
                 }}
-                className="rounded-lg border border-slate-200 px-2.5 py-1 font-medium hover:bg-slate-50 disabled:opacity-40"
+                className="rounded-xl border border-[#294341] bg-[#102A2B] px-3 py-1.5 font-semibold text-[#8FAF9A] hover:bg-[#153536] hover:text-[#F7F8F5] disabled:opacity-40 transition-colors"
               >
                 Next
               </button>
@@ -531,30 +532,30 @@ export default function UsersPage() {
       {deletingUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div
-            className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm"
+            className="fixed inset-0 bg-[#07151A]/85 backdrop-blur-sm"
             onClick={() => setDeletingUser(null)}
           />
-          <div className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl z-10 border border-slate-100">
-            <div className="flex items-center gap-3 text-rose-600 mb-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-50">
+          <div className="relative w-full max-w-md rounded-2xl bg-[#0D2224] border border-[#294341] p-6 shadow-2xl z-10">
+            <div className="flex items-center gap-3 text-rose-400 mb-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-950/40 border border-rose-800/40">
                 <Trash2 className="h-5 w-5" />
               </div>
-              <h3 className="text-base font-bold text-slate-900">Delete User Account?</h3>
+              <h3 className="text-base font-bold text-[#F7F8F5]">Delete User Account?</h3>
             </div>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              Are you sure you want to permanently delete <strong className="text-slate-900">{deletingUser.name}</strong> ({deletingUser.email})? All active sessions and permissions will be revoked immediately.
+            <p className="text-xs text-[#91A6A0] leading-relaxed">
+              Are you sure you want to permanently delete <strong className="text-[#F7F8F5]">{deletingUser.name}</strong> ({deletingUser.email})? All active sessions and permissions will be revoked immediately.
             </p>
-            <div className="flex items-center justify-end gap-2.5 mt-6">
+            <div className="flex items-center justify-end gap-2.5 mt-6 pt-3 border-t border-[#294341]">
               <button
                 onClick={() => setDeletingUser(null)}
-                className="rounded-xl border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50"
+                className="rounded-xl border border-[#294341] bg-[#102A2B] px-4 py-2 text-xs font-semibold text-[#8FAF9A] hover:bg-[#153536] hover:text-[#F7F8F5] transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={() => deleteMutation.mutate(deletingUser.id)}
                 disabled={deleteMutation.isPending}
-                className="rounded-xl bg-rose-600 px-4 py-2 text-xs font-semibold text-white hover:bg-rose-500 shadow-sm disabled:opacity-50"
+                className="rounded-xl bg-rose-700 hover:bg-rose-600 border border-rose-600/30 px-4 py-2 text-xs font-semibold text-white shadow-md disabled:opacity-50 transition-all"
               >
                 {deleteMutation.isPending ? 'Deleting...' : 'Confirm Delete'}
               </button>

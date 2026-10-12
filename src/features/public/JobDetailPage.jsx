@@ -14,10 +14,12 @@ import {
   FileText,
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import { Button, Modal } from '@/components';
+import { Button, Modal, Breadcrumbs, SEO } from '@/components';
 import { useAuth } from '@/auth/useAuth';
 import { useToast } from '@/hooks/useToast';
 import { fetchJobBySlug, applyToJob, saveJob, unsaveJob, fetchProfile } from '@/features/public/api/jobs';
+import { createJobPostingSchema, createBreadcrumbSchema } from '@/utils/schema';
+import { formatMetaDescription, getCanonicalUrl } from '@/utils/seo';
 
 const formatSalary = (min, max, currency = '₹') => {
   if (!min && !max) return 'Not disclosed';
@@ -97,6 +99,7 @@ export default function JobDetailPage() {
   if (isError || !job) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-16 text-center">
+        <SEO title="Job Not Found" description="The requested job vacancy could not be found or has expired." robots="noindex, nofollow" />
         <h2 className="text-2xl font-bold text-gray-900">Job not found</h2>
         <p className="mt-2 text-gray-600">The job you're looking for doesn't exist or has been removed.</p>
         <Button className="mt-6" onClick={() => navigate('/jobs')}>
@@ -106,11 +109,42 @@ export default function JobDetailPage() {
     );
   }
 
+  // Derive Location & Breadcrumb hierarchy
+  const locParts = (job.location || '').split(',').map((s) => s.trim());
+  const cityName = locParts[0] || 'India';
+  const regionName = locParts[1] || '';
+  const citySlug = cityName.toLowerCase().replace(/\s+/g, '-');
+  const regionSlug = regionName.toLowerCase().replace(/\s+/g, '-');
+  const companySlug = job.company_slug || job.partner?.slug || job.company_name?.toLowerCase().replace(/\s+/g, '-');
+
+  const breadcrumbs = [
+    { label: 'Jobs in India', to: '/jobs-in-india' },
+    ...(regionName ? [{ label: regionName, to: `/jobs-in-${regionSlug}` }] : []),
+    { label: cityName, to: `/jobs-in-${citySlug}` },
+    { label: job.title },
+  ];
+
+  const seoTitle = `${job.title} – ${cityName} | Vcreateventures`;
+  const seoDesc = `Apply for ${job.title} at ${job.company_name} in ${job.location}. ${formatMetaDescription(job.description || job.requirements, 140)}`;
+  const schemas = [
+    createJobPostingSchema(job),
+    createBreadcrumbSchema(breadcrumbs),
+  ].filter(Boolean);
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <SEO
+        title={seoTitle}
+        description={seoDesc}
+        canonical={`/jobs/${job.slug}`}
+        schema={schemas}
+      />
+
+      <Breadcrumbs items={breadcrumbs} className="mb-4" />
+
       <Link
         to="/jobs"
-        className="inline-flex items-center text-sm font-medium text-gray-600 hover:text-indigo-600 mb-6 transition-colors"
+        className="inline-flex items-center text-sm font-medium text-[#91A6A0] hover:text-[#B9D8C4] mb-6 transition-colors"
       >
         <ArrowLeft className="mr-2 h-4 w-4" /> Back to all jobs
       </Link>
@@ -119,57 +153,57 @@ export default function JobDetailPage() {
         {/* Main Content (2/3) */}
         <div className="flex-1 lg:col-span-2 space-y-8">
           <div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">{job.title}</h1>
-            <p className="mt-2 text-xl text-indigo-600 font-medium">
-              <Link to={`/companies/${job.company_slug || job.company_name?.toLowerCase().replace(/\s+/g, '-')}`} className="hover:underline">
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-[#F7F8F5] tracking-tight">{job.title}</h1>
+            <p className="mt-2 text-xl text-[#B9D8C4] font-medium">
+              <Link to={`/company/${companySlug}`} className="hover:underline">
                 {job.company_name}
               </Link>
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-4 py-4 border-y border-gray-200">
-            <div className="flex items-center gap-2 text-gray-700">
-              <MapPin className="h-5 w-5 text-gray-400" />
+          <div className="flex flex-wrap gap-4 py-4 border-y border-[#294341]">
+            <div className="flex items-center gap-2 text-[#91A6A0]">
+              <MapPin className="h-5 w-5 text-[#8FAF9A]" />
               <span>{job.location}</span>
             </div>
-            <div className="flex items-center gap-2 text-gray-700 capitalize">
-              <Briefcase className="h-5 w-5 text-gray-400" />
+            <div className="flex items-center gap-2 text-[#91A6A0] capitalize">
+              <Briefcase className="h-5 w-5 text-[#8FAF9A]" />
               <span>{job.workplace_type}</span>
             </div>
-            <div className="flex items-center gap-2 text-gray-700 capitalize">
-              <Clock className="h-5 w-5 text-gray-400" />
+            <div className="flex items-center gap-2 text-[#91A6A0] capitalize">
+              <Clock className="h-5 w-5 text-[#8FAF9A]" />
               <span>{job.employment_type}</span>
             </div>
-            <div className="flex items-center gap-2 text-gray-700 capitalize">
-              <GraduationCap className="h-5 w-5 text-gray-400" />
+            <div className="flex items-center gap-2 text-[#91A6A0] capitalize">
+              <GraduationCap className="h-5 w-5 text-[#8FAF9A]" />
               <span>{job.experience_level}</span>
             </div>
-            <div className="flex items-center gap-2 text-gray-700 font-medium">
-              <Banknote className="h-5 w-5 text-gray-400" />
+            <div className="flex items-center gap-2 text-[#D6A84F] font-bold">
+              <Banknote className="h-5 w-5 text-[#D6A84F]" />
               <span>{formatSalary(job.salary_min, job.salary_max, job.currency)}</span>
             </div>
           </div>
 
           <div>
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Job Description</h2>
-            <div className="prose max-w-none text-gray-700 whitespace-pre-wrap">{job.description}</div>
+            <h2 className="text-xl font-bold text-[#F7F8F5] mb-4">Job Description</h2>
+            <div className="prose max-w-none text-[#91A6A0] whitespace-pre-wrap leading-relaxed">{job.description}</div>
           </div>
 
           {job.requirements && (
             <div>
-              <h2 className="text-xl font-bold text-gray-900 mb-4">Requirements</h2>
-              <div className="prose max-w-none text-gray-700 whitespace-pre-wrap">{job.requirements}</div>
+              <h2 className="text-xl font-bold text-[#F7F8F5] mb-4">Requirements</h2>
+              <div className="prose max-w-none text-[#91A6A0] whitespace-pre-wrap leading-relaxed">{job.requirements}</div>
             </div>
           )}
 
           {job.skills && job.skills.length > 0 && (
             <div>
-              <h2 className="text-xl font-bold text-gray-900 mb-4">Required Skills</h2>
+              <h2 className="text-xl font-bold text-[#F7F8F5] mb-4">Required Skills</h2>
               <div className="flex flex-wrap gap-2">
                 {job.skills.map((skill, i) => (
                   <span
                     key={i}
-                    className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-50 text-indigo-700 border border-indigo-100"
+                    className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-[#102A2B] text-[#B9D8C4] border border-[#294341]"
                   >
                     {skill}
                   </span>
@@ -183,24 +217,24 @@ export default function JobDetailPage() {
         <div className="w-full lg:w-80 flex-shrink-0">
           <div className="sticky top-24 space-y-6">
             {/* Company Card */}
-            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+            <div className="bg-[#0D2224] border border-[#294341] rounded-2xl p-6 shadow-xl">
               <div className="flex items-center gap-4 mb-4">
                 {job.company_logo ? (
                   <img
                     src={job.company_logo}
                     alt={job.company_name}
-                    className="h-16 w-16 rounded-lg object-cover border border-gray-100"
+                    className="h-16 w-16 rounded-xl object-cover border border-[#294341]"
                   />
                 ) : (
-                  <div className="h-16 w-16 rounded-lg bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-2xl">
+                  <div className="h-16 w-16 rounded-xl bg-[#102A2B] border border-[#294341] flex items-center justify-center text-[#B9D8C4] font-bold text-2xl">
                     {job.company_name?.charAt(0) || 'C'}
                   </div>
                 )}
                 <div>
-                  <h3 className="text-lg font-bold text-gray-900">{job.company_name}</h3>
+                  <h3 className="text-lg font-bold text-[#F7F8F5]">{job.company_name}</h3>
                   <Link
                     to={`/companies/${job.company_slug || job.company_name?.toLowerCase().replace(/\s+/g, '-')}`}
-                    className="text-sm text-indigo-600 hover:underline"
+                    className="text-sm text-[#B9D8C4] hover:underline"
                   >
                     View profile
                   </Link>
@@ -208,7 +242,7 @@ export default function JobDetailPage() {
               </div>
 
               {job.created_at && (
-                <div className="pt-4 border-t border-gray-100 text-sm text-gray-500 flex justify-between">
+                <div className="pt-4 border-t border-[#294341] text-xs text-[#91A6A0] flex justify-between">
                   <span>Posted {formatDistanceToNow(new Date(job.created_at))} ago</span>
                 </div>
               )}
@@ -253,6 +287,51 @@ export default function JobDetailPage() {
               )}
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Internal SEO Linking & Related Exploration */}
+      <div className="mt-12 pt-8 border-t border-slate-200 bg-white/70 rounded-2xl p-6 border border-[#CED6E0]">
+        <h3 className="text-base font-bold text-[#2F3542] mb-3">
+          Explore Related Career Opportunities
+        </h3>
+        <div className="flex flex-wrap gap-2 text-xs font-semibold">
+          <Link
+            to={`/jobs?location=${encodeURIComponent(cityName)}`}
+            className="px-3 py-1.5 bg-[#E0ECE1] hover:bg-[#BFEDC1] rounded-xl text-[#2F3542] transition-colors"
+          >
+            All Jobs in {cityName}
+          </Link>
+          <Link
+            to={`/jobs-in-${citySlug}`}
+            className="px-3 py-1.5 bg-[#E0ECE1] hover:bg-[#BFEDC1] rounded-xl text-[#2F3542] transition-colors"
+          >
+            {cityName} Employment Hub
+          </Link>
+          <Link
+            to={`/company/${companySlug}`}
+            className="px-3 py-1.5 bg-[#E0ECE1] hover:bg-[#BFEDC1] rounded-xl text-[#2F3542] transition-colors"
+          >
+            More Jobs at {job.company_name}
+          </Link>
+          <Link
+            to="/jobs-in-india"
+            className="px-3 py-1.5 bg-[#E0ECE1] hover:bg-[#BFEDC1] rounded-xl text-[#2F3542] transition-colors"
+          >
+            Jobs in India Directory
+          </Link>
+          <Link
+            to="/jobs-in-prayagraj"
+            className="px-3 py-1.5 bg-[#BFEDC1]/60 hover:bg-[#BFEDC1] rounded-xl text-[#2F3542] transition-colors"
+          >
+            Jobs in Prayagraj ⭐
+          </Link>
+          <Link
+            to="/fresher-jobs"
+            className="px-3 py-1.5 bg-[#E0ECE1] hover:bg-[#BFEDC1] rounded-xl text-[#2F3542] transition-colors"
+          >
+            Fresher Jobs in India
+          </Link>
         </div>
       </div>
 

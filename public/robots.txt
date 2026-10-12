@@ -1,0 +1,37 @@
+# Robots.txt for Vcreateventures (https://vcreateventures.com)
+User-agent: *
+Allow: /
+Allow: /jobs
+Allow: /jobs/
+Allow: /company/
+Allow: /companies/
+Allow: /jobs-in-
+Allow: /fresher-jobs
+Allow: /internships
+
+# Disallow Private & Internal Portals
+Disallow: /admin/
+Disallow: /admin
+Disallow: /partner/
+Disallow: /partner
+Disallow: /candidate/
+Disallow: /candidate
+Disallow: /login
+Disallow: /register
+Disallow: /signup
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /verify-email
+Disallow: /api/
+
+# Prevent Faceted / Filtered Query Crawl Bloat
+Disallow: /*?*search=
+Disallow: /*?*work_mode=
+Disallow: /*?*experience_level=
+Disallow: /*?*employment_type=
+Disallow: /*?*salary_
+Disallow: /*?*sort=
+
+# XML Sitemaps
+Sitemap: https://vcreateventures.com/sitemap.xml
+

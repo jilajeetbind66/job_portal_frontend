@@ -44,7 +44,7 @@ export default function LoginPage() {
       footer={
         <>
           Naya account?{' '}
-          <Link to="/register" className="font-medium text-indigo-600 hover:underline">
+          <Link to="/register" className="font-semibold text-[#D6A84F] hover:text-[#E5B866] underline">
             Sign up
           </Link>
         </>
@@ -52,7 +52,7 @@ export default function LoginPage() {
     >
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
         {errors.root && (
-          <div role="alert" className="rounded-md bg-red-50 p-3 text-sm text-red-700">
+          <div role="alert" className="rounded-xl bg-rose-950/40 border border-rose-800/40 p-3 text-xs text-rose-300">
             {errors.root.message}
           </div>
         )}
@@ -70,8 +70,8 @@ export default function LoginPage() {
           error={errors.password?.message}
           {...register('password')}
         />
-        <div className="text-right text-sm">
-          <Link to="/forgot-password" className="text-indigo-600 hover:underline">
+        <div className="text-right text-xs">
+          <Link to="/forgot-password" className="text-[#8FAF9A] hover:text-[#F7F8F5] transition-colors">
             Password bhool gaye?
           </Link>
         </div>

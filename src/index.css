@@ -2,79 +2,87 @@
 
 @theme {
   --font-sans: 'Plus Jakarta Sans', 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --color-brand-primary: #6A8E7F;
-  --color-brand-hover: #58796B;
-  --color-brand-light: #BFEDC1;
-  --color-slate-bg: #E0ECE1;
 
-  /* VECOR Brand Palette Tokens */
-  --color-vecor-green: #6A8E7F;
-  --color-vecor-green-dark: #58796B;
-  --color-vecor-tea: #BFEDC1;
-  --color-vecor-charcoal: #2F3542;
-  --color-vecor-slate: #747D8C;
-  --color-vecor-gray: #CED6E0;
-  --color-vecor-bg: #E0ECE1;
-  --color-vecor-card: #FFFFFF;
+  /* Premium Luxury Palette Tokens */
+  --color-primary-bg: #07151A;
+  --color-dark-surface: #0D2224;
+  --color-card-dark: #102A2B;
+  --color-card-hover: #153536;
+  --color-primary-green: #2F7D5B;
+  --color-sage: #8FAF9A;
+  --color-mint: #B9D8C4;
+  --color-cream: #F7F8F5;
+  --color-dark-text: #172026;
+  --color-muted-text: #91A6A0;
+  --color-border-dark: #294341;
+  --color-gold-accent: #D6A84F;
+  --color-warm-gold: #E5B866;
 }
 
 :root {
-  --vecor-green: #6A8E7F;
-  --vecor-green-dark: #58796B;
-  --vecor-tea: #BFEDC1;
-  --vecor-charcoal: #2F3542;
-  --vecor-slate: #747D8C;
-  --vecor-gray: #CED6E0;
-  --vecor-bg: #E0ECE1;
+  --primary-bg: #07151A;
+  --dark-surface: #0D2224;
+  --card-dark: #102A2B;
+  --card-hover: #153536;
+  --primary-green: #2F7D5B;
+  --sage: #8FAF9A;
+  --mint: #B9D8C4;
+  --cream: #F7F8F5;
+  --dark-text: #172026;
+  --muted-text: #91A6A0;
+  --border-dark: #294341;
+  --gold-accent: #D6A84F;
+  --warm-gold: #E5B866;
 }
 
 body {
-  background-color: #E0ECE1;
-  color: #2F3542;
+  background-color: #07151A;
+  color: #F7F8F5;
   font-family: 'Plus Jakarta Sans', 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 /* Glassmorphism & Surface Utilities */
+.premium-glass-nav,
 .vecor-glass-nav {
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(13, 34, 36, 0.82);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(206, 214, 224, 0.65);
+  border: 1px solid rgba(41, 67, 65, 0.7);
 }
 
+.premium-glass-card,
 .vecor-glass-card {
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(16, 42, 43, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(206, 214, 224, 0.75);
+  border: 1px solid rgba(41, 67, 65, 0.8);
 }
 
+.premium-glass-search,
 .vecor-glass-search {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(13, 34, 36, 0.92);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(206, 214, 224, 0.85);
+  border: 1px solid #294341;
 }
 
-/* Organic Background Shape Glows */
-.blob-shape-1 {
+/* Ambient Radial Glows */
+.emerald-aura-1 {
   position: absolute;
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(191, 237, 193, 0.55) 0%, rgba(106, 142, 127, 0.15) 50%, rgba(247, 248, 245, 0) 70%);
-  filter: blur(60px);
-  border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(47, 125, 91, 0.22) 0%, rgba(13, 34, 36, 0.1) 50%, transparent 70%);
+  filter: blur(80px);
   pointer-events: none;
   z-index: 0;
 }
 
-.blob-shape-2 {
+.gold-aura-1 {
   position: absolute;
   width: 450px;
   height: 450px;
-  background: radial-gradient(circle, rgba(106, 142, 127, 0.22) 0%, rgba(191, 237, 193, 0.3) 55%, rgba(247, 248, 245, 0) 75%);
-  filter: blur(70px);
-  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  background: radial-gradient(circle, rgba(214, 168, 79, 0.12) 0%, rgba(13, 34, 36, 0.05) 55%, transparent 75%);
+  filter: blur(75px);
   pointer-events: none;
   z-index: 0;
 }
@@ -84,14 +92,14 @@ body {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #E0ECE1;
+  background: #07151A;
 }
 ::-webkit-scrollbar-thumb {
-  background: #CED6E0;
+  background: #294341;
   border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #747D8C;
+  background: #8FAF9A;
 }
 
 /* Mobile sidebar slide-in animation */

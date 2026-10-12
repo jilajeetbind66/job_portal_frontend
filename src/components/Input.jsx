@@ -10,7 +10,7 @@ export default function Input({ label, error, hint, id, className, ref, ...props
   return (
     <div className={className}>
       {label && (
-        <label htmlFor={inputId} className="mb-1 block text-sm font-medium text-gray-700">
+        <label htmlFor={inputId} className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-[#91A6A0]">
           {label}
         </label>
       )}
@@ -20,18 +20,20 @@ export default function Input({ label, error, hint, id, className, ref, ...props
         aria-invalid={error ? 'true' : undefined}
         aria-describedby={describedBy}
         className={clsx(
-          'block w-full rounded-md border px-3 py-2 text-sm shadow-sm focus:outline-2 focus:outline-indigo-600',
-          error ? 'border-red-500' : 'border-gray-300',
+          'block w-full rounded-xl border px-3.5 py-2.5 text-sm text-[#F7F8F5] placeholder-[#91A6A0]/50 transition-colors focus:outline-none focus:ring-1',
+          error
+            ? 'border-red-500 bg-[#102A2B] focus:border-red-500 focus:ring-red-500'
+            : 'border-[#294341] bg-[#102A2B] focus:border-[#2F7D5B] focus:ring-[#2F7D5B]',
         )}
         {...props}
       />
       {error ? (
-        <p id={`${inputId}-error`} className="mt-1 text-sm text-red-600">
+        <p id={`${inputId}-error`} className="mt-1 text-xs text-red-400">
           {error}
         </p>
       ) : (
         hint && (
-          <p id={`${inputId}-hint`} className="mt-1 text-sm text-gray-500">
+          <p id={`${inputId}-hint`} className="mt-1 text-xs text-[#91A6A0]">
             {hint}
           </p>
         )

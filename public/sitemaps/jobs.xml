@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Active Verified Job Listings on Vcreateventures -->
+  <url>
+    <loc>https://vcreateventures.com/jobs/senior-frontend-engineer</loc>
+    <lastmod>2026-10-12T00:00:00+05:30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vcreateventures.com/jobs/backend-developer-python</loc>
+    <lastmod>2026-10-12T00:00:00+05:30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vcreateventures.com/jobs/ui-ux-designer</loc>
+    <lastmod>2026-10-12T00:00:00+05:30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vcreateventures.com/jobs/react-native-developer</loc>
+    <lastmod>2026-10-12T00:00:00+05:30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vcreateventures.com/jobs/devops-engineer</loc>
+    <lastmod>2026-10-12T00:00:00+05:30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vcreateventures.com/jobs/product-manager</loc>
+    <lastmod>2026-10-12T00:00:00+05:30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+</urlset>
+

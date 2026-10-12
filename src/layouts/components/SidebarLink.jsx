@@ -18,10 +18,10 @@ export default function SidebarLink({ to, icon: Icon, label, collapsed }) {
       end={to === '/admin' || to === '/partner'}
       className={({ isActive }) =>
         clsx(
-          'group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-200',
+          'group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200',
           isActive
-            ? 'bg-[#6A8E7F]/30 text-[#BFEDC1] border-l-[3px] border-[#BFEDC1] font-bold'
-            : 'text-slate-300 hover:bg-white/10 hover:text-white border-l-[3px] border-transparent',
+            ? 'bg-[#102A2B] text-[#B9D8C4] border-l-[3px] border-[#D6A84F] font-bold shadow-xs'
+            : 'text-[#91A6A0] hover:bg-[#102A2B]/60 hover:text-[#F7F8F5] border-l-[3px] border-transparent',
           collapsed && 'justify-center px-2'
         )
       }
@@ -33,7 +33,7 @@ export default function SidebarLink({ to, icon: Icon, label, collapsed }) {
 
       {/* Tooltip — only shows on hover when sidebar is collapsed */}
       {collapsed && (
-        <span className="pointer-events-none absolute left-full ml-3 rounded-md bg-slate-800 px-2.5 py-1.5 text-xs text-slate-200 opacity-0 shadow-lg transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">
+        <span className="pointer-events-none absolute left-full ml-3 rounded-xl bg-[#0D2224] border border-[#294341] px-2.5 py-1.5 text-xs text-[#F7F8F5] opacity-0 shadow-xl transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">
           {label}
         </span>
       )}

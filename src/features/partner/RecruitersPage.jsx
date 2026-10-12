@@ -115,10 +115,10 @@ export default function RecruitersPage() {
       {/* Page Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#F7F8F5]">
             Recruiters & Team Members
           </h1>
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mt-1 text-sm text-[#91A6A0]">
             Manage your hiring organization, assign recruitment permissions, and invite team members.
           </p>
         </div>
@@ -126,13 +126,13 @@ export default function RecruitersPage() {
         {canManageRecruiters ? (
           <button
             onClick={() => setInviteModalOpen(true)}
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 transition-colors"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#2F7D5B] px-5 py-2.5 text-sm font-semibold text-[#F7F8F5] shadow-lg shadow-[#2F7D5B]/20 hover:bg-[#25684a] transition-all"
           >
             <UserPlus className="h-4 w-4" />
             Invite Team Member
           </button>
         ) : (
-          <div className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-medium text-amber-800">
+          <div className="rounded-xl border border-[#294341] bg-[#102A2B] px-3.5 py-2 text-xs font-medium text-[#D6A84F]">
             View-only access (Contact a Partner Admin to invite or manage members)
           </div>
         )}
@@ -141,21 +141,21 @@ export default function RecruitersPage() {
       {/* Metric Cards Row */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {[
-          { label: 'Total Team Members', count: counts.total || 0, icon: Users, color: 'text-slate-700 bg-slate-50' },
-          { label: 'Partner Admins', count: counts.admins || 0, icon: ShieldCheck, color: 'text-purple-700 bg-purple-50' },
-          { label: 'Active Recruiters', count: counts.recruiters || 0, icon: Briefcase, color: 'text-indigo-700 bg-indigo-50' },
-          { label: 'Active Status', count: counts.active || 0, icon: UserCheck, color: 'text-emerald-700 bg-emerald-50' },
+          { label: 'Total Team Members', count: counts.total || 0, icon: Users, color: 'text-[#F7F8F5] bg-[#102A2B] border border-[#294341]' },
+          { label: 'Partner Admins', count: counts.admins || 0, icon: ShieldCheck, color: 'text-[#E5B866] bg-[#D6A84F]/15 border border-[#D6A84F]/30' },
+          { label: 'Active Recruiters', count: counts.recruiters || 0, icon: Briefcase, color: 'text-[#B9D8C4] bg-[#2F7D5B]/20 border border-[#2F7D5B]/30' },
+          { label: 'Active Status', count: counts.active || 0, icon: UserCheck, color: 'text-[#B9D8C4] bg-[#2F7D5B]/20 border border-[#2F7D5B]/30' },
         ].map((stat) => {
           const Icon = stat.icon
           return (
-            <div key={stat.label} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+            <div key={stat.label} className="rounded-2xl border border-[#294341] bg-[#0D2224] p-4">
               <div className="flex items-center gap-3">
                 <div className={clsx('flex h-10 w-10 items-center justify-center rounded-xl', stat.color)}>
                   <Icon className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="text-xs font-medium text-slate-500">{stat.label}</p>
-                  <p className="text-xl font-bold text-slate-900">{stat.count}</p>
+                  <p className="text-xs font-medium text-[#91A6A0]">{stat.label}</p>
+                  <p className="text-xl font-bold text-[#F7F8F5]">{stat.count}</p>
                 </div>
               </div>
             </div>
@@ -164,11 +164,11 @@ export default function RecruitersPage() {
       </div>
 
       {/* Filter and Table Container */}
-      <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-4">
+      <div className="rounded-2xl border border-[#294341] bg-[#0D2224] p-5 space-y-4">
         {/* Filter bar */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           {/* Role tabs */}
-          <div className="flex flex-wrap items-center gap-1.5 border-b border-slate-100 pb-2 sm:border-b-0 sm:pb-0">
+          <div className="flex flex-wrap items-center gap-1.5 border-b border-[#294341] pb-3 sm:border-b-0 sm:pb-0">
             {[
               { id: 'all', label: 'All Members' },
               { id: ROLES.PARTNER_ADMIN, label: 'Admins' },
@@ -180,10 +180,10 @@ export default function RecruitersPage() {
                   key={tab.id}
                   onClick={() => handleRoleTab(tab.id)}
                   className={clsx(
-                    'rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors',
+                    'rounded-xl px-3.5 py-1.5 text-xs font-semibold transition-all',
                     active
-                      ? 'bg-indigo-600 text-white shadow-sm'
-                      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                      ? 'bg-[#153536] text-[#B9D8C4] border border-[#294341]'
+                      : 'text-[#91A6A0] hover:bg-[#102A2B] hover:text-[#F7F8F5]'
                   )}
                 >
                   {tab.label}
@@ -194,52 +194,52 @@ export default function RecruitersPage() {
 
           {/* Search bar */}
           <div className="relative w-full sm:w-72">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#91A6A0]" />
             <input
               type="text"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               placeholder="Search by name, email, department..."
-              className="w-full rounded-xl border border-slate-200 pl-9 pr-3 py-1.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+              className="w-full rounded-xl border border-[#294341] bg-[#102A2B] pl-10 pr-3.5 py-2 text-sm text-[#F7F8F5] placeholder:text-[#91A6A0]/50 focus:border-[#2F7D5B] focus:outline-none focus:ring-1 focus:ring-[#2F7D5B]"
             />
           </div>
         </div>
 
         {/* Table View */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-slate-600">
-            <thead className="bg-slate-50 text-xs uppercase tracking-wider text-slate-500">
+        <div className="overflow-x-auto rounded-xl border border-[#294341]">
+          <table className="w-full text-left text-sm text-[#91A6A0]">
+            <thead className="bg-[#102A2B] text-xs uppercase tracking-wider text-[#91A6A0]">
               <tr>
-                <th className="px-4 py-3 font-semibold">Team Member</th>
-                <th className="px-4 py-3 font-semibold">Department</th>
-                <th className="px-4 py-3 font-semibold">Role & Access</th>
-                <th className="px-4 py-3 font-semibold">Account Status</th>
-                <th className="px-4 py-3 font-semibold">Joined On</th>
+                <th className="px-4 py-3.5 font-semibold">Team Member</th>
+                <th className="px-4 py-3.5 font-semibold">Department</th>
+                <th className="px-4 py-3.5 font-semibold">Role & Access</th>
+                <th className="px-4 py-3.5 font-semibold">Account Status</th>
+                <th className="px-4 py-3.5 font-semibold">Joined On</th>
                 {canManageRecruiters && (
-                  <th className="px-4 py-3 text-right font-semibold">Actions</th>
+                  <th className="px-4 py-3.5 text-right font-semibold">Actions</th>
                 )}
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-[#294341]/60 bg-[#0D2224]">
               {isLoading ? (
                 Array.from({ length: 4 }).map((_, i) => (
                   <tr key={i} className="animate-pulse">
-                    <td className="px-4 py-4"><div className="h-4 w-40 bg-slate-200 rounded" /></td>
-                    <td className="px-4 py-4"><div className="h-4 w-28 bg-slate-200 rounded" /></td>
-                    <td className="px-4 py-4"><div className="h-6 w-24 bg-slate-200 rounded-full" /></td>
-                    <td className="px-4 py-4"><div className="h-6 w-16 bg-slate-200 rounded-full" /></td>
-                    <td className="px-4 py-4"><div className="h-4 w-20 bg-slate-200 rounded" /></td>
+                    <td className="px-4 py-4"><div className="h-4 w-40 bg-[#102A2B] rounded" /></td>
+                    <td className="px-4 py-4"><div className="h-4 w-28 bg-[#102A2B] rounded" /></td>
+                    <td className="px-4 py-4"><div className="h-6 w-24 bg-[#102A2B] rounded-full" /></td>
+                    <td className="px-4 py-4"><div className="h-6 w-16 bg-[#102A2B] rounded-full" /></td>
+                    <td className="px-4 py-4"><div className="h-4 w-20 bg-[#102A2B] rounded" /></td>
                     {canManageRecruiters && (
-                      <td className="px-4 py-4 text-right"><div className="h-8 w-16 bg-slate-200 rounded ml-auto" /></td>
+                      <td className="px-4 py-4 text-right"><div className="h-8 w-16 bg-[#102A2B] rounded ml-auto" /></td>
                     )}
                   </tr>
                 ))
               ) : isError ? (
                 <tr>
-                  <td colSpan={canManageRecruiters ? 6 : 5} className="py-12 text-center text-rose-600">
+                  <td colSpan={canManageRecruiters ? 6 : 5} className="py-12 text-center text-rose-400">
                     Failed to load recruiters: {error?.message}
                     <div className="mt-2">
-                      <button onClick={() => refetch()} className="text-xs text-indigo-600 underline">
+                      <button onClick={() => refetch()} className="text-xs text-[#D6A84F] underline">
                         Try Again
                       </button>
                     </div>
@@ -248,11 +248,11 @@ export default function RecruitersPage() {
               ) : recruiters.length === 0 ? (
                 <tr>
                   <td colSpan={canManageRecruiters ? 6 : 5} className="py-12 text-center">
-                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 mb-3">
+                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[#102A2B] text-[#D6A84F] border border-[#294341] mb-3">
                       <Users className="h-6 w-6" />
                     </div>
-                    <p className="text-base font-semibold text-slate-800">No team members found</p>
-                    <p className="mt-1 text-sm text-slate-500">
+                    <p className="text-base font-semibold text-[#F7F8F5]">No team members found</p>
+                    <p className="mt-1 text-sm text-[#91A6A0]">
                       {debouncedSearch || roleFilter !== 'all'
                         ? 'Try clearing search filters.'
                         : 'Invite recruiters to collaborate on jobs and candidate tracking.'}
@@ -265,34 +265,36 @@ export default function RecruitersPage() {
                   const isActive = recruiter.status === ACCOUNT_STATUS.ACTIVE
 
                   return (
-                    <tr key={recruiter.id} className="hover:bg-slate-50/70 transition-colors">
+                    <tr key={recruiter.id} className="hover:bg-[#153536]/50 transition-colors">
                       {/* Name & Avatar */}
                       <td className="px-4 py-4">
                         <div className="flex items-center gap-3">
                           <div
                             className={clsx(
-                              'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl font-bold text-sm',
-                              isAdmin ? 'bg-purple-100 text-purple-700' : 'bg-indigo-100 text-indigo-700'
+                              'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl font-bold text-sm border',
+                              isAdmin
+                                ? 'bg-[#D6A84F]/20 text-[#E5B866] border-[#D6A84F]/30'
+                                : 'bg-[#2F7D5B]/20 text-[#B9D8C4] border-[#2F7D5B]/30'
                             )}
                           >
                             {recruiter.name?.charAt(0) || 'U'}
                           </div>
                           <div>
                             <div className="flex items-center gap-2">
-                              <span className="font-semibold text-slate-900">{recruiter.name}</span>
+                              <span className="font-semibold text-[#F7F8F5]">{recruiter.name}</span>
                               {recruiter.is_owner && (
-                                <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-600">
+                                <span className="rounded-full bg-[#102A2B] border border-[#294341] px-2 py-0.5 text-[10px] font-bold text-[#D6A84F]">
                                   Primary Owner
                                 </span>
                               )}
                             </div>
-                            <p className="text-xs text-slate-500">{recruiter.email}</p>
+                            <p className="text-xs text-[#91A6A0]">{recruiter.email}</p>
                           </div>
                         </div>
                       </td>
 
                       {/* Department */}
-                      <td className="px-4 py-4 text-xs text-slate-700 font-medium">
+                      <td className="px-4 py-4 text-xs text-[#F7F8F5] font-medium">
                         {recruiter.department || 'General Talent'}
                       </td>
 
@@ -300,10 +302,10 @@ export default function RecruitersPage() {
                       <td className="px-4 py-4">
                         <span
                           className={clsx(
-                            'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold',
+                            'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold border',
                             isAdmin
-                              ? 'bg-purple-50 text-purple-700 ring-1 ring-inset ring-purple-600/20'
-                              : 'bg-indigo-50 text-indigo-700 ring-1 ring-inset ring-indigo-600/20'
+                              ? 'bg-[#D6A84F]/15 text-[#E5B866] border-[#D6A84F]/30'
+                              : 'bg-[#2F7D5B]/20 text-[#B9D8C4] border-[#2F7D5B]/40'
                           )}
                         >
                           {isAdmin ? <ShieldCheck className="h-3.5 w-3.5" /> : <Briefcase className="h-3.5 w-3.5" />}
@@ -315,16 +317,16 @@ export default function RecruitersPage() {
                       <td className="px-4 py-4">
                         <span
                           className={clsx(
-                            'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium',
+                            'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium border',
                             isActive
-                              ? 'bg-emerald-50 text-emerald-700'
-                              : 'bg-rose-50 text-rose-700'
+                              ? 'bg-[#2F7D5B]/20 text-[#B9D8C4] border-[#2F7D5B]/40'
+                              : 'bg-rose-950/40 text-rose-300 border-rose-800/40'
                           )}
                         >
                           <span
                             className={clsx(
                               'h-1.5 w-1.5 rounded-full',
-                              isActive ? 'bg-emerald-500' : 'bg-rose-500'
+                              isActive ? 'bg-[#2F7D5B]' : 'bg-rose-400'
                             )}
                           />
                           <span className="capitalize">{recruiter.status}</span>
@@ -332,7 +334,7 @@ export default function RecruitersPage() {
                       </td>
 
                       {/* Added Date */}
-                      <td className="px-4 py-4 text-xs text-slate-500">
+                      <td className="px-4 py-4 text-xs text-[#91A6A0]">
                         {recruiter.created_at ? new Date(recruiter.created_at).toLocaleDateString() : 'N/A'}
                       </td>
 
@@ -344,7 +346,7 @@ export default function RecruitersPage() {
                             {!recruiter.is_owner && (
                               <button
                                 onClick={() => setEditingRoleRecruiter(recruiter)}
-                                className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-indigo-600 transition-colors"
+                                className="rounded-lg p-1.5 text-[#91A6A0] hover:bg-[#153536] hover:text-[#D6A84F] transition-colors"
                                 title="Change Permissions Role"
                               >
                                 <ShieldCheck className="h-4 w-4" />
@@ -364,8 +366,8 @@ export default function RecruitersPage() {
                                 className={clsx(
                                   'rounded-lg p-1.5 transition-colors',
                                   isActive
-                                    ? 'text-slate-400 hover:bg-amber-50 hover:text-amber-600'
-                                    : 'text-emerald-600 hover:bg-emerald-50'
+                                    ? 'text-[#91A6A0] hover:bg-[#153536] hover:text-amber-400'
+                                    : 'text-[#B9D8C4] hover:bg-[#153536]'
                                 )}
                                 title={isActive ? 'Suspend Access' : 'Reactivate Access'}
                               >
@@ -377,7 +379,7 @@ export default function RecruitersPage() {
                             {!recruiter.is_owner && (
                               <button
                                 onClick={() => setDeletingRecruiter(recruiter)}
-                                className="rounded-lg p-1.5 text-slate-400 hover:bg-rose-50 hover:text-rose-600 transition-colors"
+                                className="rounded-lg p-1.5 text-[#91A6A0] hover:bg-rose-950/40 hover:text-rose-400 transition-colors"
                                 title="Remove Team Member"
                               >
                                 <Trash2 className="h-4 w-4" />
@@ -396,10 +398,10 @@ export default function RecruitersPage() {
 
         {/* Pagination Bar */}
         {meta.total > 0 && (
-          <div className="flex items-center justify-between border-t border-slate-100 pt-3 text-xs text-slate-500">
+          <div className="flex items-center justify-between border-t border-[#294341] pt-4 text-xs text-[#91A6A0]">
             <p>
-              Showing page <span className="font-semibold text-slate-700">{meta.current_page}</span> of{' '}
-              <span className="font-semibold text-slate-700">{meta.last_page}</span> ({meta.total} members)
+              Showing page <span className="font-semibold text-[#F7F8F5]">{meta.current_page}</span> of{' '}
+              <span className="font-semibold text-[#F7F8F5]">{meta.last_page}</span> ({meta.total} members)
             </p>
             <div className="flex items-center gap-2">
               <button
@@ -409,7 +411,7 @@ export default function RecruitersPage() {
                   p.set('page', String(meta.current_page - 1))
                   setSearchParams(p)
                 }}
-                className="rounded-lg border border-slate-200 px-2.5 py-1 font-medium hover:bg-slate-50 disabled:opacity-40"
+                className="rounded-lg border border-[#294341] bg-[#102A2B] px-3 py-1 font-medium text-[#91A6A0] hover:bg-[#153536] hover:text-[#F7F8F5] disabled:opacity-40 transition-colors"
               >
                 Previous
               </button>
@@ -420,7 +422,7 @@ export default function RecruitersPage() {
                   p.set('page', String(meta.current_page + 1))
                   setSearchParams(p)
                 }}
-                className="rounded-lg border border-slate-200 px-2.5 py-1 font-medium hover:bg-slate-50 disabled:opacity-40"
+                className="rounded-lg border border-[#294341] bg-[#102A2B] px-3 py-1 font-medium text-[#91A6A0] hover:bg-[#153536] hover:text-[#F7F8F5] disabled:opacity-40 transition-colors"
               >
                 Next
               </button>
@@ -448,30 +450,30 @@ export default function RecruitersPage() {
       {deletingRecruiter && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div
-            className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm"
+            className="fixed inset-0 bg-[#07151A]/80 backdrop-blur-xs"
             onClick={() => setDeletingRecruiter(null)}
           />
-          <div className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl z-10 border border-slate-100">
-            <div className="flex items-center gap-3 text-rose-600 mb-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-50">
+          <div className="relative w-full max-w-md rounded-2xl bg-[#0D2224] p-6 shadow-2xl z-10 border border-[#294341] text-[#F7F8F5]">
+            <div className="flex items-center gap-3 text-rose-400 mb-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-950/40 border border-rose-800/40">
                 <Trash2 className="h-5 w-5" />
               </div>
-              <h3 className="text-base font-bold text-slate-900">Remove Team Member?</h3>
+              <h3 className="text-base font-bold text-[#F7F8F5]">Remove Team Member?</h3>
             </div>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              Are you sure you want to remove <strong className="text-slate-900">{deletingRecruiter.name}</strong> from your organization? They will immediately lose access to your jobs and applicant pipelines.
+            <p className="text-sm text-[#91A6A0] leading-relaxed">
+              Are you sure you want to remove <strong className="text-[#F7F8F5]">{deletingRecruiter.name}</strong> from your organization? They will immediately lose access to your jobs and applicant pipelines.
             </p>
             <div className="flex items-center justify-end gap-2.5 mt-6">
               <button
                 onClick={() => setDeletingRecruiter(null)}
-                className="rounded-xl border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50"
+                className="rounded-xl border border-[#294341] bg-[#102A2B] px-4 py-2 text-xs font-semibold text-[#91A6A0] hover:text-[#F7F8F5] transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={() => deleteMutation.mutate(deletingRecruiter.id)}
                 disabled={deleteMutation.isPending}
-                className="rounded-xl bg-rose-600 px-4 py-2 text-xs font-semibold text-white hover:bg-rose-500 shadow-sm disabled:opacity-50"
+                className="rounded-xl bg-rose-600 px-4 py-2 text-xs font-semibold text-white hover:bg-rose-500 shadow-sm disabled:opacity-50 transition-colors"
               >
                 {deleteMutation.isPending ? 'Removing...' : 'Confirm Remove'}
               </button>

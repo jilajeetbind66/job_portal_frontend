@@ -105,13 +105,13 @@ export default function PartnerFormPage() {
   if (isEditMode && isFetching) {
     return (
       <div className="space-y-6 max-w-3xl animate-pulse">
-        <div className="h-8 w-48 bg-gray-200 rounded"></div>
-        <div className="bg-white shadow rounded-lg p-6 space-y-6">
-          <div className="h-24 w-24 bg-gray-200 rounded-lg"></div>
+        <div className="h-8 w-48 bg-[#102A2B] rounded"></div>
+        <div className="bg-[#0D2224] border border-[#294341] rounded-2xl p-6 space-y-6">
+          <div className="h-24 w-24 bg-[#102A2B] rounded-2xl"></div>
           <div className="space-y-4">
-            <div className="h-10 bg-gray-200 rounded"></div>
-            <div className="h-10 bg-gray-200 rounded"></div>
-            <div className="h-24 bg-gray-200 rounded"></div>
+            <div className="h-10 bg-[#102A2B] rounded"></div>
+            <div className="h-10 bg-[#102A2B] rounded"></div>
+            <div className="h-24 bg-[#102A2B] rounded"></div>
           </div>
         </div>
       </div>
@@ -119,31 +119,38 @@ export default function PartnerFormPage() {
   }
 
   return (
-    <div className="max-w-3xl space-y-6">
+    <div className="max-w-3xl space-y-6 pb-12">
       <div className="flex items-center space-x-4">
         <Link
           to={isEditMode ? `/admin/partners/${id}` : '/admin/partners'}
-          className="text-gray-500 hover:text-gray-700"
+          className="text-[#8FAF9A] hover:text-[#F7F8F5] transition-colors p-1.5 rounded-xl bg-[#102A2B] border border-[#294341]"
         >
-          <ArrowLeft className="h-5 w-5" />
+          <ArrowLeft className="h-4 w-4" />
         </Link>
-        <h1 className="text-2xl font-bold text-gray-900">
-          {isEditMode ? 'Edit Partner' : 'Create Partner'}
-        </h1>
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-[#F7F8F5]">
+            {isEditMode ? 'Edit Partner' : 'Create Partner'}
+          </h1>
+          <p className="mt-0.5 text-xs text-[#91A6A0]">
+            {isEditMode ? 'Update company credentials and branding assets' : 'Onboard a new hiring partner organization'}
+          </p>
+        </div>
       </div>
 
-      <div className="bg-white shadow sm:rounded-lg">
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 px-4 py-5 sm:p-6">
+      <div className="bg-[#0D2224] border border-[#294341] shadow-xl rounded-2xl overflow-hidden">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 p-6 sm:p-8">
           
           {/* Logo Upload */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">Company Logo</label>
-            <div className="mt-2 flex items-center space-x-6">
-              <div className="h-20 w-20 flex-shrink-0 rounded-lg overflow-hidden border-2 border-gray-200 border-dashed bg-gray-50 flex items-center justify-center relative">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-[#8FAF9A] mb-2">
+              Company Logo
+            </label>
+            <div className="flex items-center space-x-6">
+              <div className="h-20 w-20 flex-shrink-0 rounded-2xl overflow-hidden border-2 border-dashed border-[#294341] bg-[#102A2B] flex items-center justify-center relative group">
                 {logoPreview ? (
                   <img src={logoPreview} alt="Logo preview" className="h-full w-full object-cover" />
                 ) : (
-                  <ImageIcon className="h-8 w-8 text-gray-400" />
+                  <ImageIcon className="h-8 w-8 text-[#8FAF9A]" />
                 )}
                 <input
                   type="file"
@@ -154,8 +161,8 @@ export default function PartnerFormPage() {
                 />
               </div>
               <div>
-                <label className="cursor-pointer inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
-                  <Upload className="-ml-1 mr-2 h-4 w-4" />
+                <label className="cursor-pointer inline-flex items-center px-4 py-2 border border-[#294341] shadow-sm text-xs font-semibold rounded-xl text-[#8FAF9A] bg-[#102A2B] hover:bg-[#153536] hover:text-[#F7F8F5] transition-colors">
+                  <Upload className="-ml-1 mr-2 h-4 w-4 text-[#8FAF9A]" />
                   <span>{logoPreview ? 'Change Logo' : 'Upload Logo'}</span>
                   <input
                     type="file"
@@ -164,7 +171,7 @@ export default function PartnerFormPage() {
                     className="sr-only"
                   />
                 </label>
-                <p className="mt-2 text-xs text-gray-500">PNG, JPG, GIF up to 5MB.</p>
+                <p className="mt-2 text-xs text-[#91A6A0]">PNG, JPG, SVG or WEBP up to 5MB.</p>
               </div>
             </div>
           </div>
@@ -172,76 +179,70 @@ export default function PartnerFormPage() {
           <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
             {/* Name */}
             <div className="sm:col-span-2">
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="name" className="block text-xs font-semibold uppercase tracking-wider text-[#8FAF9A] mb-2">
                 Company Name *
               </label>
-              <div className="mt-1">
-                <input
-                  type="text"
-                  id="name"
-                  {...register('name')}
-                  className={clsx(
-                    "shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md",
-                    errors.name && "border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500"
-                  )}
-                  placeholder="Acme Corp"
-                />
-              </div>
+              <input
+                type="text"
+                id="name"
+                {...register('name')}
+                className={clsx(
+                  "shadow-inner block w-full text-xs rounded-xl border border-[#294341] bg-[#102A2B] px-3.5 py-2.5 text-[#F7F8F5] placeholder-[#91A6A0]/50 focus:border-[#2F7D5B] focus:outline-none focus:ring-1 focus:ring-[#2F7D5B]",
+                  errors.name && "border-rose-500 focus:border-rose-500 focus:ring-rose-500"
+                )}
+                placeholder="e.g. Infosys, Wipro, Zomato"
+              />
               {errors.name && (
-                <p className="mt-2 text-sm text-red-600">{errors.name.message}</p>
+                <p className="mt-1.5 text-xs text-rose-400">{errors.name.message}</p>
               )}
             </div>
 
             {/* Website */}
             <div className="sm:col-span-2">
-              <label htmlFor="website" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="website" className="block text-xs font-semibold uppercase tracking-wider text-[#8FAF9A] mb-2">
                 Website URL
               </label>
-              <div className="mt-1">
-                <input
-                  type="text"
-                  id="website"
-                  {...register('website')}
-                  className={clsx(
-                    "shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md",
-                    errors.website && "border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500"
-                  )}
-                  placeholder="https://example.com"
-                />
-              </div>
+              <input
+                type="text"
+                id="website"
+                {...register('website')}
+                className={clsx(
+                  "shadow-inner block w-full text-xs rounded-xl border border-[#294341] bg-[#102A2B] px-3.5 py-2.5 text-[#F7F8F5] placeholder-[#91A6A0]/50 focus:border-[#2F7D5B] focus:outline-none focus:ring-1 focus:ring-[#2F7D5B]",
+                  errors.website && "border-rose-500 focus:border-rose-500 focus:ring-rose-500"
+                )}
+                placeholder="https://company.com"
+              />
               {errors.website && (
-                <p className="mt-2 text-sm text-red-600">{errors.website.message}</p>
+                <p className="mt-1.5 text-xs text-rose-400">{errors.website.message}</p>
               )}
             </div>
 
             {/* Description */}
             <div className="sm:col-span-2">
-              <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="description" className="block text-xs font-semibold uppercase tracking-wider text-[#8FAF9A] mb-2">
                 Description
               </label>
-              <div className="mt-1">
-                <textarea
-                  id="description"
-                  rows={4}
-                  {...register('description')}
-                  className={clsx(
-                    "shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md",
-                    errors.description && "border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500"
-                  )}
-                  placeholder="Brief description of the company..."
-                />
-              </div>
+              <textarea
+                id="description"
+                rows={4}
+                {...register('description')}
+                className={clsx(
+                  "shadow-inner block w-full text-xs rounded-xl border border-[#294341] bg-[#102A2B] px-3.5 py-2.5 text-[#F7F8F5] placeholder-[#91A6A0]/50 focus:border-[#2F7D5B] focus:outline-none focus:ring-1 focus:ring-[#2F7D5B]",
+                  errors.description && "border-rose-500 focus:border-rose-500 focus:ring-rose-500"
+                )}
+                placeholder="Brief description of the partner organization, industry, and workforce culture..."
+              />
               {errors.description && (
-                <p className="mt-2 text-sm text-red-600">{errors.description.message}</p>
+                <p className="mt-1.5 text-xs text-rose-400">{errors.description.message}</p>
               )}
             </div>
           </div>
 
-          <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+          <div className="flex justify-end space-x-3 pt-4 border-t border-[#294341]">
             <button
               type="button"
               onClick={() => navigate(isEditMode ? `/admin/partners/${id}` : '/admin/partners')}
-              className="px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="px-4 py-2 border border-[#294341] shadow-sm text-xs font-semibold rounded-xl text-[#8FAF9A] bg-[#102A2B] hover:bg-[#153536] hover:text-[#F7F8F5] transition-colors"
               disabled={isSubmitting}
             >
               Cancel
@@ -249,7 +250,7 @@ export default function PartnerFormPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="inline-flex justify-center items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-75 disabled:cursor-not-allowed"
+              className="inline-flex justify-center items-center px-4 py-2 border border-[#2F7D5B]/50 shadow-md text-xs font-semibold rounded-xl text-white bg-[#2F7D5B] hover:bg-[#246347] transition-all disabled:opacity-50"
             >
               {isSubmitting && <Loader2 className="animate-spin -ml-1 mr-2 h-4 w-4" />}
               {isEditMode ? 'Save Changes' : 'Create Partner'}

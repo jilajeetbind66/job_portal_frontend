@@ -50,7 +50,7 @@ export default function RegisterPage() {
       footer={
         <>
           Pehle se account hai?{' '}
-          <Link to="/login" className="font-medium text-indigo-600 hover:underline">
+          <Link to="/login" className="font-semibold text-[#D6A84F] hover:text-[#E5B866] underline">
             Login
           </Link>
         </>
@@ -58,7 +58,7 @@ export default function RegisterPage() {
     >
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
         {errors.root && (
-          <div role="alert" className="rounded-md bg-red-50 p-3 text-sm text-red-700">
+          <div role="alert" className="rounded-xl bg-rose-950/40 border border-rose-800/40 p-3 text-xs text-rose-300">
             {errors.root.message}
           </div>
         )}
@@ -97,11 +97,11 @@ export default function RegisterPage() {
           {...register('password_confirmation')}
         />
         <div>
-          <label className="flex items-start gap-2 text-sm text-gray-700">
-            <input type="checkbox" className="mt-1" {...register('consent')} />
+          <label className="flex items-start gap-2.5 text-xs text-[#8FAF9A] cursor-pointer">
+            <input type="checkbox" className="mt-0.5 rounded border-[#294341] bg-[#102A2B] text-[#2F7D5B] focus:ring-[#2F7D5B]" {...register('consent')} />
             <span>Main apna data job applications ke liye use hone ki sahmati deta/deti hoon.</span>
           </label>
-          {errors.consent && <p className="mt-1 text-sm text-red-600">{errors.consent.message}</p>}
+          {errors.consent && <p className="mt-1 text-xs text-rose-400">{errors.consent.message}</p>}
         </div>
         <Button type="submit" loading={isSubmitting} className="w-full">
           Sign up

@@ -21,33 +21,33 @@ export default function Table({
 
   return (
     <div>
-      <div className="overflow-x-auto rounded-lg border border-gray-200">
-        <table className="min-w-full divide-y divide-gray-200 text-sm">
-          <thead className="bg-gray-50">
+      <div className="overflow-x-auto rounded-xl border border-[#294341] bg-[#0D2224]">
+        <table className="min-w-full divide-y divide-[#294341] text-sm">
+          <thead className="bg-[#102A2B]">
             <tr>
               {columns.map((c) => (
                 <th
                   key={c.key}
                   scope="col"
-                  className="px-4 py-3 text-left font-medium text-gray-600"
+                  className="px-4 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-[#91A6A0]"
                 >
                   {c.header}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100 bg-white">
+          <tbody className="divide-y divide-[#294341]/60 bg-[#0D2224]">
             {loading ? (
               <tr>
-                <td colSpan={columns.length} className="px-4 py-10 text-center text-gray-500">
-                  <Loader2 className="mx-auto h-5 w-5 animate-spin" aria-label="Loading" />
+                <td colSpan={columns.length} className="px-4 py-12 text-center text-[#91A6A0]">
+                  <Loader2 className="mx-auto h-6 w-6 animate-spin text-[#2F7D5B]" aria-label="Loading" />
                 </td>
               </tr>
             ) : (
               rows.map((row) => (
-                <tr key={row[rowKey]}>
+                <tr key={row[rowKey]} className="hover:bg-[#153536]/60 transition-colors">
                   {columns.map((c) => (
-                    <td key={c.key} className={c.className ?? 'px-4 py-3 text-gray-800'}>
+                    <td key={c.key} className={c.className ?? 'px-4 py-3.5 text-[#F7F8F5]'}>
                       {c.render ? c.render(row) : row[c.key]}
                     </td>
                   ))}
@@ -59,7 +59,7 @@ export default function Table({
       </div>
 
       {pagination && (
-        <div className="mt-3 flex items-center justify-between text-sm text-gray-600">
+        <div className="mt-4 flex items-center justify-between text-sm text-[#91A6A0]">
           <span>
             Page {pagination.page} of {totalPages}
           </span>

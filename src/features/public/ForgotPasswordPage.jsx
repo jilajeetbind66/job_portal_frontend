@@ -35,19 +35,19 @@ export default function ForgotPasswordPage() {
       title="Forgot password"
       subtitle="Email daalo, hum reset link bhejenge"
       footer={
-        <Link to="/login" className="font-medium text-indigo-600 hover:underline">
+        <Link to="/login" className="font-semibold text-[#D6A84F] hover:text-[#E5B866] underline">
           Login par wapas jao
         </Link>
       }
     >
       {sent ? (
-        <p role="status" className="rounded-md bg-green-50 p-3 text-sm text-green-800">
+        <p role="status" className="rounded-xl border border-[#2F7D5B]/40 bg-[#2F7D5B]/20 p-4 text-xs font-semibold text-[#B9D8C4] leading-relaxed">
           Agar ye email registered hai to reset link bhej diya gaya hai. Apna inbox check karo.
         </p>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
           {errors.root && (
-            <div role="alert" className="rounded-md bg-red-50 p-3 text-sm text-red-700">
+            <div role="alert" className="rounded-xl bg-rose-950/40 border border-rose-800/40 p-3 text-xs text-rose-300">
               {errors.root.message}
             </div>
           )}
