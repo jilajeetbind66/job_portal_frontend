@@ -88,12 +88,6 @@ export default function PublicLayout() {
               <Building2 className="w-3.5 h-3.5 text-[#8FAF9A]" />
               For Employers
             </NavLink>
-            <NavLink
-              to="/jobs-in-india"
-              className="text-[#91A6A0] hover:text-[#F7F8F5] transition-colors"
-            >
-              Resources
-            </NavLink>
           </nav>
 
           {/* Right Action Icons & Auth */}
@@ -197,13 +191,6 @@ export default function PublicLayout() {
               >
                 For Employers
               </Link>
-              <Link
-                to="/jobs-in-india"
-                onClick={() => setMobileMenuOpen(false)}
-                className="py-2.5 px-3.5 rounded-xl hover:bg-[#102A2B] hover:text-[#B9D8C4] text-[#F7F8F5]"
-              >
-                Resources & Locations
-              </Link>
             </nav>
 
             <div className="pt-4 border-t border-[#294341] flex flex-col gap-2.5">
@@ -249,7 +236,7 @@ export default function PublicLayout() {
       {/* Editorial Luxury Dark Footer */}
       <footer className="bg-[#07151A] text-[#91A6A0] pt-16 pb-12 border-t border-[#294341]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-[#294341]">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-[#294341]">
             <div className="lg:col-span-2 space-y-4">
               <div>
                 <Logo isDark={true} />
@@ -272,19 +259,6 @@ export default function PublicLayout() {
                 <li><Link to="/fresher-jobs" className="hover:text-[#B9D8C4] transition-colors">Fresher Jobs</Link></li>
                 <li><Link to="/candidate" className="hover:text-[#B9D8C4] transition-colors">Candidate Dashboard</Link></li>
                 <li><Link to="/candidate/profile" className="hover:text-[#B9D8C4] transition-colors">Create Profile</Link></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-xs font-bold tracking-wider text-[#F7F8F5] uppercase mb-4">
-                Priority Markets
-              </h4>
-              <ul className="space-y-2.5 text-sm text-[#91A6A0]">
-                <li><Link to="/jobs-in-india" className="hover:text-[#B9D8C4] transition-colors">Jobs in India (All States)</Link></li>
-                <li><Link to="/jobs-in-uttar-pradesh" className="hover:text-[#B9D8C4] transition-colors">Jobs in Uttar Pradesh</Link></li>
-                <li><Link to="/jobs-in-prayagraj" className="hover:text-[#D6A84F] text-[#B9D8C4] font-semibold transition-colors">Jobs in Prayagraj ⭐</Link></li>
-                <li><Link to="/jobs-in-prayagraj/fresher-jobs" className="hover:text-[#B9D8C4] transition-colors">Fresher Jobs in Prayagraj</Link></li>
-                <li><Link to="/jobs-in-prayagraj/software-developer" className="hover:text-[#B9D8C4] transition-colors">Software Jobs in Prayagraj</Link></li>
               </ul>
             </div>
 
