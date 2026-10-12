@@ -10,16 +10,15 @@ import AuthCard from './AuthCard'
 
 const schema = z
   .object({
-    password: z.string().min(8, 'Password kam se kam 8 characters ka ho'),
+    password: z.string().min(8, 'Password must be at least 8 characters'),
     password_confirmation: z.string(),
   })
   .refine((v) => v.password === v.password_confirmation, {
-    message: 'Dono password same hone chahiye',
+    message: 'Passwords do not match',
     path: ['password_confirmation'],
   })
 
-// Email me link aata hai: /reset-password?token=...&email=...
-// Partner users ka "set password" link bhi yahi page use karta hai.
+// Reset link delivered via email: /reset-password?token=...&email=...
 export default function ResetPasswordPage() {
   const [params] = useSearchParams()
   const token = params.get('token')
@@ -35,11 +34,11 @@ export default function ResetPasswordPage() {
 
   if (!token || !email) {
     return (
-      <AuthCard title="Link sahi nahi hai">
+      <AuthCard title="Invalid or Expired Link">
         <p className="text-xs text-[#91A6A0] leading-relaxed">
-          Ye reset link adhura ya purana hai.{' '}
+          This password reset link is invalid or has expired.{' '}
           <Link to="/forgot-password" className="font-semibold text-[#D6A84F] hover:text-[#E5B866] underline">
-            Naya link mangao
+            Request a new link
           </Link>
         </p>
       </AuthCard>
@@ -49,7 +48,7 @@ export default function ResetPasswordPage() {
   const onSubmit = async (values) => {
     try {
       await resetPasswordRequest({ token, email, ...values })
-      toast.success('Password set ho gaya. Ab login karo.')
+      toast.success('Password successfully reset. You can now login.')
       navigate('/login', { replace: true })
     } catch (error) {
       if (!applyServerErrors(error, setError)) {
@@ -60,11 +59,11 @@ export default function ResetPasswordPage() {
 
   return (
     <AuthCard
-      title="Naya password set karo"
-      subtitle={`${email} ke liye naya password chun lo`}
+      title="Set New Password"
+      subtitle={`Choose a new password for ${email}`}
       footer={
         <Link to="/login" className="font-semibold text-[#D6A84F] hover:text-[#E5B866] underline">
-          Login par wapas jao
+          Back to Login
         </Link>
       }
     >

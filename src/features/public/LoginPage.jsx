@@ -9,8 +9,8 @@ import { applyServerErrors, getErrorMessage } from '@/api/errors'
 import AuthCard from './AuthCard'
 
 const schema = z.object({
-  email: z.email('Sahi email daalo'),
-  password: z.string().min(1, 'Password daalo'),
+  email: z.string().email('Please enter a valid email address'),
+  password: z.string().min(1, 'Password is required'),
 })
 
 export default function LoginPage() {
@@ -24,7 +24,7 @@ export default function LoginPage() {
     formState: { errors, isSubmitting },
   } = useForm({ resolver: zodResolver(schema) })
 
-  // Login hote hi (ya pehle se logged in ho to) role ke portal par bhejo
+  // Redirect to role portal on login
   if (isAuthenticated) return <Navigate to={from ?? ROLE_HOME[role] ?? '/'} replace />
 
   const onSubmit = async (values) => {
@@ -40,10 +40,10 @@ export default function LoginPage() {
   return (
     <AuthCard
       title="Login"
-      subtitle="Apne account me sign in karo"
+      subtitle="Sign in to your account"
       footer={
         <>
-          Naya account?{' '}
+          Don&apos;t have an account?{' '}
           <Link to="/register" className="font-semibold text-[#D6A84F] hover:text-[#E5B866] underline">
             Sign up
           </Link>
@@ -72,7 +72,7 @@ export default function LoginPage() {
         />
         <div className="text-right text-xs">
           <Link to="/forgot-password" className="text-[#8FAF9A] hover:text-[#F7F8F5] transition-colors">
-            Password bhool gaye?
+            Forgot your password?
           </Link>
         </div>
         <Button type="submit" loading={isSubmitting} className="w-full">

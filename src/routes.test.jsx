@@ -36,7 +36,7 @@ function renderAt(path, role) {
 const cases = [
   ['/', null, 'Find Your Dream Job'],
   ['/jobs', null, 'Find Jobs'],
-  ['/verify-email', null, 'Apna email verify karo'],
+  ['/verify-email', null, 'Verify Your Email Address'],
   ['/candidate', ROLES.CANDIDATE, 'Quick Links'],
   ['/candidate/profile', ROLES.CANDIDATE, 'Your Profile'],
   ['/candidate/applications', ROLES.CANDIDATE, 'My Applications'],

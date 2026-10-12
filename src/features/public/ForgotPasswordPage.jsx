@@ -8,7 +8,7 @@ import { forgotPasswordRequest } from '@/api/auth'
 import { applyServerErrors, getErrorMessage } from '@/api/errors'
 import AuthCard from './AuthCard'
 
-const schema = z.object({ email: z.email('Sahi email daalo') })
+const schema = z.object({ email: z.string().email('Please enter a valid email address') })
 
 export default function ForgotPasswordPage() {
   const [sent, setSent] = useState(false)
@@ -32,17 +32,17 @@ export default function ForgotPasswordPage() {
 
   return (
     <AuthCard
-      title="Forgot password"
-      subtitle="Email daalo, hum reset link bhejenge"
+      title="Forgot Password"
+      subtitle="Enter your email to receive a password reset link"
       footer={
         <Link to="/login" className="font-semibold text-[#D6A84F] hover:text-[#E5B866] underline">
-          Login par wapas jao
+          Back to Login
         </Link>
       }
     >
       {sent ? (
         <p role="status" className="rounded-xl border border-[#2F7D5B]/40 bg-[#2F7D5B]/20 p-4 text-xs font-semibold text-[#B9D8C4] leading-relaxed">
-          Agar ye email registered hai to reset link bhej diya gaya hai. Apna inbox check karo.
+          If this email is registered, a password reset link has been sent. Please check your inbox.
         </p>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">

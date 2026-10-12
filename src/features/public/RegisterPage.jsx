@@ -9,15 +9,15 @@ import AuthCard from './AuthCard'
 
 const schema = z
   .object({
-    name: z.string().min(2, 'Naam daalo'),
-    email: z.email('Sahi email daalo'),
-    phone: z.string().regex(/^[6-9]\d{9}$/, '10 digit ka mobile number daalo'),
-    password: z.string().min(8, 'Password kam se kam 8 characters ka ho'),
+    name: z.string().min(2, 'Full name is required'),
+    email: z.string().email('Please enter a valid email address'),
+    phone: z.string().regex(/^[6-9]\d{9}$/, 'Please enter a valid 10-digit mobile number'),
+    password: z.string().min(8, 'Password must be at least 8 characters'),
     password_confirmation: z.string(),
-    consent: z.boolean().refine((v) => v, 'Aage badhne ke liye sahmati zaroori hai'),
+    consent: z.boolean().refine((v) => v, 'Consent is required to proceed'),
   })
   .refine((v) => v.password === v.password_confirmation, {
-    message: 'Dono password same hone chahiye',
+    message: 'Passwords do not match',
     path: ['password_confirmation'],
   })
 
@@ -33,7 +33,6 @@ export default function RegisterPage() {
 
   const onSubmit = async ({ consent, ...payload }) => {
     try {
-      // consent backend ko bhi bhejte hain (DPDP: signup par sahmati ka record)
       await signUp({ ...payload, consent })
       navigate('/verify-email', { replace: true })
     } catch (error) {
@@ -45,11 +44,11 @@ export default function RegisterPage() {
 
   return (
     <AuthCard
-      title="Candidate sign up"
-      subtitle="Account banao aur jobs ke liye apply karo"
+      title="Candidate Sign Up"
+      subtitle="Create your account and apply for jobs across India"
       footer={
         <>
-          Pehle se account hai?{' '}
+          Already have an account?{' '}
           <Link to="/login" className="font-semibold text-[#D6A84F] hover:text-[#E5B866] underline">
             Login
           </Link>
@@ -99,7 +98,7 @@ export default function RegisterPage() {
         <div>
           <label className="flex items-start gap-2.5 text-xs text-[#8FAF9A] cursor-pointer">
             <input type="checkbox" className="mt-0.5 rounded border-[#294341] bg-[#102A2B] text-[#2F7D5B] focus:ring-[#2F7D5B]" {...register('consent')} />
-            <span>Main apna data job applications ke liye use hone ki sahmati deta/deti hoon.</span>
+            <span>I agree to the processing of my personal data for job applications under the Terms of Service and Privacy Policy.</span>
           </label>
           {errors.consent && <p className="mt-1 text-xs text-rose-400">{errors.consent.message}</p>}
         </div>

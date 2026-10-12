@@ -94,8 +94,8 @@ describe('login', () => {
     const user = userEvent.setup()
     renderAt('/login')
     await user.click(await screen.findByRole('button', { name: 'Login' }))
-    expect(await screen.findByText('Sahi email daalo')).toBeInTheDocument()
-    expect(screen.getByText('Password daalo')).toBeInTheDocument()
+    expect(await screen.findByText('Please enter a valid email address')).toBeInTheDocument()
+    expect(screen.getByText('Password is required')).toBeInTheDocument()
   })
 })
 
@@ -141,7 +141,7 @@ describe('register', () => {
     const router = renderAt('/register')
     await fill(user)
     await user.click(screen.getByRole('button', { name: 'Sign up' }))
-    expect(await screen.findByText(/sahmati zaroori/)).toBeInTheDocument()
+    expect(await screen.findByText(/consent is required/i)).toBeInTheDocument()
     expect(router.state.location.pathname).toBe('/register')
   })
 
@@ -151,7 +151,7 @@ describe('register', () => {
     await fill(user, { confirm: 'different1' })
     await user.click(screen.getByRole('checkbox'))
     await user.click(screen.getByRole('button', { name: 'Sign up' }))
-    expect(await screen.findByText('Dono password same hone chahiye')).toBeInTheDocument()
+    expect(await screen.findByText('Passwords do not match')).toBeInTheDocument()
   })
 
   it('email already taken ka server error dikhata hai', async () => {
@@ -170,12 +170,12 @@ describe('password reset', () => {
     renderAt('/forgot-password')
     await user.type(await screen.findByLabelText('Email'), 'asha@example.com')
     await user.click(screen.getByRole('button', { name: 'Send reset link' }))
-    expect(await screen.findByText(/reset link bhej diya/)).toBeInTheDocument()
+    expect(await screen.findByText(/password reset link has been sent/i)).toBeInTheDocument()
   })
 
   it('token ke bina reset page "link sahi nahi" dikhata hai', async () => {
     renderAt('/reset-password')
-    expect(await screen.findByText('Link sahi nahi hai')).toBeInTheDocument()
+    expect(await screen.findByText('Invalid or Expired Link')).toBeInTheDocument()
   })
 
   it('reset ke baad /login par jata hai', async () => {
