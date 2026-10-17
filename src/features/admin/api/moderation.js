@@ -4,7 +4,7 @@ import { api } from '@/api/client'
  * Fetch jobs in the moderation queue
  */
 export async function fetchModerationQueue({ status = 'pending_review', search = '', page = 1, perPage = 10 } = {}) {
-  const { data } = await api.get('/admin/moderation/jobs', {
+  const { data } = await api.get('/admin/jobs', {
     params: {
       status: status === 'all' ? undefined : status,
       search: search || undefined,
@@ -19,7 +19,7 @@ export async function fetchModerationQueue({ status = 'pending_review', search =
  * Fetch detailed job review data including partner info
  */
 export async function fetchJobForReview(id) {
-  const { data } = await api.get(`/admin/moderation/jobs/${id}`)
+  const { data } = await api.get(`/admin/jobs/${id}`)
   return data
 }
 
@@ -27,7 +27,7 @@ export async function fetchJobForReview(id) {
  * Approve and publish a job
  */
 export async function approveJob(id) {
-  const { data } = await api.post(`/admin/moderation/jobs/${id}/approve`)
+  const { data } = await api.patch(`/admin/jobs/${id}/approve`)
   return data
 }
 
@@ -35,7 +35,7 @@ export async function approveJob(id) {
  * Reject a job with a mandatory rejection reason
  */
 export async function rejectJob(id, { reason }) {
-  const { data } = await api.post(`/admin/moderation/jobs/${id}/reject`, { reason })
+  const { data } = await api.patch(`/admin/jobs/${id}/reject`, { reason })
   return data
 }
 

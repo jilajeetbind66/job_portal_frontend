@@ -5,21 +5,32 @@ import {
   Briefcase,
   Users,
   ShieldCheck,
-  TrendingUp,
-  AlertCircle,
   Clock,
   ArrowRight,
   Plus,
-  CheckCircle2,
-  XCircle,
   Activity,
-  Calendar,
 } from 'lucide-react'
 import { clsx } from 'clsx'
 import { fetchAdminStats, fetchAdminActivity } from './api/analytics'
 
+const EMPTY_DASHBOARD_STATS = {
+  partners: { total: 0, by_status: { active: 0, suspended: 0 } },
+  jobs: { total: 0, by_status: {} },
+  candidates: 0,
+  applications: { total: 0, by_status: {} },
+  signups_per_day: [],
+}
+
+const JOB_STATUS_LABELS = {
+  draft: 'Draft',
+  pending_review: 'Pending review',
+  published: 'Published',
+  closed: 'Closed',
+  rejected: 'Rejected',
+}
+
 export default function AdminDashboardPage() {
-  const { data: statsResponse, isLoading: statsLoading, isError: statsError, error: statsErr, refetch: refetchStats } = useQuery({
+  const { data: statsResponse, isLoading: statsLoading, isError: statsError, refetch: refetchStats } = useQuery({
     queryKey: ['admin', 'analytics', 'stats'],
     queryFn: fetchAdminStats,
   })
@@ -29,18 +40,21 @@ export default function AdminDashboardPage() {
     queryFn: fetchAdminActivity,
   })
 
-  const stats = statsResponse?.data || {
-    totals: { partners: 0, active_jobs: 0, candidates: 0, pending_moderation: 0 },
-    growth: {},
-    weekly_trends: [],
-    department_distribution: [],
-    moderation_status: {},
-  }
+  const stats = statsResponse?.data ?? EMPTY_DASHBOARD_STATS
 
   const activities = activityResponse?.data || []
+  const weeklySignups = stats.signups_per_day.map((signup) => ({
+    day: new Date(`${signup.date}T12:00:00`).toLocaleDateString(undefined, { weekday: 'short' }),
+    candidates: signup.total,
+  }))
+  const jobStatuses = Object.entries(JOB_STATUS_LABELS).map(([status, label]) => ({
+    status,
+    label,
+    count: stats.jobs.by_status[status] ?? 0,
+  }))
+  const totalJobCount = stats.jobs.total
 
-  // Max value for bar chart scaling
-  const maxCandidateWeekly = Math.max(...(stats.weekly_trends?.map((d) => d.candidates) || [100]), 10)
+  const maxCandidateWeekly = Math.max(...weeklySignups.map((signup) => signup.candidates), 1)
 
   return (
     <div className="space-y-6 pb-12">
@@ -62,9 +76,9 @@ export default function AdminDashboardPage() {
           >
             <ShieldCheck className="h-4 w-4 text-[#D6A84F]" />
             <span>Moderation Queue</span>
-            {stats.totals.pending_moderation > 0 && (
+            {(stats.jobs.by_status.pending_review ?? 0) > 0 && (
               <span className="ml-1 rounded-full bg-[#D6A84F] px-1.5 py-0.2 text-[10px] font-bold text-[#07151A]">
-                {stats.totals.pending_moderation}
+                {stats.jobs.by_status.pending_review}
               </span>
             )}
           </Link>
@@ -79,37 +93,43 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
+      {statsError && (
+        <div role="alert" className="flex items-center justify-between gap-4 rounded-xl border border-rose-400/30 bg-rose-400/10 px-4 py-3 text-sm text-rose-200">
+          <span>Dashboard metrics could not be loaded.</span>
+          <button type="button" onClick={() => refetchStats()} className="shrink-0 font-semibold underline">
+            Retry
+          </button>
+        </div>
+      )}
+
       {/* Metrics Row */}
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         {[
           {
             label: 'Total Active Partners',
-            value: stats.totals.partners,
-            growth: stats.growth.partners_pct || '+12%',
+            value: stats.partners.by_status.active,
             icon: Building2,
             color: 'text-[#B9D8C4] bg-[#2F7D5B]/20 border border-[#2F7D5B]/30',
             link: '/admin/partners',
           },
           {
             label: 'Live Published Jobs',
-            value: stats.totals.active_jobs,
-            growth: stats.growth.jobs_pct || '+24%',
+            value: stats.jobs.by_status.published ?? 0,
             icon: Briefcase,
             color: 'text-[#B9D8C4] bg-[#2F7D5B]/20 border border-[#2F7D5B]/30',
             link: '/admin/moderation',
           },
           {
             label: 'Registered Candidates',
-            value: stats.totals.candidates?.toLocaleString(),
-            growth: stats.growth.candidates_pct || '+18%',
+            value: stats.candidates.toLocaleString(),
             icon: Users,
             color: 'text-[#E5B866] bg-[#D6A84F]/20 border border-[#D6A84F]/30',
             link: '/admin/users',
           },
           {
             label: 'Pending Moderation',
-            value: stats.totals.pending_moderation,
-            isAlert: stats.totals.pending_moderation > 0,
+            value: stats.jobs.by_status.pending_review ?? 0,
+            isAlert: (stats.jobs.by_status.pending_review ?? 0) > 0,
             icon: ShieldCheck,
             color: 'text-[#E5B866] bg-[#D6A84F]/15 border border-[#D6A84F]/30',
             link: '/admin/moderation',
@@ -126,12 +146,6 @@ export default function AdminDashboardPage() {
                 <div className={clsx('flex h-11 w-11 items-center justify-center rounded-xl', stat.color)}>
                   <Icon className="h-5 w-5" />
                 </div>
-                {stat.growth && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-[#2F7D5B]/20 border border-[#2F7D5B]/30 px-2.5 py-0.5 text-xs font-semibold text-[#B9D8C4]">
-                    <TrendingUp className="h-3 w-3" />
-                    {stat.growth}
-                  </span>
-                )}
                 {stat.isAlert && (
                   <span className="inline-flex items-center gap-1 rounded-full bg-[#D6A84F]/20 border border-[#D6A84F]/30 px-2 py-0.5 text-xs font-bold text-[#E5B866] animate-pulse">
                     Review Required
@@ -142,7 +156,7 @@ export default function AdminDashboardPage() {
               <div className="mt-4">
                 <p className="text-xs font-medium text-[#91A6A0]">{stat.label}</p>
                 <p className="mt-1 text-2xl font-bold tracking-tight text-[#F7F8F5] group-hover:text-[#D6A84F] transition-colors">
-                  {statsLoading ? '...' : stat.value}
+                  {statsLoading ? '...' : statsError ? '--' : stat.value}
                 </p>
               </div>
             </Link>
@@ -150,23 +164,19 @@ export default function AdminDashboardPage() {
         })}
       </div>
 
-      {/* Middle Row: Growth Chart & Department Distribution */}
+      {/* Middle Row: Signup Chart & Job Distribution */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Weekly Trend Bar Chart */}
         <div className="lg:col-span-2 rounded-2xl border border-[#294341] bg-[#0D2224] p-6 space-y-4">
           <div className="flex items-center justify-between border-b border-[#294341] pb-3">
             <div>
-              <h2 className="text-base font-bold text-[#F7F8F5]">Weekly Talent & Job Activity</h2>
-              <p className="text-xs text-[#91A6A0]">Candidates registered vs job openings submitted (last 7 days)</p>
+              <h2 className="text-base font-bold text-[#F7F8F5]">Candidate Signups</h2>
+              <p className="text-xs text-[#91A6A0]">Daily registrations over the last 7 days</p>
             </div>
             <div className="flex items-center gap-4 text-xs font-medium">
               <div className="flex items-center gap-1.5">
                 <span className="h-3 w-3 rounded-md bg-[#2F7D5B]" />
                 <span className="text-[#91A6A0]">Candidates</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="h-3 w-3 rounded-md bg-[#D6A84F]" />
-                <span className="text-[#91A6A0]">Jobs</span>
               </div>
             </div>
           </div>
@@ -174,34 +184,28 @@ export default function AdminDashboardPage() {
           {/* Responsive SVG Chart Representation */}
           <div className="pt-4">
             <div className="flex h-56 items-end gap-3 sm:gap-6 border-b border-[#294341] pb-2">
-              {stats.weekly_trends?.map((item) => {
+              {weeklySignups.map((item) => {
                 const candidateHeight = Math.round((item.candidates / maxCandidateWeekly) * 100)
-                const jobHeight = Math.round((item.jobs / 20) * 80)
 
                 return (
                   <div key={item.day} className="group relative flex flex-1 flex-col items-center justify-end h-full">
-                    {/* Tooltip on hover */}
                     <div className="pointer-events-none absolute -top-12 z-20 hidden rounded-xl bg-[#102A2B] border border-[#294341] px-2.5 py-1 text-[11px] font-medium text-[#F7F8F5] shadow-lg group-hover:flex flex-col items-center">
                       <span>{item.candidates} candidates</span>
-                      <span>{item.jobs} jobs</span>
                     </div>
 
                     <div className="flex w-full items-end justify-center gap-1.5">
-                      {/* Candidate Column */}
                       <div
                         style={{ height: `${Math.max(candidateHeight, 10)}%` }}
                         className="w-1/2 max-w-[20px] rounded-t-lg bg-[#2F7D5B] transition-all duration-300 group-hover:bg-[#25684a]"
-                      />
-                      {/* Job Column */}
-                      <div
-                        style={{ height: `${Math.max(jobHeight, 8)}%` }}
-                        className="w-1/2 max-w-[20px] rounded-t-lg bg-[#D6A84F] transition-all duration-300 group-hover:bg-[#E5B866]"
                       />
                     </div>
                     <span className="mt-2 text-xs font-semibold text-[#91A6A0]">{item.day}</span>
                   </div>
                 )
               })}
+              {!statsLoading && weeklySignups.length === 0 && (
+                <p className="w-full self-center text-center text-sm text-[#91A6A0]">No signup data for this period.</p>
+              )}
             </div>
           </div>
         </div>
@@ -210,38 +214,36 @@ export default function AdminDashboardPage() {
         <div className="rounded-2xl border border-[#294341] bg-[#0D2224] p-6 space-y-4">
           <div className="border-b border-[#294341] pb-3">
             <h2 className="text-base font-bold text-[#F7F8F5]">Job Distribution</h2>
-            <p className="text-xs text-[#91A6A0]">Active positions by department</p>
+            <p className="text-xs text-[#91A6A0]">Platform-wide jobs grouped by status</p>
           </div>
 
           <div className="space-y-4 pt-1">
-            {stats.department_distribution?.map((dept) => (
-              <div key={dept.name} className="space-y-1.5">
-                <div className="flex items-center justify-between text-xs font-semibold">
-                  <span className="text-[#F7F8F5]">{dept.name}</span>
-                  <span className="text-[#91A6A0]">
-                    {dept.count} jobs ({dept.percentage}%)
-                  </span>
+            {jobStatuses.map((jobStatus) => {
+              const percentage = totalJobCount > 0 ? Math.round((jobStatus.count / totalJobCount) * 100) : 0
+
+              return (
+                <div key={jobStatus.status} className="space-y-1.5">
+                  <div className="flex items-center justify-between text-xs font-semibold">
+                    <span className="text-[#F7F8F5]">{jobStatus.label}</span>
+                    <span className="text-[#91A6A0]">{jobStatus.count} jobs ({percentage}%)</span>
+                  </div>
+                  <div className="h-2 w-full overflow-hidden rounded-full bg-[#102A2B] border border-[#294341]">
+                    <div
+                      className="h-full rounded-full bg-[#2F7D5B] transition-all duration-500"
+                      style={{ width: `${percentage}%` }}
+                    />
+                  </div>
                 </div>
-                <div className="h-2 w-full overflow-hidden rounded-full bg-[#102A2B] border border-[#294341]">
-                  <div
-                    className="h-full rounded-full bg-[#2F7D5B] transition-all duration-500"
-                    style={{ width: `${dept.percentage}%` }}
-                  />
-                </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
 
-          {/* Quick Moderation Box */}
+          {/* Application summary */}
           <div className="mt-6 rounded-xl border border-[#294341] bg-[#102A2B] p-3.5 space-y-2">
-            <p className="text-xs font-bold text-[#F7F8F5]">Moderation Overview (This Week)</p>
+            <p className="text-xs font-bold text-[#F7F8F5]">Applications</p>
             <div className="flex items-center justify-between text-xs pt-1">
-              <span className="flex items-center gap-1 text-[#B9D8C4]">
-                <CheckCircle2 className="h-3.5 w-3.5 text-[#2F7D5B]" /> Approved: <strong className="text-[#F7F8F5]">{stats.moderation_status?.approved_this_week || 18}</strong>
-              </span>
-              <span className="flex items-center gap-1 text-rose-300">
-                <XCircle className="h-3.5 w-3.5 text-rose-400" /> Rejected: <strong className="text-[#F7F8F5]">{stats.moderation_status?.rejected_this_week || 3}</strong>
-              </span>
+              <span className="text-[#91A6A0]">Total submitted</span>
+              <strong className="text-[#F7F8F5]">{stats.applications.total}</strong>
             </div>
           </div>
         </div>
@@ -264,25 +266,36 @@ export default function AdminDashboardPage() {
         </div>
 
         <div className="divide-y divide-[#294341]">
-          {activities.map((act) => (
-            <div key={act.id} className="flex flex-col sm:flex-row sm:items-center justify-between py-3.5 gap-2">
-              <div className="flex items-start gap-3">
-                <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#102A2B] border border-[#294341] text-[#D6A84F]">
-                  <Clock className="h-4 w-4" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-[#F7F8F5]">{act.title}</p>
-                  <p className="text-xs text-[#91A6A0] mt-0.5">{act.description}</p>
-                </div>
-              </div>
+          {activities.map((act) => {
+            const title = act.title ?? act.action?.replace(/_/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase()) ?? 'Platform activity'
+            const subjectType = act.subject_type?.split('\\').pop() ?? act.target_type
+            const description = act.description ?? act.note ?? act.target_name ?? [subjectType, act.subject_id ?? act.target_id].filter(Boolean).join(' #')
+            const actorName = act.actor?.name ?? act.actor_name ?? act.user ?? 'System'
+            const timestamp = act.created_at ?? act.timestamp
 
-              <div className="flex items-center gap-3 text-xs text-[#91A6A0] pl-11 sm:pl-0">
-                <span className="font-medium text-[#F7F8F5]">{act.user}</span>
-                <span>•</span>
-                <span>{new Date(act.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+            return (
+              <div key={act.id} className="flex flex-col sm:flex-row sm:items-center justify-between py-3.5 gap-2">
+                <div className="flex items-start gap-3">
+                  <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#102A2B] border border-[#294341] text-[#D6A84F]">
+                    <Clock className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold capitalize text-[#F7F8F5]">{title}</p>
+                    <p className="text-xs text-[#91A6A0] mt-0.5">{description}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 text-xs text-[#91A6A0] pl-11 sm:pl-0">
+                  <span className="font-medium text-[#F7F8F5]">{actorName}</span>
+                  <span>•</span>
+                  <span>{timestamp ? new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '-'}</span>
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
+          {!activityLoading && activities.length === 0 && (
+            <p className="py-4 text-sm text-[#91A6A0]">No recent platform activity.</p>
+          )}
         </div>
       </div>
     </div>

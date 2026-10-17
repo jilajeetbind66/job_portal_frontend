@@ -9,9 +9,16 @@ import { fetchPartner, createPartner, updatePartner } from './api/partners';
 import clsx from 'clsx';
 
 const partnerSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters').max(100, 'Name cannot exceed 100 characters'),
+  name: z.string().min(2, 'Name must be at least 2 characters').max(255, 'Name cannot exceed 255 characters'),
+  slug: z
+    .string()
+    .min(2, 'Partner URL slug must be at least 2 characters')
+    .max(255, 'Partner URL slug cannot exceed 255 characters')
+    .regex(/^[a-zA-Z0-9_-]+$/, 'Use only letters, numbers, dashes, and underscores'),
+  industry: z.string().max(255, 'Industry cannot exceed 255 characters').optional().or(z.literal('')),
   website: z.string().url('Please enter a valid URL (e.g. https://example.com)').optional().or(z.literal('')),
   description: z.string().max(500, 'Description cannot exceed 500 characters').optional().or(z.literal('')),
+  max_active_jobs: z.coerce.number().int('Enter a whole number').min(1, 'Limit must be at least 1'),
 });
 
 export default function PartnerFormPage() {
@@ -22,20 +29,39 @@ export default function PartnerFormPage() {
 
   const [logoFile, setLogoFile] = useState(null);
   const [logoPreview, setLogoPreview] = useState(null);
+  const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
 
   const {
     register,
     handleSubmit,
     reset,
+    setError,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(partnerSchema),
     defaultValues: {
       name: '',
+      slug: '',
+      industry: '',
       website: '',
       description: '',
+      max_active_jobs: 50,
     },
   });
+  const partnerName = watch('name');
+
+  useEffect(() => {
+    if (!isEditMode && !slugManuallyEdited) {
+      const slug = partnerName
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '');
+      setValue('slug', slug);
+    }
+  }, [isEditMode, partnerName, setValue, slugManuallyEdited]);
 
   const { data: partner, isLoading: isFetching } = useQuery({
     queryKey: ['admin', 'partners', id],
@@ -48,8 +74,11 @@ export default function PartnerFormPage() {
       const p = partner?.data || partner;
       reset({
         name: p.name || '',
+        slug: p.slug || '',
+        industry: p.industry || '',
         website: p.website || '',
-        description: p.description || '',
+        description: p.about || p.description || '',
+        max_active_jobs: Number(p.max_active_jobs ?? 50),
       });
       if (p.logo || p.logoUrl) {
         setLogoPreview(p.logo || p.logoUrl);
@@ -69,12 +98,21 @@ export default function PartnerFormPage() {
     }
   };
 
+  const handleServerErrors = (error) => {
+    Object.entries(error.response?.data?.errors ?? {}).forEach(([field, messages]) => {
+      const formField = field === 'about' ? 'description' : field;
+      const message = Array.isArray(messages) ? messages[0] : messages;
+      setError(formField, { type: 'server', message });
+    });
+  };
+
   const createMutation = useMutation({
     mutationFn: (formData) => createPartner(formData),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'partners'] });
       navigate(`/admin/partners/${data?.data?.id || data?.id || ''}`);
     },
+    onError: handleServerErrors,
   });
 
   const updateMutation = useMutation({
@@ -84,13 +122,25 @@ export default function PartnerFormPage() {
       queryClient.invalidateQueries({ queryKey: ['admin', 'partners'] });
       navigate(`/admin/partners/${id}`);
     },
+    onError: handleServerErrors,
   });
+
+  const mutationError = createMutation.error || updateMutation.error;
+  const responseData = mutationError?.response?.data;
+  const serverValidationMessages = Object.values(responseData?.errors ?? {})
+    .flatMap((messages) => (Array.isArray(messages) ? messages : [messages]));
+  const rawResponseBody = responseData && !responseData.message && serverValidationMessages.length === 0
+    ? (typeof responseData === 'string' ? responseData : JSON.stringify(responseData))
+    : null;
 
   const onSubmit = (data) => {
     const formData = new FormData();
     formData.append('name', data.name);
+    formData.append('slug', data.slug);
+    formData.append('max_active_jobs', String(data.max_active_jobs));
+    if (data.industry) formData.append('industry', data.industry);
     if (data.website) formData.append('website', data.website);
-    if (data.description) formData.append('description', data.description);
+    if (data.description) formData.append('about', data.description);
     if (logoFile) formData.append('logo', logoFile);
 
     if (isEditMode) {
@@ -139,6 +189,17 @@ export default function PartnerFormPage() {
 
       <div className="bg-[#0D2224] border border-[#294341] shadow-xl rounded-2xl overflow-hidden">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 p-6 sm:p-8">
+          {(createMutation.isError || updateMutation.isError) && (
+            <div role="alert" className="rounded-xl border border-rose-800/50 bg-rose-950/40 p-3 text-sm text-rose-300">
+              <p className="font-semibold">{mutationError?.response?.status ? `HTTP ${mutationError.response.status}` : 'No HTTP response'}</p>
+              {responseData?.message && <p>{responseData.message}</p>}
+              {serverValidationMessages.map((message) => <p key={message}>{message}</p>)}
+              {rawResponseBody && <pre className="mt-2 whitespace-pre-wrap break-words">{rawResponseBody}</pre>}
+              {!responseData?.message && serverValidationMessages.length === 0 && !rawResponseBody && (
+                <p>{mutationError?.message || 'Unable to save this partner. Please check the details and try again.'}</p>
+              )}
+            </div>
+          )}
           
           {/* Logo Upload */}
           <div>
@@ -154,7 +215,7 @@ export default function PartnerFormPage() {
                 )}
                 <input
                   type="file"
-                  accept="image/*"
+                  accept="image/jpeg,image/png,image/webp"
                   onChange={handleLogoChange}
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                   title="Upload logo"
@@ -166,12 +227,12 @@ export default function PartnerFormPage() {
                   <span>{logoPreview ? 'Change Logo' : 'Upload Logo'}</span>
                   <input
                     type="file"
-                    accept="image/*"
+                    accept="image/jpeg,image/png,image/webp"
                     onChange={handleLogoChange}
                     className="sr-only"
                   />
                 </label>
-                <p className="mt-2 text-xs text-[#91A6A0]">PNG, JPG, SVG or WEBP up to 5MB.</p>
+                <p className="mt-2 text-xs text-[#91A6A0]">JPG, PNG or WEBP up to 2MB.</p>
               </div>
             </div>
           </div>
@@ -195,6 +256,54 @@ export default function PartnerFormPage() {
               {errors.name && (
                 <p className="mt-1.5 text-xs text-rose-400">{errors.name.message}</p>
               )}
+            </div>
+
+            <div className="sm:col-span-2">
+              <label htmlFor="slug" className="block text-xs font-semibold uppercase tracking-wider text-[#8FAF9A] mb-2">
+                Partner URL Slug *
+              </label>
+              <input
+                type="text"
+                id="slug"
+                {...register('slug', { onChange: () => setSlugManuallyEdited(true) })}
+                className={clsx(
+                  'shadow-inner block w-full text-xs rounded-xl border border-[#294341] bg-[#102A2B] px-3.5 py-2.5 text-[#F7F8F5] placeholder-[#91A6A0]/50 focus:border-[#2F7D5B] focus:outline-none focus:ring-1 focus:ring-[#2F7D5B]',
+                  errors.slug && 'border-rose-500 focus:border-rose-500 focus:ring-rose-500'
+                )}
+                placeholder="company-name"
+              />
+              {errors.slug && <p className="mt-1.5 text-xs text-rose-400">{errors.slug.message}</p>}
+            </div>
+
+            <div>
+              <label htmlFor="industry" className="block text-xs font-semibold uppercase tracking-wider text-[#8FAF9A] mb-2">
+                Industry
+              </label>
+              <input
+                type="text"
+                id="industry"
+                {...register('industry')}
+                className="shadow-inner block w-full text-xs rounded-xl border border-[#294341] bg-[#102A2B] px-3.5 py-2.5 text-[#F7F8F5] placeholder-[#91A6A0]/50 focus:border-[#2F7D5B] focus:outline-none focus:ring-1 focus:ring-[#2F7D5B]"
+                placeholder="e.g. Information Technology"
+              />
+              {errors.industry && <p className="mt-1.5 text-xs text-rose-400">{errors.industry.message}</p>}
+            </div>
+
+            <div>
+              <label htmlFor="max_active_jobs" className="block text-xs font-semibold uppercase tracking-wider text-[#8FAF9A] mb-2">
+                Active Job Limit *
+              </label>
+              <input
+                type="number"
+                id="max_active_jobs"
+                min="1"
+                {...register('max_active_jobs', { valueAsNumber: true })}
+                className={clsx(
+                  'shadow-inner block w-full text-xs rounded-xl border border-[#294341] bg-[#102A2B] px-3.5 py-2.5 text-[#F7F8F5] focus:border-[#2F7D5B] focus:outline-none focus:ring-1 focus:ring-[#2F7D5B]',
+                  errors.max_active_jobs && 'border-rose-500 focus:border-rose-500 focus:ring-rose-500'
+                )}
+              />
+              {errors.max_active_jobs && <p className="mt-1.5 text-xs text-rose-400">{errors.max_active_jobs.message}</p>}
             </div>
 
             {/* Website */}

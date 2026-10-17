@@ -2,6 +2,7 @@ import { Link, NavLink, Outlet } from 'react-router-dom'
 import clsx from 'clsx'
 import Logo from '@/components/Logo'
 import { LogoutButton } from '@/components'
+import NotificationBell from '@/components/NotificationBell'
 import { useAuth } from '@/auth/useAuth'
 
 const links = [
@@ -22,6 +23,7 @@ export default function CandidateLayout() {
             <Logo isDark={true} />
           </Link>
           <div className="flex items-center gap-3 text-sm text-[#91A6A0]">
+            <NotificationBell />
             <span className="font-semibold text-[#F7F8F5]">{user?.name}</span>
             <LogoutButton />
           </div>

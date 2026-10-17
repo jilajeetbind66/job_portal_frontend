@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import {
   Building,
@@ -30,10 +30,12 @@ const formatSalary = (min, max, currency = '₹') => {
 
 export default function CompanyPage() {
   const { slug } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = Math.max(1, Number.parseInt(searchParams.get('page') || '1', 10) || 1);
 
   const { data: company, isLoading, isError, error } = useQuery({
-    queryKey: ['company', slug],
-    queryFn: () => fetchCompanyBySlug(slug),
+    queryKey: ['company', slug, page],
+    queryFn: () => fetchCompanyBySlug(slug, { page }),
   });
 
   if (isLoading) {
@@ -72,6 +74,11 @@ export default function CompanyPage() {
   }
 
   const openJobs = company.jobs || [];
+  const jobsPagination = company.jobs_pagination || {
+    current_page: page,
+    last_page: 1,
+    total: openJobs.length,
+  };
   const breadcrumbs = [
     { label: 'Jobs in India', to: '/jobs-in-india' },
     { label: 'Companies', to: '/jobs' },
@@ -196,7 +203,7 @@ export default function CompanyPage() {
               <p className="text-xs text-slate-500">Explore roles currently recruiting candidates</p>
             </div>
             <span className="bg-indigo-50 text-indigo-700 text-xs font-bold px-3 py-1 rounded-full border border-indigo-100">
-              {openJobs.length} {openJobs.length === 1 ? 'Job' : 'Jobs'}
+              {jobsPagination.total} {jobsPagination.total === 1 ? 'Job' : 'Jobs'}
             </span>
           </div>
 
@@ -279,6 +286,41 @@ export default function CompanyPage() {
                   </div>
                 </div>
               ))}
+            </div>
+          )}
+
+          {jobsPagination.last_page > 1 && (
+            <div className="flex items-center justify-between border-t border-slate-200 pt-3 text-xs text-slate-500">
+              <p>
+                Showing page <span className="font-semibold text-slate-900">{jobsPagination.current_page}</span> of{' '}
+                <span className="font-semibold text-slate-900">{jobsPagination.last_page}</span> ({jobsPagination.total} jobs)
+              </p>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  disabled={jobsPagination.current_page <= 1}
+                  onClick={() => {
+                    const nextParams = new URLSearchParams(searchParams);
+                    nextParams.set('page', String(jobsPagination.current_page - 1));
+                    setSearchParams(nextParams);
+                  }}
+                  className="rounded-lg border border-slate-200 px-3 py-1.5 font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
+                >
+                  Previous
+                </button>
+                <button
+                  type="button"
+                  disabled={jobsPagination.current_page >= jobsPagination.last_page}
+                  onClick={() => {
+                    const nextParams = new URLSearchParams(searchParams);
+                    nextParams.set('page', String(jobsPagination.current_page + 1));
+                    setSearchParams(nextParams);
+                  }}
+                  className="rounded-lg border border-slate-200 px-3 py-1.5 font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
+                >
+                  Next
+                </button>
+              </div>
             </div>
           )}
         </div>

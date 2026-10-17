@@ -61,7 +61,21 @@ export default function PartnersPage() {
     queryFn: () => fetchPartners({ search: debouncedSearch, status: statusFilter, page }),
   });
 
-  const partners = data?.data || data?.partners || (Array.isArray(data) ? data : []);
+  const normalizedPartners = Array.isArray(data?.data)
+    ? data.data
+    : Array.isArray(data?.partners)
+      ? data.partners
+      : Array.isArray(data)
+        ? data
+        : [];
+
+  const partners = normalizedPartners.map((partner) => ({
+    ...partner,
+    logo: partner.logo ?? partner.logoUrl ?? partner.logo_url ?? partner.logo_path ?? null,
+    jobs_count: partner.jobs_count ?? partner.jobsCount ?? 0,
+    recruiters_count: partner.recruiters_count ?? partner.recruitersCount ?? 0,
+    status: partner.status ?? partner.account_status ?? ACCOUNT_STATUS.ACTIVE,
+  }));
   const totalPages = data?.meta?.last_page || data?.totalPages || 1;
 
   return (
@@ -218,10 +232,10 @@ export default function PartnersPage() {
                       <StatusBadge status={partner.status} />
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-[#F7F8F5]">
-                      {partner.jobsCount || 0}
+                      {partner.jobs_count ?? partner.jobsCount ?? 0}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-[#F7F8F5]">
-                      {partner.recruitersCount || 0}
+                      {partner.recruiters_count ?? partner.recruitersCount ?? 0}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <div className="flex justify-end gap-3">

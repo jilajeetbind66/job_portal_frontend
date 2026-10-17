@@ -4,14 +4,24 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Button, Input } from '@/components'
 import { useAuth } from '@/auth/useAuth'
+import { getCsrfCookie } from '@/api/client'
 import { applyServerErrors, getErrorMessage } from '@/api/errors'
 import AuthCard from './AuthCard'
 
 const schema = z
   .object({
-    name: z.string().min(2, 'Full name is required'),
+    name: z
+      .string()
+      .min(2, 'Full name is required')
+      .max(255, 'Full name must be at most 255 characters'),
     email: z.string().email('Please enter a valid email address'),
-    phone: z.string().regex(/^[6-9]\d{9}$/, 'Please enter a valid 10-digit mobile number'),
+    phone: z
+      .union([
+        z.string().regex(/^[6-9]\d{9}$/, 'Please enter a valid 10-digit mobile number'),
+        z.literal(''),
+      ])
+      .optional()
+      .transform((value) => (value === '' ? null : value)),
     password: z.string().min(8, 'Password must be at least 8 characters'),
     password_confirmation: z.string(),
     consent: z.boolean().refine((v) => v, 'Consent is required to proceed'),
@@ -42,6 +52,10 @@ export default function RegisterPage() {
     }
   }
 
+  const prefetchCsrfCookie = () => {
+    getCsrfCookie().catch(() => {})
+  }
+
   return (
     <AuthCard
       title="Candidate Sign Up"
@@ -55,9 +69,17 @@ export default function RegisterPage() {
         </>
       }
     >
-      <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
+      <form
+        onFocusCapture={prefetchCsrfCookie}
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
+        className="space-y-4"
+      >
         {errors.root && (
-          <div role="alert" className="rounded-xl bg-rose-950/40 border border-rose-800/40 p-3 text-xs text-rose-300">
+          <div
+            role="alert"
+            className="rounded-xl bg-rose-950/40 border border-rose-800/40 p-3 text-xs text-rose-300"
+          >
             {errors.root.message}
           </div>
         )}
@@ -97,8 +119,15 @@ export default function RegisterPage() {
         />
         <div>
           <label className="flex items-start gap-2.5 text-xs text-[#8FAF9A] cursor-pointer">
-            <input type="checkbox" className="mt-0.5 rounded border-[#294341] bg-[#102A2B] text-[#2F7D5B] focus:ring-[#2F7D5B]" {...register('consent')} />
-            <span>I agree to the processing of my personal data for job applications under the Terms of Service and Privacy Policy.</span>
+            <input
+              type="checkbox"
+              className="mt-0.5 rounded border-[#294341] bg-[#102A2B] text-[#2F7D5B] focus:ring-[#2F7D5B]"
+              {...register('consent')}
+            />
+            <span>
+              I agree to the processing of my personal data for job applications under the Terms of
+              Service and Privacy Policy.
+            </span>
           </label>
           {errors.consent && <p className="mt-1 text-xs text-rose-400">{errors.consent.message}</p>}
         </div>

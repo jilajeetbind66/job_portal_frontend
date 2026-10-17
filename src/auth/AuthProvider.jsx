@@ -37,22 +37,17 @@ export default function AuthProvider({ children }) {
     }
   }, [])
 
-  const login = useCallback(
-    async (credentials) => {
-      await loginRequest(credentials)
-      return refresh()
-    },
-    [refresh],
-  )
+  const login = useCallback(async (credentials) => {
+    const nextSession = await loginRequest(credentials)
+    setSession(nextSession)
+    return nextSession
+  }, [])
 
-  const register = useCallback(
-    async (payload) => {
-      await registerRequest(payload)
-      // Backend register ke baad login kara de to session mil jayega, warna null
-      return refresh()
-    },
-    [refresh],
-  )
+  const register = useCallback(async (payload) => {
+    const nextSession = await registerRequest(payload)
+    setSession(nextSession)
+    return nextSession
+  }, [])
 
   const logout = useCallback(async () => {
     try {

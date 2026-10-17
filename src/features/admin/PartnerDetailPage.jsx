@@ -75,6 +75,7 @@ export default function PartnerDetailPage() {
   if (!partner) return null;
 
   const partnerData = partner?.data || partner;
+  const description = partnerData.description ?? partnerData.about ?? '';
   const isActive = partnerData.status === ACCOUNT_STATUS.ACTIVE;
 
   const handleToggleSuspend = () => {
@@ -166,7 +167,7 @@ export default function PartnerDetailPage() {
           <dl className="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
             <div className="sm:col-span-2 lg:col-span-3">
               <dt className="text-xs font-semibold uppercase tracking-wider text-[#8FAF9A]">Description</dt>
-              <dd className="mt-1.5 text-xs text-[#91A6A0] leading-relaxed whitespace-pre-wrap">{partnerData.description || 'No description provided.'}</dd>
+              <dd className="mt-1.5 text-xs text-[#91A6A0] leading-relaxed whitespace-pre-wrap">{description || 'No description provided.'}</dd>
             </div>
             <div className="sm:col-span-1 rounded-xl bg-[#102A2B]/40 border border-[#294341] p-4">
               <dt className="text-xs font-semibold text-[#8FAF9A]">Created Date</dt>
@@ -178,7 +179,7 @@ export default function PartnerDetailPage() {
             </div>
             <div className="sm:col-span-1 rounded-xl bg-[#102A2B]/40 border border-[#294341] p-4">
               <dt className="text-xs font-semibold text-[#8FAF9A]">Total Active Jobs</dt>
-              <dd className="mt-1 text-sm font-bold text-[#B9D8C4]">{partnerData.jobs_count ?? partnerData.jobsCount ?? 0}</dd>
+              <dd className="mt-1 text-sm font-bold text-[#B9D8C4]">{partnerData.active_jobs_count ?? partnerData.jobs_count ?? partnerData.jobsCount ?? 0}</dd>
             </div>
             <div className="sm:col-span-1 rounded-xl bg-[#102A2B]/40 border border-[#294341] p-4">
               <dt className="text-xs font-semibold text-[#8FAF9A]">Total Recruiters</dt>

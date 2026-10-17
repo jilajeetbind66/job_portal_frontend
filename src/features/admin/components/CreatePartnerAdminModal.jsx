@@ -13,13 +13,19 @@ const schema = z.object({
 });
 
 export default function CreatePartnerAdminModal({ open, onClose, partnerId, onSuccess }) {
-  const { register, handleSubmit, reset, formState: { errors } } = useForm({
+  const { register, handleSubmit, reset, setError, formState: { errors } } = useForm({
     resolver: zodResolver(schema),
     defaultValues: { name: '', email: '' }
   });
 
   const mutation = useMutation({
     mutationFn: (data) => createPartnerAdmin(partnerId, data),
+    onError: (error) => {
+      Object.entries(error.response?.data?.errors ?? {}).forEach(([field, messages]) => {
+        const message = Array.isArray(messages) ? messages[0] : messages;
+        setError(field, { type: 'server', message });
+      });
+    },
     onSuccess: () => {
       reset();
       onSuccess?.();
@@ -51,6 +57,13 @@ export default function CreatePartnerAdminModal({ open, onClose, partnerId, onSu
   const onSubmit = (data) => {
     mutation.mutate(data);
   };
+
+  const serverValidationMessages = Object.values(mutation.error?.response?.data?.errors ?? {})
+    .flatMap((messages) => (Array.isArray(messages) ? messages : [messages]));
+  const responseData = mutation.error?.response?.data;
+  const rawResponseBody = responseData && !responseData.message && serverValidationMessages.length === 0
+    ? (typeof responseData === 'string' ? responseData : JSON.stringify(responseData))
+    : null;
 
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#07151A]/85 backdrop-blur-sm p-4" onClick={onClose}>
@@ -111,8 +124,14 @@ export default function CreatePartnerAdminModal({ open, onClose, partnerId, onSu
             </div>
             
             {mutation.isError && (
-              <div className="p-3 bg-rose-950/40 border border-rose-800/40 text-rose-300 text-xs rounded-xl">
-                {mutation.error?.message || 'Failed to create partner admin. Please verify data and try again.'}
+              <div role="alert" className="p-3 bg-rose-950/40 border border-rose-800/40 text-rose-300 text-xs rounded-xl">
+                <p className="font-semibold">{mutation.error?.response?.status ? `HTTP ${mutation.error.response.status}` : 'No HTTP response'}</p>
+                {responseData?.message && <p>{responseData.message}</p>}
+                {serverValidationMessages.map((message) => <p key={message}>{message}</p>)}
+                {rawResponseBody && <pre className="mt-2 whitespace-pre-wrap break-words">{rawResponseBody}</pre>}
+                {!responseData?.message && serverValidationMessages.length === 0 && !rawResponseBody && (
+                  <p>{mutation.error?.message || 'Failed to create partner admin. Please verify data and try again.'}</p>
+                )}
               </div>
             )}
           </div>

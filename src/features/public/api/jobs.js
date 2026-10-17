@@ -10,9 +10,14 @@ export const fetchJobBySlug = async (slug) => {
   return data.data;
 };
 
-export const fetchCompanyBySlug = async (slug) => {
-  const { data } = await api.get(`/public/companies/${slug}`);
+export const fetchCompanyBySlug = async (slug, params) => {
+  const { data } = await api.get(`/public/companies/${slug}`, { params });
   return data.data;
+};
+
+export const fetchCompanies = async (params) => {
+  const { data } = await api.get('/public/companies', { params });
+  return data;
 };
 
 export const saveJob = async (jobId) => {

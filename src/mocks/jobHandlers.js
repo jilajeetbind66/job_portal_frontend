@@ -294,8 +294,8 @@ export const jobHandlers = [
   // ADMIN MODERATION ENDPOINTS
   // ==========================================
 
-  // GET /admin/moderation/jobs (List queue)
-  http.get('*/api/v1/admin/moderation/jobs', ({ request }) => {
+  // GET /admin/jobs (List queue)
+  http.get('*/api/v1/admin/jobs', ({ request }) => {
     const url = new URL(request.url)
     const status = url.searchParams.get('status')
     const search = url.searchParams.get('search')?.toLowerCase() || ''
@@ -342,8 +342,8 @@ export const jobHandlers = [
     })
   }),
 
-  // GET /admin/moderation/jobs/:id (Detail for review)
-  http.get('*/api/v1/admin/moderation/jobs/:id', ({ params }) => {
+  // GET /admin/jobs/:id (Detail for review)
+  http.get('*/api/v1/admin/jobs/:id', ({ params }) => {
     const id = parseInt(params.id, 10)
     const job = jobs.find((j) => j.id === id)
 
@@ -354,8 +354,8 @@ export const jobHandlers = [
     return HttpResponse.json({ data: job })
   }),
 
-  // POST /admin/moderation/jobs/:id/approve
-  http.post('*/api/v1/admin/moderation/jobs/:id/approve', ({ params }) => {
+  // PATCH /admin/jobs/:id/approve
+  http.patch('*/api/v1/admin/jobs/:id/approve', ({ params }) => {
     const id = parseInt(params.id, 10)
     const job = jobs.find((j) => j.id === id)
 
@@ -373,8 +373,8 @@ export const jobHandlers = [
     })
   }),
 
-  // POST /admin/moderation/jobs/:id/reject
-  http.post('*/api/v1/admin/moderation/jobs/:id/reject', async ({ params, request }) => {
+  // PATCH /admin/jobs/:id/reject
+  http.patch('*/api/v1/admin/jobs/:id/reject', async ({ params, request }) => {
     const id = parseInt(params.id, 10)
     const body = await request.json()
     const job = jobs.find((j) => j.id === id)

@@ -1,4 +1,6 @@
-import { api, getCsrfCookie } from './client'
+import { api, clearCsrfCookieCache, getCsrfCookie } from './client'
+
+let pendingSessionRequest = null
 
 // /auth/me ka response { data: { user, role, permissions } } ya seedha { user, role, permissions }
 // ho sakta hai. Backend ka final shape aane par sirf yahi function badlega.
@@ -13,22 +15,36 @@ function normalizeSession(body) {
 }
 
 export async function fetchMe() {
-  const { data } = await api.get('/auth/me')
-  return normalizeSession(data)
+  if (!pendingSessionRequest) {
+    pendingSessionRequest = api
+      .get('/auth/me')
+      .then(({ data }) => normalizeSession(data))
+      .finally(() => {
+        pendingSessionRequest = null
+      })
+  }
+
+  return pendingSessionRequest
 }
 
 export async function loginRequest(credentials) {
   await getCsrfCookie()
-  await api.post('/auth/login', credentials)
+  const { data } = await api.post('/auth/login', credentials)
+  return normalizeSession(data)
 }
 
 export async function registerRequest(payload) {
   await getCsrfCookie()
-  await api.post('/auth/register', payload)
+  const { data } = await api.post('/auth/register', payload)
+  return normalizeSession(data)
 }
 
 export async function logoutRequest() {
-  await api.post('/auth/logout')
+  try {
+    await api.post('/auth/logout')
+  } finally {
+    clearCsrfCookieCache()
+  }
 }
 
 export async function forgotPasswordRequest(email) {

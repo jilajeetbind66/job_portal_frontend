@@ -6,7 +6,7 @@ import { api } from '@/api/client'
 export async function fetchPartnerJobs({ status = '', search = '', page = 1, perPage = 10 } = {}) {
   const { data } = await api.get('/partner/jobs', {
     params: {
-      status: status || undefined,
+      status: status && status !== 'all' ? status : undefined,
       search: search || undefined,
       page,
       per_page: perPage,
@@ -29,6 +29,14 @@ export async function fetchPartnerJob(id) {
  */
 export async function createPartnerJob(payload) {
   const { data } = await api.post('/partner/jobs', payload)
+  return data
+}
+
+/**
+ * Submit a saved draft job for moderation review
+ */
+export async function submitPartnerJobForReview(id) {
+  const { data } = await api.post(`/partner/jobs/${id}/submit-review`)
   return data
 }
 

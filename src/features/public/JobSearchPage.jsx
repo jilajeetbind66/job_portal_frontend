@@ -23,9 +23,29 @@ import { useToast } from '@/hooks/useToast';
 import { useDebounce } from '@/hooks/useDebounce';
 import { createBreadcrumbSchema } from '@/utils/schema';
 
-const WORK_MODES = ['All', 'Remote', 'Hybrid', 'On-Site'];
-const EXPERIENCE_LEVELS = ['All', 'Entry', 'Mid', 'Senior', 'Lead'];
-const EMPLOYMENT_TYPES = ['All', 'Full-time', 'Part-time', 'Contract', 'Internship'];
+const WORK_MODES = [
+  { label: 'All', value: 'All' },
+  { label: 'Remote', value: 'remote' },
+  { label: 'Hybrid', value: 'hybrid' },
+  { label: 'On-Site', value: 'onsite' },
+];
+const EXPERIENCE_LEVELS = [
+  { label: 'All', value: 'All' },
+  { label: 'Entry', value: 'entry' },
+  { label: 'Mid', value: 'mid' },
+  { label: 'Senior', value: 'senior' },
+  { label: 'Lead', value: 'lead' },
+];
+const EMPLOYMENT_TYPES = [
+  { label: 'All', value: 'All' },
+  { label: 'Full-time', value: 'full_time' },
+  { label: 'Part-time', value: 'part_time' },
+  { label: 'Contract', value: 'contract' },
+  { label: 'Internship', value: 'internship' },
+];
+
+const getFilterLabel = (options, value) =>
+  options.find((option) => option.value === value)?.label || value;
 
 const formatSalary = (min, max, currency = '₹') => {
   if (!min && !max) return null;
@@ -125,9 +145,9 @@ export default function JobSearchPage() {
   const activeFilters = [
     searchParams.get('search') && { key: 'search', label: `Keyword: "${searchParams.get('search')}"` },
     searchParams.get('location') && { key: 'location', label: `Location: "${searchParams.get('location')}"` },
-    searchParams.get('workplace_type') && { key: 'workplace_type', label: `Work: ${searchParams.get('workplace_type')}` },
-    searchParams.get('experience_level') && { key: 'experience_level', label: `Exp: ${searchParams.get('experience_level')}` },
-    searchParams.get('employment_type') && { key: 'employment_type', label: `Type: ${searchParams.get('employment_type')}` },
+    searchParams.get('workplace_type') && { key: 'workplace_type', label: `Work: ${getFilterLabel(WORK_MODES, searchParams.get('workplace_type'))}` },
+    searchParams.get('experience_level') && { key: 'experience_level', label: `Exp: ${getFilterLabel(EXPERIENCE_LEVELS, searchParams.get('experience_level'))}` },
+    searchParams.get('employment_type') && { key: 'employment_type', label: `Type: ${getFilterLabel(EMPLOYMENT_TYPES, searchParams.get('employment_type'))}` },
     searchParams.get('category') && { key: 'category', label: `Category: ${searchParams.get('category')}` },
   ].filter(Boolean);
 
@@ -180,7 +200,7 @@ export default function JobSearchPage() {
           <Select
             value={searchParams.get('workplace_type') || 'All'}
             onChange={(e) => handleFilterChange('workplace_type', e.target.value)}
-            options={WORK_MODES.map((m) => ({ label: m, value: m }))}
+            options={WORK_MODES}
           />
         </div>
 
@@ -189,7 +209,7 @@ export default function JobSearchPage() {
           <Select
             value={searchParams.get('experience_level') || 'All'}
             onChange={(e) => handleFilterChange('experience_level', e.target.value)}
-            options={EXPERIENCE_LEVELS.map((m) => ({ label: m, value: m }))}
+            options={EXPERIENCE_LEVELS}
           />
         </div>
 
@@ -198,7 +218,7 @@ export default function JobSearchPage() {
           <Select
             value={searchParams.get('employment_type') || 'All'}
             onChange={(e) => handleFilterChange('employment_type', e.target.value)}
-            options={EMPLOYMENT_TYPES.map((m) => ({ label: m, value: m }))}
+            options={EMPLOYMENT_TYPES}
           />
         </div>
       </div>

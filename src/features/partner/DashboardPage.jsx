@@ -19,7 +19,8 @@ import {
   UserPlus,
 } from 'lucide-react'
 import { clsx } from 'clsx'
-import { APPLICATION_STATUS } from '@/constants'
+import { APPLICATION_STATUS, ROLES } from '@/constants'
+import { useAuth } from '@/auth/useAuth'
 import { fetchPartnerDashboard } from './api/dashboard'
 
 const STAGE_CONFIG = {
@@ -68,6 +69,8 @@ function formatRelativeTime(isoString) {
 }
 
 export default function PartnerDashboardPage() {
+  const { role } = useAuth()
+  const isPartnerAdmin = role === ROLES.PARTNER_ADMIN
   const { data: dashboardResponse, isLoading, isError, error, refetch, isFetching } = useQuery({
     queryKey: ['partner', 'dashboard'],
     queryFn: fetchPartnerDashboard,
@@ -100,14 +103,16 @@ export default function PartnerDashboardPage() {
         <div>
           <div className="flex items-center gap-2.5">
             <h1 className="text-2xl font-extrabold tracking-tight text-[#F7F8F5]">
-              Partner Recruitment Dashboard
+              {isPartnerAdmin ? 'Partner Recruitment Dashboard' : 'Recruiter Dashboard'}
             </h1>
             <span className="rounded-full bg-[#102A2B] border border-[#294341] px-3 py-0.5 text-xs font-semibold text-[#B9D8C4]">
               {company_name}
             </span>
           </div>
           <p className="mt-1 text-sm text-[#91A6A0]">
-            Real-time candidate pipeline overview, active vacancies, and hiring team activities.
+            {isPartnerAdmin
+              ? 'Real-time candidate pipeline overview, active vacancies, and hiring team activities.'
+              : 'Manage your vacancies, review applicants, and move candidates through your hiring pipeline.'}
           </p>
         </div>
 
@@ -211,8 +216,7 @@ export default function PartnerDashboardPage() {
               {
                 label: 'New This Week',
                 value: metrics.new_applicants_this_week,
-                subtext: 'Recent applicant surge',
-                badge: '+28%',
+                subtext: 'Applications received this week',
                 icon: TrendingUp,
                 color: 'text-[#2F7D5B] bg-[#102A2B] border border-[#294341]',
                 link: '/partner/jobs',
@@ -257,7 +261,7 @@ export default function PartnerDashboardPage() {
           </div>
 
           {/* Quick Actions Bar */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div className={clsx('grid grid-cols-1 gap-4', isPartnerAdmin ? 'sm:grid-cols-3' : 'sm:grid-cols-2')}>
             <Link
               to="/partner/jobs/new"
               className="flex items-center gap-3.5 rounded-2xl border border-[#294341] bg-[#0D2224] p-4 shadow-sm hover:border-[#8FAF9A] hover:bg-[#102A2B] transition-all group"
@@ -272,33 +276,51 @@ export default function PartnerDashboardPage() {
               <ChevronRight className="h-4 w-4 text-[#91A6A0] group-hover:translate-x-0.5 transition-transform" />
             </Link>
 
-            <Link
-              to="/partner/recruiters"
-              className="flex items-center gap-3.5 rounded-2xl border border-[#294341] bg-[#0D2224] p-4 shadow-sm hover:border-[#8FAF9A] hover:bg-[#102A2B] transition-all group"
-            >
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#102A2B] text-[#8FAF9A] border border-[#294341] group-hover:bg-[#2F7D5B] group-hover:text-white transition-colors">
-                <UserPlus className="h-5 w-5" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h4 className="text-xs font-bold text-[#F7F8F5] truncate">Manage Recruiter Team</h4>
-                <p className="text-[11px] text-[#91A6A0]">{metrics.active_recruiters || 0} active team members</p>
-              </div>
-              <ChevronRight className="h-4 w-4 text-[#91A6A0] group-hover:translate-x-0.5 transition-transform" />
-            </Link>
+            {isPartnerAdmin ? (
+              <>
+                <Link
+                  to="/partner/recruiters"
+                  className="flex items-center gap-3.5 rounded-2xl border border-[#294341] bg-[#0D2224] p-4 shadow-sm hover:border-[#8FAF9A] hover:bg-[#102A2B] transition-all group"
+                >
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#102A2B] text-[#8FAF9A] border border-[#294341] group-hover:bg-[#2F7D5B] group-hover:text-white transition-colors">
+                    <UserPlus className="h-5 w-5" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-xs font-bold text-[#F7F8F5] truncate">Manage Recruiter Team</h4>
+                    <p className="text-[11px] text-[#91A6A0]">{metrics.active_recruiters || 0} active team members</p>
+                  </div>
+                  <ChevronRight className="h-4 w-4 text-[#91A6A0] group-hover:translate-x-0.5 transition-transform" />
+                </Link>
 
-            <Link
-              to="/partner/company"
-              className="flex items-center gap-3.5 rounded-2xl border border-[#294341] bg-[#0D2224] p-4 shadow-sm hover:border-[#8FAF9A] hover:bg-[#102A2B] transition-all group"
-            >
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#102A2B] text-[#B9D8C4] border border-[#294341] group-hover:bg-[#2F7D5B] group-hover:text-white transition-colors">
-                <Building2 className="h-5 w-5" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h4 className="text-xs font-bold text-[#F7F8F5] truncate">Company Profile</h4>
-                <p className="text-[11px] text-[#91A6A0]">Branding, perks &amp; locations</p>
-              </div>
-              <ChevronRight className="h-4 w-4 text-[#91A6A0] group-hover:translate-x-0.5 transition-transform" />
-            </Link>
+                <Link
+                  to="/partner/company"
+                  className="flex items-center gap-3.5 rounded-2xl border border-[#294341] bg-[#0D2224] p-4 shadow-sm hover:border-[#8FAF9A] hover:bg-[#102A2B] transition-all group"
+                >
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#102A2B] text-[#B9D8C4] border border-[#294341] group-hover:bg-[#2F7D5B] group-hover:text-white transition-colors">
+                    <Building2 className="h-5 w-5" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-xs font-bold text-[#F7F8F5] truncate">Company Profile</h4>
+                    <p className="text-[11px] text-[#91A6A0]">Branding, perks &amp; locations</p>
+                  </div>
+                  <ChevronRight className="h-4 w-4 text-[#91A6A0] group-hover:translate-x-0.5 transition-transform" />
+                </Link>
+              </>
+            ) : (
+              <Link
+                to="/partner/applicants"
+                className="flex items-center gap-3.5 rounded-2xl border border-[#294341] bg-[#0D2224] p-4 shadow-sm hover:border-[#8FAF9A] hover:bg-[#102A2B] transition-all group"
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#102A2B] text-[#B9D8C4] border border-[#294341] group-hover:bg-[#2F7D5B] group-hover:text-white transition-colors">
+                  <Users className="h-5 w-5" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="text-xs font-bold text-[#F7F8F5] truncate">Review Applicants</h4>
+                  <p className="text-[11px] text-[#91A6A0]">Open your candidate pipeline</p>
+                </div>
+                <ChevronRight className="h-4 w-4 text-[#91A6A0] group-hover:translate-x-0.5 transition-transform" />
+              </Link>
+            )}
           </div>
 
           {/* Hiring Pipeline Funnel & Stage Breakdown */}

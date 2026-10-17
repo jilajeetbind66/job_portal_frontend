@@ -1,58 +1,85 @@
+import { lazy, Suspense } from 'react'
 import { createBrowserRouter } from 'react-router-dom'
 import { ROLES } from '@/constants'
 import RequireRole from '@/auth/RequireRole'
 
 import PublicLayout from '@/layouts/PublicLayout'
-import CandidateLayout from '@/layouts/CandidateLayout'
-import PartnerLayout from '@/layouts/PartnerLayout'
-import AdminLayout from '@/layouts/AdminLayout'
-
 import HomePage from '@/features/public/HomePage'
-import JobSearchPage from '@/features/public/JobSearchPage'
-import JobDetailPage from '@/features/public/JobDetailPage'
-import CompanyPage from '@/features/public/CompanyPage'
-import JobOrCategoryDispatcher from '@/features/public/JobOrCategoryDispatcher'
-import FresherJobsPage from '@/features/public/FresherJobsPage'
-import LoginPage from '@/features/public/LoginPage'
-import RegisterPage from '@/features/public/RegisterPage'
-import ForgotPasswordPage from '@/features/public/ForgotPasswordPage'
-import ResetPasswordPage from '@/features/public/ResetPasswordPage'
-import VerifyEmailNoticePage from '@/features/public/VerifyEmailNoticePage'
 
-import JobsInIndiaPage from '@/features/public/geo/JobsInIndiaPage'
-import StateJobsPage from '@/features/public/geo/StateJobsPage'
-import CityJobsPage from '@/features/public/geo/CityJobsPage'
-import CityCategoryJobsPage from '@/features/public/geo/CityCategoryJobsPage'
-import { GeoDispatcherPage, GeoSubDispatcherPage } from '@/features/public/geo/GeoDispatcher'
+const CandidateLayout = lazy(() => import('@/layouts/CandidateLayout'))
+const PartnerLayout = lazy(() => import('@/layouts/PartnerLayout'))
+const AdminLayout = lazy(() => import('@/layouts/AdminLayout'))
 
-import CandidateDashboardPage from '@/features/candidate/DashboardPage'
-import ProfilePage from '@/features/candidate/ProfilePage'
-import ApplicationsPage from '@/features/candidate/ApplicationsPage'
-import SavedJobsPage from '@/features/candidate/SavedJobsPage'
+const JobSearchPage = lazy(() => import('@/features/public/JobSearchPage'))
+const JobDetailPage = lazy(() => import('@/features/public/JobDetailPage'))
+const CompanyPage = lazy(() => import('@/features/public/CompanyPage'))
+const CompaniesPage = lazy(() => import('@/features/public/CompaniesPage'))
+const JobOrCategoryDispatcher = lazy(() => import('@/features/public/JobOrCategoryDispatcher'))
+const FresherJobsPage = lazy(() => import('@/features/public/FresherJobsPage'))
+const LoginPage = lazy(() => import('@/features/public/LoginPage'))
+const RegisterPage = lazy(() => import('@/features/public/RegisterPage'))
+const ForgotPasswordPage = lazy(() => import('@/features/public/ForgotPasswordPage'))
+const ResetPasswordPage = lazy(() => import('@/features/public/ResetPasswordPage'))
+const VerifyEmailNoticePage = lazy(() => import('@/features/public/VerifyEmailNoticePage'))
+const JobsInIndiaPage = lazy(() => import('@/features/public/geo/JobsInIndiaPage'))
+const StateJobsPage = lazy(() => import('@/features/public/geo/StateJobsPage'))
+const CityJobsPage = lazy(() => import('@/features/public/geo/CityJobsPage'))
+const CityCategoryJobsPage = lazy(() => import('@/features/public/geo/CityCategoryJobsPage'))
+const GeoDispatcherPage = lazy(() =>
+  import('@/features/public/geo/GeoDispatcher').then((module) => ({
+    default: module.GeoDispatcherPage,
+  })),
+)
+const GeoSubDispatcherPage = lazy(() =>
+  import('@/features/public/geo/GeoDispatcher').then((module) => ({
+    default: module.GeoSubDispatcherPage,
+  })),
+)
+const CandidateDashboardPage = lazy(() => import('@/features/candidate/DashboardPage'))
+const ProfilePage = lazy(() => import('@/features/candidate/ProfilePage'))
+const ApplicationsPage = lazy(() => import('@/features/candidate/ApplicationsPage'))
+const SavedJobsPage = lazy(() => import('@/features/candidate/SavedJobsPage'))
+const PartnerDashboardPage = lazy(() => import('@/features/partner/DashboardPage'))
+const JobsPage = lazy(() => import('@/features/partner/JobsPage'))
+const JobEditorPage = lazy(() => import('@/features/partner/JobEditorPage'))
+const ApplicantsPage = lazy(() => import('@/features/partner/ApplicantsPage'))
+const RecruitersPage = lazy(() => import('@/features/partner/RecruitersPage'))
+const PartnerCompanyPage = lazy(() => import('@/features/partner/CompanyPage'))
+const AdminDashboardPage = lazy(() => import('@/features/admin/DashboardPage'))
+const PartnersPage = lazy(() => import('@/features/admin/PartnersPage'))
+const PartnerDetailPage = lazy(() => import('@/features/admin/PartnerDetailPage'))
+const PartnerFormPage = lazy(() => import('@/features/admin/PartnerFormPage'))
+const ModerationPage = lazy(() => import('@/features/admin/ModerationPage'))
+const JobReviewPage = lazy(() => import('@/features/admin/JobReviewPage'))
+const UsersPage = lazy(() => import('@/features/admin/UsersPage'))
+const AuditLogsPage = lazy(() => import('@/features/admin/AuditLogsPage'))
 
-import PartnerDashboardPage from '@/features/partner/DashboardPage'
-import JobsPage from '@/features/partner/JobsPage'
-import JobEditorPage from '@/features/partner/JobEditorPage'
-import ApplicantsPage from '@/features/partner/ApplicantsPage'
-import RecruitersPage from '@/features/partner/RecruitersPage'
-import PartnerCompanyPage from '@/features/partner/CompanyPage'
-
-import AdminDashboardPage from '@/features/admin/DashboardPage'
-import PartnersPage from '@/features/admin/PartnersPage'
-import PartnerDetailPage from '@/features/admin/PartnerDetailPage'
-import PartnerFormPage from '@/features/admin/PartnerFormPage'
-import ModerationPage from '@/features/admin/ModerationPage'
-import JobReviewPage from '@/features/admin/JobReviewPage'
-import UsersPage from '@/features/admin/UsersPage'
-import AuditLogsPage from '@/features/admin/AuditLogsPage'
+function withPageFallback(element) {
+  return (
+    <Suspense
+      fallback={
+        <div
+          className="flex min-h-[40vh] items-center justify-center text-sm text-muted-text"
+          role="status"
+          aria-live="polite"
+        >
+          Loading page...
+        </div>
+      }
+    >
+      {element}
+    </Suspense>
+  )
+}
 
 export const routes = [
   {
-    element: <PublicLayout />,
+    element: withPageFallback(<PublicLayout />),
     children: [
       { path: '/', element: <HomePage /> },
       { path: '/jobs', element: <JobSearchPage /> },
       { path: '/jobs/:slug', element: <JobOrCategoryDispatcher /> },
+      { path: '/companies', element: <CompaniesPage /> },
       { path: '/companies/:slug', element: <CompanyPage /> },
       { path: '/company/:slug', element: <CompanyPage /> },
       { path: '/login', element: <LoginPage /> },
@@ -85,7 +112,7 @@ export const routes = [
   },
   {
     path: '/candidate',
-    element: <RequireRole roles={[ROLES.CANDIDATE]} />,
+    element: withPageFallback(<RequireRole roles={[ROLES.CANDIDATE]} />),
     children: [
       {
         element: <CandidateLayout />,
@@ -100,7 +127,7 @@ export const routes = [
   },
   {
     path: '/partner',
-    element: <RequireRole roles={[ROLES.PARTNER_ADMIN, ROLES.PARTNER_RECRUITER]} />,
+    element: withPageFallback(<RequireRole roles={[ROLES.PARTNER_ADMIN, ROLES.PARTNER_RECRUITER]} />),
     children: [
       {
         element: <PartnerLayout />,
@@ -111,15 +138,20 @@ export const routes = [
           { path: 'jobs/:id/edit', element: <JobEditorPage /> },
           { path: 'jobs/:id/applicants', element: <ApplicantsPage /> },
           { path: 'applicants', element: <ApplicantsPage /> },
-          { path: 'recruiters', element: <RecruitersPage /> },
-          { path: 'company', element: <PartnerCompanyPage /> },
+          {
+            element: <RequireRole roles={[ROLES.PARTNER_ADMIN]} />,
+            children: [
+              { path: 'recruiters', element: <RecruitersPage /> },
+              { path: 'company', element: <PartnerCompanyPage /> },
+            ],
+          },
         ],
       },
     ],
   },
   {
     path: '/admin',
-    element: <RequireRole roles={[ROLES.SUPER_ADMIN]} />,
+    element: withPageFallback(<RequireRole roles={[ROLES.SUPER_ADMIN]} />),
     children: [
       {
         element: <AdminLayout />,

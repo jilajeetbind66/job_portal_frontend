@@ -3,6 +3,9 @@ import axios from 'axios'
 export const UNAUTHORIZED_EVENT = 'auth:unauthorized'
 
 const API_BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:8000'
+const CSRF_COOKIE_CACHE_MS = 5 * 60 * 1000
+let csrfCookiePromise = null
+let csrfCookieExpiresAt = 0
 
 export const api = axios.create({
   baseURL: `${API_BASE}/api/v1`,
@@ -12,10 +15,36 @@ export const api = axios.create({
 })
 
 // Sanctum SPA login se pehle ek baar CSRF cookie leni padti hai
-export function getCsrfCookie() {
-  return axios.get(`${API_BASE}/sanctum/csrf-cookie`, {
-    withCredentials: true,
-  })
+export function clearCsrfCookieCache() {
+  csrfCookieExpiresAt = 0
+}
+
+export function getCsrfCookie({ forceRefresh = false } = {}) {
+  if (csrfCookiePromise) {
+    return csrfCookiePromise
+  }
+
+  if (!forceRefresh && Date.now() < csrfCookieExpiresAt) {
+    return Promise.resolve()
+  }
+
+  csrfCookiePromise = axios
+    .get(`${API_BASE}/sanctum/csrf-cookie`, {
+      withCredentials: true,
+    })
+    .then((response) => {
+      csrfCookieExpiresAt = Date.now() + CSRF_COOKIE_CACHE_MS
+      return response
+    })
+    .catch((error) => {
+      csrfCookieExpiresAt = 0
+      throw error
+    })
+    .finally(() => {
+      csrfCookiePromise = null
+    })
+
+  return csrfCookiePromise
 }
 
 api.interceptors.response.use(
@@ -27,7 +56,7 @@ api.interceptors.response.use(
     // 419: CSRF token expire. Cookie dobara lo aur request ek baar retry karo
     if (status === 419 && config && !config._retried) {
       config._retried = true
-      await getCsrfCookie()
+      await getCsrfCookie({ forceRefresh: true })
       return api(config)
     }
 

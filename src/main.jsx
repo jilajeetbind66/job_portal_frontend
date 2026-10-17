@@ -7,7 +7,14 @@ import { router } from './routes'
 import AuthProvider from '@/auth/AuthProvider'
 import { ToastProvider } from '@/components'
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 30_000,
+      retry: 1,
+    },
+  },
+})
 
 async function enableMocking() {
   // .env me VITE_USE_MOCKS=true rakho to MSW chalega

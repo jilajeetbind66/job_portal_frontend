@@ -19,11 +19,12 @@ export async function fetchRecruiters({ search = '', role = '', status = '', pag
 /**
  * Invite a new recruiter / admin to the partner team
  */
-export async function inviteRecruiter({ name, email, role }) {
+export async function inviteRecruiter({ name, email, role, department }) {
   const { data } = await api.post('/partner/recruiters/invite', {
     name,
     email,
     role,
+    department,
   })
   return data
 }

@@ -2,7 +2,7 @@ import { api } from '@/api/client';
 
 export const fetchPartners = async ({ search = '', status = '', page = 1, perPage = 15 } = {}) => {
   const { data } = await api.get('/admin/partners', {
-    params: { search, status, page, per_page: perPage },
+    params: { search, status: status === 'ALL' ? undefined : status, page, per_page: perPage },
   });
   return data;
 };
@@ -57,6 +57,6 @@ export const toggleSuspendPartner = async (id) => {
 };
 
 export const createPartnerAdmin = async (partnerId, data) => {
-  const response = await api.post(`/admin/partners/${partnerId}/admins`, data);
+  const response = await api.post(`/admin/partners/${partnerId}/admin-user`, data);
   return response.data;
 };

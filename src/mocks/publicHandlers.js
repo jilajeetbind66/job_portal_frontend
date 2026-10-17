@@ -168,6 +168,24 @@ const mockJobs = [
   }
 ];
 
+const mockCompanies = Array.from(
+  new Map(
+    mockJobs.map((job) => {
+      const slug = job.partner?.slug || job.company_name.toLowerCase().replace(/\s+/g, '-');
+      const companyJobs = mockJobs.filter((item) => item.company_name === job.company_name);
+      return [slug, {
+        id: job.partner?.id || slug,
+        name: job.company_name,
+        slug,
+        logo: job.company_logo,
+        industry: 'Software & Technology',
+        description: job.partner?.description || `${job.company_name} is hiring across multiple teams.`,
+        active_jobs_count: companyJobs.length,
+      }];
+    }),
+  ).values(),
+);
+
 const mockCompany = {
   id: 'p1',
   name: 'TechFlow India',
@@ -247,6 +265,27 @@ let mockCandidateProfile = {
 };
 
 export const publicHandlers = [
+  http.get(`${API}/public/companies`, ({ request }) => {
+    const url = new URL(request.url);
+    const search = (url.searchParams.get('search') || '').trim().toLowerCase();
+    const page = Number.parseInt(url.searchParams.get('page') || '1', 10);
+    const perPage = Number.parseInt(url.searchParams.get('per_page') || '12', 10);
+    const filtered = mockCompanies.filter((company) =>
+      `${company.name} ${company.industry}`.toLowerCase().includes(search),
+    );
+    const start = (page - 1) * perPage;
+
+    return HttpResponse.json({
+      data: filtered.slice(start, start + perPage),
+      meta: {
+        current_page: page,
+        last_page: Math.max(1, Math.ceil(filtered.length / perPage)),
+        per_page: perPage,
+        total: filtered.length,
+      },
+    });
+  }),
+
   http.get(`${API}/public/jobs`, ({ request }) => {
     const url = new URL(request.url);
     const search = (url.searchParams.get('search') || '').toLowerCase().trim();
@@ -320,9 +359,22 @@ export const publicHandlers = [
     return HttpResponse.json({ data: job });
   }),
 
-  http.get(`${API}/public/companies/:slug`, ({ params }) => {
+  http.get(`${API}/public/companies/:slug`, ({ params, request }) => {
+    const page = parseInt(new URL(request.url).searchParams.get('page') || '1', 10);
+    const perPage = 12;
+
+    const paginateCompanyJobs = (company, jobs) => ({
+      ...company,
+      jobs: jobs.slice((page - 1) * perPage, page * perPage),
+      jobs_pagination: {
+        current_page: page,
+        last_page: Math.max(1, Math.ceil(jobs.length / perPage)),
+        total: jobs.length,
+      },
+    });
+
     if (params.slug === mockCompany.slug) {
-      return HttpResponse.json({ data: mockCompany });
+      return HttpResponse.json({ data: paginateCompanyJobs(mockCompany, mockCompany.jobs) });
     }
     const companyJobs = mockJobs.filter((j) => {
       const pSlug = j.partner?.name?.toLowerCase().replace(/\s+/g, '-');
@@ -333,7 +385,7 @@ export const publicHandlers = [
     if (companyJobs.length > 0) {
       const firstJob = companyJobs[0];
       return HttpResponse.json({
-        data: {
+        data: paginateCompanyJobs({
           id: firstJob.partner?.id || 'comp_' + params.slug,
           name: firstJob.company_name,
           slug: params.slug,
@@ -345,8 +397,7 @@ export const publicHandlers = [
           industry: 'Software & Technology Services',
           size: '100-500 employees',
           founded_year: 2017,
-          jobs: companyJobs,
-        },
+        }, companyJobs),
       });
     }
 

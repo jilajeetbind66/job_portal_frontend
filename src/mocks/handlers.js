@@ -39,7 +39,15 @@ const usersByRole = {
 
 const permissionsByRole = {
   [ROLES.CANDIDATE]: [],
-  [ROLES.PARTNER_ADMIN]: ['jobs.create', 'jobs.publish', 'applications.view', 'recruiters.manage'],
+  [ROLES.PARTNER_ADMIN]: [
+    'jobs.create',
+    'jobs.publish',
+    'applications.view',
+    'recruiters.view',
+    'recruiters.create',
+    'recruiters.update',
+    'partner.users.manage',
+  ],
   [ROLES.PARTNER_RECRUITER]: ['jobs.create', 'applications.view'],
   [ROLES.SUPER_ADMIN]: ['partners.manage', 'jobs.moderate', 'users.manage', 'analytics.view'],
 }
@@ -52,10 +60,38 @@ const roleByEmailPrefix = {
 }
 
 let currentRole = null
+let mockNotificationRead = false
 
 // Tests me seedha "is role se logged in" set karne ke liye
 export function setMockRole(role) {
   currentRole = role
+  mockNotificationRead = false
+}
+
+function getMockNotifications() {
+  const isPartner = [ROLES.PARTNER_ADMIN, ROLES.PARTNER_RECRUITER].includes(currentRole)
+  const isAdmin = currentRole === ROLES.SUPER_ADMIN
+  const notification = {
+    id: 'demo-notification-1',
+    data: {
+      title: isAdmin ? 'Job awaiting review' : isPartner ? 'New applicant' : 'Application update',
+      message: isAdmin
+        ? 'A partner submitted a job for moderation.'
+        : isPartner
+          ? 'A candidate applied for Senior Engineer.'
+          : 'Your application status has changed.',
+      url: isAdmin
+        ? '/admin/moderation/7'
+        : isPartner
+          ? '/partner/applicants'
+          : '/candidate/applications',
+      activity_type: isAdmin ? 'job.pending_review' : isPartner ? 'application.received' : 'application.status_changed',
+    },
+    read_at: mockNotificationRead ? new Date().toISOString() : null,
+    created_at: new Date().toISOString(),
+  }
+
+  return currentRole ? [notification] : []
 }
 
 const validationError = (field, message) =>
@@ -82,12 +118,32 @@ export const handlers = [
       return validationError('email', 'These credentials do not match our records.')
     }
     currentRole = role
-    return HttpResponse.json({ message: 'Logged in' })
+    return HttpResponse.json({
+      message: 'Logged in',
+      user: { ...usersByRole[role], role, permissions: permissionsByRole[role] },
+    })
   }),
 
   http.post(`${API}/api/v1/auth/logout`, () => {
     currentRole = null
     return new HttpResponse(null, { status: 204 })
+  }),
+
+  http.get(`${API}/api/v1/notifications`, () => {
+    const data = getMockNotifications()
+    return HttpResponse.json({
+      data,
+      meta: { current_page: 1, last_page: 1, per_page: 15, total: data.length },
+    })
+  }),
+
+  http.get(`${API}/api/v1/notifications/unread-count`, () =>
+    HttpResponse.json({ unread_count: currentRole && !mockNotificationRead ? 1 : 0 }),
+  ),
+
+  http.patch(`${API}/api/v1/notifications/:notificationId/read`, () => {
+    mockNotificationRead = true
+    return HttpResponse.json({ data: { id: 'demo-notification-1', read_at: new Date().toISOString() } })
   }),
 
   http.post(`${API}/api/v1/auth/register`, async ({ request }) => {
@@ -96,7 +152,14 @@ export const handlers = [
       return validationError('email', 'The email has already been taken.')
     }
     currentRole = ROLES.CANDIDATE
-    return HttpResponse.json({ message: 'Registered' }, { status: 201 })
+    return HttpResponse.json({
+      message: 'Registered',
+      user: {
+        ...usersByRole[ROLES.CANDIDATE],
+        role: ROLES.CANDIDATE,
+        permissions: permissionsByRole[ROLES.CANDIDATE],
+      },
+    }, { status: 201 })
   }),
 
   http.post(`${API}/api/v1/auth/forgot-password`, () =>

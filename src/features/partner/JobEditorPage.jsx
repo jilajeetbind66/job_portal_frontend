@@ -20,6 +20,7 @@ import { JOB_STATUS } from '@/constants'
 import {
   fetchPartnerJob,
   createPartnerJob,
+  submitPartnerJobForReview,
   updatePartnerJob,
 } from './api/jobs'
 import JobStatusBadge from './components/JobStatusBadge'
@@ -101,7 +102,7 @@ export default function JobEditorPage() {
 
   // Save Mutation
   const saveMutation = useMutation({
-    mutationFn: ({ payload, targetStatus }) => {
+    mutationFn: async ({ payload, targetStatus }) => {
       const formattedSkills = payload.skills
         .split(',')
         .map((s) => s.trim())
@@ -113,10 +114,22 @@ export default function JobEditorPage() {
         status: targetStatus,
       }
 
-      if (isEditMode) {
-        return updatePartnerJob(id, body)
+      const savedJob = isEditMode
+        ? await updatePartnerJob(id, body)
+        : await createPartnerJob(body)
+
+      if (targetStatus === JOB_STATUS.PENDING_REVIEW) {
+        const jobId = isEditMode ? id : savedJob.data.id
+
+        try {
+          return await submitPartnerJobForReview(jobId)
+        } catch (error) {
+          error.savedBeforeReviewFailure = true
+          throw error
+        }
       }
-      return createPartnerJob(body)
+
+      return savedJob
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['partner', 'jobs'] })
@@ -129,6 +142,11 @@ export default function JobEditorPage() {
   }
 
   const isSaving = saveMutation.isPending
+  const saveErrorResponse = saveMutation.error?.response?.data
+  const saveValidationMessages = Object.values(saveErrorResponse?.errors ?? {}).flat()
+  const saveErrorMessage = saveMutation.error?.savedBeforeReviewFailure
+    ? 'Changes were saved, but the job could not be submitted for review.'
+    : saveErrorResponse?.message || 'The job could not be saved. Please try again.'
 
   if (isEditMode && isFetching) {
     return (
@@ -160,6 +178,22 @@ export default function JobEditorPage() {
           </div>
         </div>
       </div>
+
+      {saveMutation.isError && (
+        <div
+          role="alert"
+          className="rounded-xl border border-rose-900/60 bg-rose-950/40 p-4 text-sm text-rose-200"
+        >
+          <p className="font-semibold">{saveErrorMessage}</p>
+          {saveValidationMessages.length > 0 && (
+            <ul className="mt-2 list-disc space-y-1 pl-5">
+              {saveValidationMessages.map((message, index) => (
+                <li key={`${index}-${message}`}>{message}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
 
       {/* Reviewer Feedback Banner (If Rejected) */}
       {isRejected && job?.rejection_reason && (

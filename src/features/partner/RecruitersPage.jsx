@@ -31,7 +31,7 @@ export default function RecruitersPage() {
   const queryClient = useQueryClient()
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const canManageRecruiters = can ? can('recruiters.manage') : currentUserRole === ROLES.PARTNER_ADMIN
+  const canManageRecruiters = can ? can('partner.users.manage') : currentUserRole === ROLES.PARTNER_ADMIN
 
   const searchParam = searchParams.get('search') || ''
   const roleFilter = searchParams.get('role') || 'all'

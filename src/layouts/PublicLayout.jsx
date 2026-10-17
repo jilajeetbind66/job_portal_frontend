@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from 'react'
-import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
+import { Link, NavLink, Outlet } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, Bell, Building2, UserCheck, ArrowRight } from 'lucide-react'
+import { Menu, X, Building2, UserCheck, ArrowRight } from 'lucide-react'
 import Logo from '@/components/Logo'
+import NotificationBell from '@/components/NotificationBell'
 import { LogoutButton } from '@/components'
 import { ROLE_HOME } from '@/constants'
 import { useAuth } from '@/auth/useAuth'
 
 export default function PublicLayout() {
-  const { isAuthenticated, role, loading } = useAuth()
+  const { isAuthenticated, role } = useAuth()
   const [isScrolled, setIsScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const location = useLocation()
-
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20)
     window.addEventListener('scroll', handleScroll)
@@ -76,7 +75,7 @@ export default function PublicLayout() {
               Remote Jobs
             </NavLink>
             <NavLink
-              to="/company/google"
+              to="/companies"
               className="text-[#91A6A0] hover:text-[#F7F8F5] transition-colors"
             >
               Companies
@@ -92,45 +91,36 @@ export default function PublicLayout() {
 
           {/* Right Action Icons & Auth */}
           <div className="hidden sm:flex items-center gap-3.5 text-sm">
-            {/* Notification Bell Icon */}
-            <button
-              type="button"
-              className="p-2 rounded-full text-[#91A6A0] hover:text-[#F7F8F5] hover:bg-[#102A2B] transition-colors relative"
-              aria-label="Notifications"
-            >
-              <Bell className="w-4 h-4" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#D6A84F]" />
-            </button>
+            <NotificationBell className="rounded-full" />
 
-            {!loading &&
-              (isAuthenticated ? (
-                <>
-                  <Link
-                    to={ROLE_HOME[role] ?? '/'}
-                    className="inline-flex items-center gap-1.5 font-semibold px-4 py-2 rounded-full bg-[#102A2B] border border-[#294341] text-[#B9D8C4] hover:border-[#8FAF9A] transition-colors"
-                  >
-                    <UserCheck className="w-4 h-4 text-[#2F7D5B]" />
-                    My Portal
-                  </Link>
-                  <LogoutButton />
-                </>
-              ) : (
-                <>
-                  <Link
-                    to="/login"
-                    className="font-semibold text-[#F7F8F5] hover:text-[#B9D8C4] px-3 py-1.5 transition-colors"
-                  >
-                    Log In
-                  </Link>
-                  <Link
-                    to="/register"
-                    className="inline-flex items-center gap-1.5 px-4.5 py-2 rounded-full bg-[#D6A84F] hover:bg-[#E5B866] text-[#172026] text-xs sm:text-sm font-bold shadow-md transition-all duration-200 hover:scale-[1.02]"
-                  >
-                    <span>Register Now</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </>
-              ))}
+            {isAuthenticated ? (
+              <>
+                <Link
+                  to={ROLE_HOME[role] ?? '/'}
+                  className="inline-flex items-center gap-1.5 font-semibold px-4 py-2 rounded-full bg-[#102A2B] border border-[#294341] text-[#B9D8C4] hover:border-[#8FAF9A] transition-colors"
+                >
+                  <UserCheck className="w-4 h-4 text-[#2F7D5B]" />
+                  My Portal
+                </Link>
+                <LogoutButton />
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="font-semibold text-[#F7F8F5] hover:text-[#B9D8C4] px-3 py-1.5 transition-colors"
+                >
+                  Log In
+                </Link>
+                <Link
+                  to="/register"
+                  className="inline-flex items-center gap-1.5 px-4.5 py-2 rounded-full bg-[#D6A84F] hover:bg-[#E5B866] text-[#172026] text-xs sm:text-sm font-bold shadow-md transition-all duration-200 hover:scale-[1.02]"
+                >
+                  <span>Register Now</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Trigger */}
@@ -178,7 +168,7 @@ export default function PublicLayout() {
                 Remote Jobs
               </Link>
               <Link
-                to="/company/google"
+                to="/companies"
                 onClick={() => setMobileMenuOpen(false)}
                 className="py-2.5 px-3.5 rounded-xl hover:bg-[#102A2B] hover:text-[#B9D8C4] text-[#F7F8F5]"
               >
