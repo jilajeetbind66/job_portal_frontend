@@ -2,7 +2,8 @@ import axios from 'axios'
 
 export const UNAUTHORIZED_EVENT = 'auth:unauthorized'
 
-const API_BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:8000'
+//const API_BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:8000'
+const API_BASE = import.meta.env.VITE_API_URL ?? ''
 const CSRF_COOKIE_CACHE_MS = 5 * 60 * 1000
 let csrfCookiePromise = null
 let csrfCookieExpiresAt = 0
